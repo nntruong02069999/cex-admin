@@ -1,0 +1,22 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Project Structure Guide
+
+The main source code is located in the [`src/`](mdc:src) directory, which contains the following key subdirectories:
+
+- [`components/`](mdc:src/components): Reusable UI components, organized by feature or type.
+- [`containers/`](mdc:src/containers): Container components and layout-related logic.
+- [`routes/`](mdc:src/routes): Application route definitions and route-specific components.
+- [`services/`](mdc:src/services): Service modules for API calls and business logic.
+- [`util/`](mdc:src/util): Utility functions and helpers.
+- [`models/`](mdc:src/models): Data models and types.
+- [`constants/`](mdc:src/constants): Application-wide constants.
+- [`styles/`](mdc:src/styles): Global and modular style files.
+- [`assets/`](mdc:src/assets): Static assets such as images and fonts.
+
+The main entry point for the application is [`src/index.tsx`](mdc:src/index.tsx).
+
+Configuration files such as [`package.json`](mdc:package.json), [`tsconfig.json`](mdc:tsconfig.json), and [`README.md`](mdc:README.md) are located in the project root.

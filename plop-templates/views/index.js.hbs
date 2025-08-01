@@ -1,0 +1,385 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Form, Input, Button, Space, Tooltip, Avatar } from 'antd';
+import { SearchOutlined, PlusOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { connect } from 'dva';
+import ProTable from 'packages/pro-table/Table';
+import { get, union } from 'lodash';
+import {{pascalCase pageName}}Detail from '../detail';
+import { getValue, setTableChange, getTableChange } from 'util/helpers';
+{{#each columns}}
+  {{#if renderFormItem}}
+  import {{pascalCase renderFormItem}}Select from '../../../components/Select/{{pascalCase renderFormItem}}';
+  {{/if}}
+{{/each}}
+
+const tranform{{pascalCase pageName}}Params = (filters, formValues, sorter) => {
+  let initFitler = {};
+  if (filters) {
+    Object.assign(initFitler, filters);
+    if (initFitler.name) {
+      initFitler.name = {
+        contains: initFitler.name
+      };
+    }
+  }
+  let initFormValues = {};
+  if (formValues) {
+    Object.assign(initFormValues, formValues);
+    if (initFormValues.name) {
+      initFormValues.name = {
+        contains: initFormValues.name
+      };
+    }
+  }
+  let initSort = [];
+  if (sorter && sorter.field) {
+    initSort = [{ [sorter.field]: sorter.order === 'ascend' ? "asc" : "desc" }];
+  }
+  return { filters: { ...initFitler, ...initFormValues }, sort: initSort };
+};
+
+const RESOURCE = "{{camelCase pageName}}";
+const {{pascalCase pageName}}List = (props) => {
+  const [form] = Form.useForm();
+  const searchInput = useRef();
+  const actionRef = useRef();
+
+  /* const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]); */
+  // const [skip,] = useState(0);
+  const [limit,] = useState((process.env.REACT_APP_PAGESIZE && !Number.isNaN(process.env.REACT_APP_PAGESIZE)) ?
+  Number(process.env.REACT_APP_PAGESIZE) : 10);
+  const [current, setCurrent] = useState(1);
+  const [listSearch, setListSearch] = useState({});
+  const tableChange = getTableChange(RESOURCE);
+  const [formValues, setFormValues] = useState((origin) => {
+    return tableChange?.formValues || {};
+  });
+  const [drawerDetail, setDrawerDetail] = useState({
+    visible: false,
+    record: {}
+  });
+  {{!-- const [pagination, setPagination] = useState({
+    pageSize: limit
+  }); --}}
+  const [columnsStateMap, setColumnsStateMap] = useState({{{JSONstringify columnsStateMap}}});
+
+  const {
+    dispatch,
+    [RESOURCE]: { data },
+    loading, history
+  } = props;
+
+  useEffect(() => {
+    let initParams = {};
+    let pagi = Object.assign({}, (tableChange?.pagination) || {});
+    const defaultCurrent = pagi.current || 1;
+    initParams = tranform{{pascalCase pageName}}Params(tableChange?.filtersArg, tableChange?.formValues, tableChange?.sort);
+
+    dispatch({
+      type: `${RESOURCE}/fetch`,
+      payload: {
+        page: tableChange?.pagination?.current || current,
+        current: tableChange?.pagination?.current || current,
+        skip: (defaultCurrent - 1) * pagi.pageSize,
+        limit: pagi.pageSize || limit,
+        pageSize: pagi.pageSize || limit,
+        sort: initParams.sort ? (initParams.sort.length <= 0 ? [{ "createdAt": "desc" }] : initParams.sort) : [{ "createdAt": "desc" }],
+        queryInput: {
+          ...initParams.filters,
+        }
+      }
+    });
+  }, []);
+
+  {{!-- useEffect(() => {
+    let pagi = Object.assign(pagination, (data && data.pagination) || {});
+    setPagination(origin => ({
+      ...origin,
+      ...pagi
+    }));
+  }, [data]); --}}
+
+  const handleTableChange = (pagi, filtersArg, sorter) => {
+    const filters = Object.keys(filtersArg).reduce((obj, key) => {
+      const newObj = { ...obj };
+      if (filtersArg[key] !== null) newObj[key] = getValue(filtersArg[key]);
+      return newObj;
+    }, {});
+
+    const initParams = tranform{{pascalCase pageName}}Params(filters, formValues, sorter);
+
+    if (sessionStorage.getItem('isReset') === 'true') {
+      sessionStorage.setItem('isReset', false);
+    }
+    const params = {
+      queryInput: {
+        ...initParams.filters
+      },
+      page: Number(pagi.current),
+      current: Number(pagi.current),
+      skip: (Number(pagi.current) - 1) * Number(pagi.pageSize),
+      limit: Number(pagi.pageSize),
+      pageSize: Number(pagi.pageSize)
+    };
+    if (sorter.field) {
+      params.sort = [{ [sorter.field]: sorter.order === 'ascend' ? "asc" : "desc" }];
+      // params.sort = (!sorter.order || sorter.order == 'ascend') ? sorter.field : `-${sorter.field}`;
+    } else {
+      params.sort = union(initParams.sort || [], [{ "createdAt": "desc" }]);
+    }
+    setTableChange(RESOURCE, { pagination: pagi, filters, sorter, formValues });
+    setCurrent(pagination.current);
+    dispatch({
+      type: `${RESOURCE}/fetch`,
+      payload: params
+    });
+  };
+
+  const handleTableSearch = () => {
+    form.current.validateFields().then(fieldsValue => {
+      console.log('handleSearch -> fieldsValue', fieldsValue);
+      let values = {};
+      Object.keys(fieldsValue).forEach(key => {
+        if (fieldsValue[key] !== null && fieldsValue[key] !== undefined) {
+          values[key] = fieldsValue[key];
+        }
+      });
+
+      if (sessionStorage.getItem('isReset') === 'true') {
+        sessionStorage.setItem('isReset', 'false');
+        values = {};
+      }
+      const initParams = tranform{{pascalCase pageName}}Params(tableChange?.filters, values, tableChange?.sort);
+
+      setTableChange(RESOURCE, {
+        ...tableChange,
+        pagination: {
+          ...tableChange.pagination,
+          page: 1,
+          current: 1,
+          skip: 0,
+          limit,
+          pageSize: limit
+        },
+        formValues: values
+      });
+      setFormValues(() => values);
+      dispatch({
+        type: `${RESOURCE}/fetch`,
+        payload: {
+          queryInput: {
+            ...initParams.filters
+          },
+          page: 1,
+          current: 1,
+          skip: 0,
+          limit,
+          pageSize: limit,
+          sort: union(initParams.sort || [], [{ "createdAt": "desc" }])
+        }
+      });
+    }).catch(err => {
+      if (err) return;
+    });
+  };
+
+  const handleSearchFilter = (selectedKeys, confirm, dataIndex) => {
+    setListSearch({
+      ...listSearch,
+      [`search_${dataIndex}`]: selectedKeys[0],
+    });
+    confirm();
+  };
+
+  const getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style=\{{ padding: 8 }}>
+        <Input
+          ref={searchInput}
+          placeholder={`Tìm kiếm ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearchFilter(selectedKeys, confirm, dataIndex)}
+          style=\{{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearchFilter(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style=\{{ width: 90 }}
+          >
+            Tìm
+          </Button>
+          <Button onClick={() => handleReset(clearFilters, confirm, dataIndex)} size="small" style=\{{ width: 90 }}>
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: filtered => <SearchOutlined style=\{{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => searchInput.current.select());
+      }
+    },
+    onFilter: (value, record) => record
+  });
+
+  const handleReset = (clearFilters, confirm, dataIndex) => {
+    clearFilters();
+    setListSearch({
+      ...listSearch,
+      [`search_${dataIndex}`]: '',
+    });
+    confirm();
+  };
+
+  const handleAddClick = () => {
+    history.push({ pathname: `${props.match.url}/add` });
+  };
+
+  const handleEditClick = item => {
+    history.push({ pathname: `${props.match.url}/${item.id}` });
+  };
+
+  const columns = [
+{{#each columns}}
+{
+  title: '{{title}}',
+  dataIndex: '{{dataIndex}}',
+  {{#if valueType}}
+    valueType: '{{valueType}}',
+  {{/if}}
+  {{#if key}}
+    key: '{{key}}',
+  {{/if}}
+  {{#if width}}
+    width: {{width}},
+  {{/if}}
+  {{#if ellipsis}}
+    ellipsis: {
+      showTitle: true
+    },
+  {{/if}}
+  {{#if fixed}}
+    fixed: '{{fixed}}',
+  {{/if}}
+  {{#if align}}
+    align: '{{align}}',
+  {{/if}}
+  {{#if sorter}}
+    sorter: {{sorter}},
+  {{/if}}
+  {{#if needTotal}}
+    needTotal: {{needTotal}},
+  {{/if}}
+  {{#if hideInSearch}}
+    hideInSearch: {{hideInSearch}},
+  {{/if}}
+  {{#if hideInTable}}
+    hideInTable: {{hideInTable}},
+  {{/if}}
+  {{#if filters}}
+    filters: {{filters}},
+  {{/if}}
+  {{#if valueEnum}}
+    {{!-- valueEnum: {{stringify valueEnum}}, --}}
+    valueEnum: {
+    {{#forIn valueEnum}}
+    "{{@key}}" : { {{#forIn .}} "{{@key}}": "{{.}}", {{/forIn}} },
+    {{/forIn}}
+    },
+  {{/if}}
+  {{#if render}}
+    {{!-- {{#if valueType=}}
+      render: (val,record,index) => `${formatNumber(val)}`,
+    {{/if}} --}}
+  {{/if}}
+  {{#if renderFormItem}}
+  renderFormItem: (_, { type, defaultRender, ...rest }, form) => {
+    return <{{pascalCase renderFormItem}}Select />;
+  },
+  {{/if}}
+  {{#if hasFilter}}
+  ...getColumnSearchProps('{{dataIndex}}'),
+  {{/if}}
+},
+{{/each}}
+  {
+    title: 'Thao tác',
+    width: 150,
+    fixed: 'right',
+    render: (text, record) => (
+      <>
+        <Tooltip title={`Sửa`}>
+          <EditOutlined onClick={()=> handleEditClick(record)} />
+        </Tooltip>
+        {{!-- <Divider type="vertical" /> --}}
+      </>
+    ),
+  },
+];
+
+  return (
+    <>
+      <ProTable
+        tableClassName="gx-table-responsive"
+        type="table"
+        rowKey="id"
+        search={true}
+        headerTitle="Người dùng"
+        actionRef={actionRef}
+        formRef={form}
+        form=\{{ initialValues: formValues }}
+        dataSource={data && data.list}
+        pagination={data.pagination}
+        columns={columns}
+        columnsStateMap={columnsStateMap}
+        onColumnsStateChange={(mapCols) => {
+          setColumnsStateMap(mapCols);
+        }}
+        loading={loading}
+        // scroll=\{{ x: 1500, y: 300 }}
+        onChange={handleTableChange}
+        onSubmit={handleTableSearch}
+        beforeSearchSubmit={(searchParams) => {
+          return {};
+        }}
+        onReset={() => {
+          sessionStorage.setItem('isReset', 'true');
+          setTableChange(RESOURCE, {
+            pagination: {
+              current: 1,
+              skip: 0,
+              limit,
+            },
+            filtersArg: {}, sorter: {}, formValues: {}
+          });
+        }}
+        toolBarRender={(action, { selectedRows }) => [
+          <Button icon={<PlusOutlined />} type="primary" onClick={() => handleAddClick()}>
+            {`Thêm mới`}
+          </Button>
+        ]}
+      />
+      <{{pascalCase pageName}}Detail
+        drawerVisible={drawerDetail.visible}
+        record={drawerDetail.record}
+        onChange={(v) => {
+          setDrawerDetail(origin => ({
+            ...origin,
+            visible: v
+          }));
+        }}
+      />
+    </>
+  );
+}
+
+export default connect(({ {{camelCase pageName}}, loading }) => ({
+  {{camelCase pageName}},
+  loading: loading.models.{{camelCase pageName}}
+}))({{pascalCase pageName}}List);

@@ -1,0 +1,202 @@
+[
+	{
+		"title": "ID",
+		"dataIndex": "id",
+		"width": 60,
+		"fixed": "left",
+    "show": false,
+    "sorter": true,
+		"hideInTable": false,
+		"hideInSearch": true,
+		"hideInForm": true
+	},
+  {
+    "title": "Dự án",
+    "dataIndex": "projectId",
+    "width": 200,
+    "show": false,
+    "hasFilter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 1,
+      "col": 1
+    }
+  },
+  {
+    "title": "Ngày ký HĐ",
+    "dataIndex": "timeSign",
+    "width": 150,
+    "valueType": "dateTime",
+    "show": true,
+    "sorter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "hideInForm": true,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 4,
+      "col": 1
+    }
+  },
+  {
+    "title": "Mã căn",
+    "dataIndex": "fullCodeApartment",
+    "width": 100,
+    "show": true,
+    "hasFilter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 2,
+      "col": 1
+    }
+  },
+	{
+		"title": "Mã căn rút gọn",
+		"dataIndex": "shortCodeApartment",
+		"width": 120,
+    "show": true,
+		"hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "filters": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 1,
+			"col": 1
+		}
+	},
+	{
+		"title": "Khách hàng",
+		"dataIndex": "customerId",
+		"width": 120,
+    "show": true,
+		"hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "filters": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 2,
+			"col": 2
+		}
+	},
+	{
+		"title": "Ảnh HĐ",
+		"dataIndex": "evidenceImage",
+		"width": 200,
+    "show": false,
+		"hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 3,
+			"col": 1
+		}
+	},
+	{
+		"title": "Giá",
+		"dataIndex": "totalPrice",
+		"width": 200,
+    "valueType": "digit",
+    "show": true,
+		"hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 2,
+			"col": 2
+		}
+	},
+	{
+		"title": "Lý do hủy",
+		"dataIndex": "cancelReason",
+		"width": 120,
+    "show": false,
+    "filters": true,
+		"hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 4,
+			"col": 1
+		}
+	},
+  {
+		"title": "Khác xác nhận",
+		"dataIndex": "userConfirm",
+		"width": 120,
+    "show": false,
+    "filters": true,
+		"hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 4,
+			"col": 1
+		}
+	},
+  {
+		"title": "Id căn hộ",
+		"dataIndex": "apartmentId",
+		"width": 120,
+    "show": false,
+    "filters": true,
+		"hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 4,
+			"col": 1
+		}
+	},
+	{
+		"title": "Trạng thái",
+		"dataIndex": "status",
+		"width": 120,
+    "show": false,
+    "filters": true,
+		"hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "valueEnum": {
+      "success": { "text": "Hoạt động", "status": "Processing", "color": "#ec3b3b", "isText": true },
+      "false": { "text": "Dừng", "status": "Default", "color": "#ec3b3b", "isText": true }
+    },
+		"formPattern": {
+			"card": "Thông tin khác",
+			"row": 2,
+			"col": 1
+		}
+	},
+	{
+		"title": "Ngày tạo",
+		"dataIndex": "createdAt",
+		"width": 150,
+    "show": false,
+		"valueType": "dateTime",
+    "sorter": true,
+		"hideInTable": false,
+		"hideInSearch": false,
+		"hideInForm": true
+	},
+	{
+		"title": "Ngày sửa",
+		"dataIndex": "updatedAt",
+		"width": 150,
+		"valueType": "dateTime",
+    "sorter": true,
+		"hideInTable": false,
+		"hideInSearch": false,
+		"hideInForm": true,
+    "show": false
+	}
+]

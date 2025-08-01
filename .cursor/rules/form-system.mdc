@@ -1,0 +1,150 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Form System Architecture Guide
+
+## Overview
+The Form system is a comprehensive form builder solution consisting of dynamic form rendering, schema configuration, and flexible layouts. It supports multiple widget types and conditional logic.
+
+## Core Form Components Structure
+
+### Main Form Components
+- **Entry Point**: [FormViewer.tsx](mdc:src/routes/default/form/FormViewer.tsx) - Router entry and container
+- **Core Logic**: [FormCtrl.tsx](mdc:src/controls/layouts/schemaTemplate/FormCtrl.tsx) - Main form logic component
+- **Schema Template**: [src/controls/layouts/schemaTemplate/](mdc:src/controls/layouts/schemaTemplate/) - Template layouts
+
+### Configuration Components
+- **Schema Editor**: [SchemaEditor.tsx](mdc:src/controls/editors/SchemaEditor.tsx) - Field configuration tool
+- **Schema Setting**: [SchemaSetting.tsx](mdc:src/controls/settings/SchemaSetting.tsx) - Form layout settings
+- **Button Editor**: [ButtonEditor.tsx](mdc:src/controls/editors/ButtonEditor.tsx) - Action button configuration
+- **API Editor**: [APIEditor.tsx](mdc:src/controls/editors/APIEditor.tsx) - API endpoint management
+
+### Layout Components
+- **Form Layouts**: [src/controls/layouts/](mdc:src/controls/layouts/)
+  - [FormOneColumn.tsx](mdc:src/controls/layouts/FormOneColumn.tsx) - Flexible column layout
+  - [FormTwoColumn.tsx](mdc:src/controls/layouts/FormTwoColumn.tsx) - Two-column fixed layout
+
+### Schema Components
+- **Base Component**: [Base.tsx](mdc:src/packages/pro-component/schema/Base.tsx) - Field renderer
+- **Widget Library**: [src/packages/pro-component/schema/](mdc:src/packages/pro-component/schema/) - All form widgets
+- **Form Schema**: [index.tsx](mdc:src/packages/pro-component/schema/index.tsx) - Main form component
+
+## Navigation Patterns
+
+### Form Development Workflow
+1. Start with [FormViewer.tsx](mdc:src/routes/default/form/FormViewer.tsx) for routing
+2. Use [FormCtrl.tsx](mdc:src/controls/layouts/schemaTemplate/FormCtrl.tsx) for business logic
+3. Configure fields in [SchemaEditor.tsx](mdc:src/controls/editors/SchemaEditor.tsx)
+4. Set layout in [SchemaSetting.tsx](mdc:src/controls/settings/SchemaSetting.tsx)
+5. Add widgets from [src/packages/pro-component/schema/](mdc:src/packages/pro-component/schema/)
+
+### When Working on Widgets
+- Check [Base.tsx](mdc:src/packages/pro-component/schema/Base.tsx) for field rendering logic
+- Look at [Widgets.tsx](mdc:src/packages/pro-component/schema/Widgets.tsx) for widget exports
+- Review specific widgets in [src/packages/pro-component/schema/](mdc:src/packages/pro-component/schema/)
+
+### When Debugging Forms
+- Check [FormCtrl.tsx](mdc:src/controls/layouts/schemaTemplate/FormCtrl.tsx) for data flow
+- Verify schema configuration in [SchemaEditor.tsx](mdc:src/controls/editors/SchemaEditor.tsx)
+- Review API calls in [APIEditor.tsx](mdc:src/controls/editors/APIEditor.tsx)
+
+## Data Flow Patterns
+
+### Form Data Flow
+```
+URL Query → FormViewer → FormCtrl → loadData() → API → populateFields() → FormSchema → Base Components
+```
+
+### Configuration Flow
+```
+SchemaEditor → ISchemaEditorProperties[] → SchemaSetting → ISchemaSetting → FormCtrl → render
+```
+
+### Submit Flow
+```
+FormSchema.onSubmit → FormCtrl.onButtonClick → helper.callPageApi → Response → feedback
+```
+
+## Common Patterns
+
+### Creating New Widgets
+1. Create widget in [src/packages/pro-component/schema/](mdc:src/packages/pro-component/schema/)
+2. Export in [Widgets.tsx](mdc:src/packages/pro-component/schema/Widgets.tsx)
+3. Add to widget list in [SchemaEditor.tsx](mdc:src/controls/editors/SchemaEditor.tsx)
+4. Update [Base.tsx](mdc:src/packages/pro-component/schema/Base.tsx) if needed
+
+### Form Configuration
+- Use [SchemaEditor.tsx](mdc:src/controls/editors/SchemaEditor.tsx) for field setup
+- Configure layouts in [SchemaSetting.tsx](mdc:src/controls/settings/SchemaSetting.tsx)
+- Set up APIs in [APIEditor.tsx](mdc:src/controls/editors/APIEditor.tsx)
+
+### Custom Templates
+- Create in [src/controls/layouts/schemaTemplate/](mdc:src/controls/layouts/schemaTemplate/)
+- Register in schema template exports
+- Configure in [SchemaSetting.tsx](mdc:src/controls/settings/SchemaSetting.tsx)
+
+## Key Interfaces
+
+### ISchemaEditorProperties
+Located in [SchemaEditor.tsx](mdc:src/controls/editors/SchemaEditor.tsx)
+- Defines field configuration structure
+- Controls widget behavior and appearance
+
+### ISchemaSetting
+Located in [PageEditor.tsx](mdc:src/routes/default/pageManager/PageEditor.tsx)
+- Form layout configuration
+- Column settings and responsive behavior
+
+### FormCtrlProps/State
+Located in [FormCtrl.tsx](mdc:src/controls/layouts/schemaTemplate/FormCtrl.tsx)
+- Core form state management
+- Data transformation logic
+
+## Debugging Tips
+
+### Form Not Rendering
+- Check [FormViewer.tsx](mdc:src/routes/default/form/FormViewer.tsx) for proper pageInfo loading
+- Verify schema structure in [FormCtrl.tsx](mdc:src/controls/layouts/schemaTemplate/FormCtrl.tsx)
+
+### Widget Issues
+- Debug in [Base.tsx](mdc:src/packages/pro-component/schema/Base.tsx)
+- Check widget implementation in [src/packages/pro-component/schema/](mdc:src/packages/pro-component/schema/)
+
+### API Problems
+- Review [APIEditor.tsx](mdc:src/controls/editors/APIEditor.tsx) configuration
+- Check helper.callPageApi in [FormCtrl.tsx](mdc:src/controls/layouts/schemaTemplate/FormCtrl.tsx)
+
+### Layout Issues
+- Check [FormOneColumn.tsx](mdc:src/controls/layouts/FormOneColumn.tsx) or [FormTwoColumn.tsx](mdc:src/controls/layouts/FormTwoColumn.tsx)
+- Verify settings in [SchemaSetting.tsx](mdc:src/controls/settings/SchemaSetting.tsx)
+
+## File Dependencies
+
+### Core Dependencies
+- [FormViewer.tsx](mdc:src/routes/default/form/FormViewer.tsx) depends on [FormCtrl.tsx](mdc:src/controls/layouts/schemaTemplate/FormCtrl.tsx)
+- [FormCtrl.tsx](mdc:src/controls/layouts/schemaTemplate/FormCtrl.tsx) depends on [FormSchema](mdc:src/packages/pro-component/schema/index.tsx)
+- All layouts depend on [Base.tsx](mdc:src/packages/pro-component/schema/Base.tsx)
+
+### Configuration Dependencies
+- [SchemaEditor.tsx](mdc:src/controls/editors/SchemaEditor.tsx) uses [OrderableList.tsx](mdc:src/controls/editors/OrderableList.tsx)
+- [SchemaSetting.tsx](mdc:src/controls/settings/SchemaSetting.tsx) uses layout components
+- All editors use [ArrayEditor.tsx](mdc:src/controls/editors/ArrayEditor.tsx) for complex data
+
+## Best Practices
+
+### Performance
+- Use React.memo for layout components
+- Implement useMemo for derived values
+- Avoid inline functions in render methods
+
+### State Management
+- Keep form state in [FormCtrl.tsx](mdc:src/controls/layouts/schemaTemplate/FormCtrl.tsx)
+- Use immutable updates for schema changes
+- Leverage controlled components pattern
+
+### Widget Development
+- Follow Base component interface
+- Implement proper onChange handlers
+- Support all schema properties where applicable

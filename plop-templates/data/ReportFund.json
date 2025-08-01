@@ -1,0 +1,157 @@
+[
+    {
+      "title": "ID",
+      "dataIndex": "id",
+      "width": 60,
+      "fixed": "left",
+      "sorter": true,
+      "hideInTable": false,
+      "hideInSearch": true,
+      "hideInForm": true
+    },
+    {
+      "title": "Toà nhà/phân khu",
+      "dataIndex": "buildingCode-subdivision",
+      "width": 200,
+      "hasFilter": true,
+      "hideInTable": false,
+      "hideInSearch": false
+    },
+    {
+      "title": "Tầng/hàng",
+      "dataIndex": "floorCode-row",
+      "width": 200,
+      "hasFilter": false,
+      "hideInTable": false,
+      "hideInSearch": true
+    },
+    {
+      "title": "Số nhà",
+      "dataIndex": "apartmentCode",
+      "width": 200,
+      "hasFilter": false,
+      "hideInTable": false,
+      "hideInSearch": true
+    },
+    {
+      "title": "Mã căn",
+      "dataIndex": "fullCode",
+      "width": 200,
+      "hasFilter": false,
+      "hideInTable": false,
+      "hideInSearch": false
+    },
+    {
+      "title": "Tình trạng",
+      "dataIndex": "status",
+      "width": 200,
+      "hasFilter": false,
+      "hideInTable": true,
+      "hideInSearch": false
+    },
+    {
+      "title": "Tổng giá trị căn",
+      "dataIndex": "totalPrice",
+      "width": 200,
+      "hasFilter": false,
+      "hideInTable": false,
+      "hideInSearch": false
+    },
+    {
+      "title": "Tổng giá theo BCTT đê tính tỷ lệ thanh toán",
+      "dataIndex": "totalPriceWithProcedure",
+      "width": 200,
+      "hasFilter": false,
+      "hideInTable": false
+    },
+    {
+      "title": "CD SALES",
+      "dataIndex": "directorSale",
+      "width": 150,
+      "hideInTable": false,
+      "hideInSearch": false
+    },
+    {
+      "title": "Đại lý nhận quỹ",
+      "dataIndex": "agencyName",
+      "width": 150,
+      "hideInTable": false,
+      "hideInSearch": false
+    },
+    {
+        "title": "Tổng thu",
+        "dataIndex": "totalCollect",
+        "width": 150,
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "%Thu tiền",
+        "dataIndex": "percentCollect",
+        "width": 150,
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "Ngày báo bán",
+        "dataIndex": "daySaled",
+        "width": 150,
+        "valueType": "dateTime",
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "Ngày đủ cọc",
+        "dataIndex": "dayEnoughDeposit",
+        "width": 150,
+        "valueType": "dateTime",
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "Ngày TTDC",
+        "dataIndex": "dayTTDC",
+        "width": 150,
+        "valueType": "dateTime",
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "Ngày hợp đồng mua bán",
+        "dataIndex": "dayHDMB",
+        "width": 150,
+        "valueType": "dateTime",
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "Tình trạng thủ tục",
+        "dataIndex": "statusProcedure",
+        "width": 150,
+        "valueType": "dateTime",
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "Cảnh báo chậm thủ tục quá 7 ngày",
+        "dataIndex": "warning7Days",
+        "width": 150,
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "Tình trạng chi tiết",
+        "dataIndex": "statusDetail",
+        "width": 150,
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "Ghi chú",
+        "dataIndex": "note",
+        "width": 150,
+        "hideInTable": false,
+        "hideInSearch": false
+    }
+  ]
+  

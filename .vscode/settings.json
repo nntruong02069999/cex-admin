@@ -1,0 +1,7 @@
+{
+    "i18n-ally.localesPaths": [
+        "plop-templates/locales",
+        "src/lngProvider/locales",
+        "src/packages/pro-table/locale"
+    ]
+}

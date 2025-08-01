@@ -1,0 +1,15 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Constants Guide
+
+The [`src/constants/`](mdc:src/constants) directory contains application-wide constants, enums, and configuration values.
+
+- [`constants.ts`](mdc:src/constants/constants.ts): Defines color arrays, data types, default values, and debug flags.
+- [`enums.ts`](mdc:src/constants/enums.ts): Enumerations for use throughout the app.
+- [`ThemeSetting.ts`](mdc:src/constants/ThemeSetting.ts): Theme-related constants.
+- [`HttpStatusCode.ts`](mdc:src/constants/HttpStatusCode.ts): HTTP status code mappings.
+
+Constants are imported wherever fixed values or configuration are needed, ensuring consistency and maintainability.

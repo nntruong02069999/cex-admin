@@ -1,0 +1,554 @@
+.invitation-reward-page {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 20px;
+
+  .invitation-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+
+    .ant-card-body {
+      padding: 0;
+    }
+  }
+}
+
+// Header styles
+.invitation-header {
+  padding: 24px 24px 0;
+  background: #fff;
+
+  .header-title {
+    margin-bottom: 24px;
+
+    h2 {
+      margin: 0 0 8px 0;
+      color: #262626;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .header-description {
+      margin: 0;
+      color: #8c8c8c;
+      font-size: 14px;
+    }
+  }
+
+  .invitation-tabs {
+    .ant-tabs-nav {
+      margin-bottom: 0;
+    }
+
+    .invitation-tab-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .tab-label {
+        font-weight: 500;
+      }
+
+      .anticon {
+        font-size: 16px;
+      }
+    }
+
+    // Tab-specific colors
+    .invitation-tab-pending {
+      .ant-tabs-tab-active {
+        .invitation-tab-title .anticon {
+          color: #faad14;
+        }
+      }
+    }
+
+    .invitation-tab-qualified {
+      .ant-tabs-tab-active {
+        .invitation-tab-title .anticon {
+          color: #52c41a;
+        }
+      }
+    }
+
+    .invitation-tab-paid {
+      .ant-tabs-tab-active {
+        .invitation-tab-title .anticon {
+          color: #1890ff;
+        }
+      }
+    }
+
+    .invitation-tab-expired {
+      .ant-tabs-tab-active {
+        .invitation-tab-title .anticon {
+          color: #ff4d4f;
+        }
+      }
+    }
+  }
+}
+
+// Filters styles
+.invitation-filters {
+  padding: 24px;
+  background: #fafafa;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+
+  .ant-row {
+    align-items: flex-end;
+  }
+
+  .ant-input,
+  .ant-picker,
+  .ant-select {
+    height: 36px;
+  }
+
+  .ant-btn {
+    height: 36px;
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .ant-col {
+      margin-bottom: 16px;
+    }
+  }
+}
+
+// Table styles
+.invitation-table {
+  .ant-table {
+    background: #fff;
+
+    .ant-table-thead > tr > th {
+      background: #fafafa;
+      border-bottom: 2px solid #f0f0f0;
+      font-weight: 600;
+      color: #262626;
+    }
+
+    .ant-table-tbody > tr:hover > td {
+      background: #f5f5f5;
+    }
+  }
+
+  // Custom cell styles
+  .user-info {
+    .phone {
+      margin-bottom: 4px;
+    }
+
+    .invite-code {
+      margin-bottom: 2px;
+    }
+
+    .uuid {
+      color: #999;
+    }
+  }
+
+  // User info card styles
+  .user-info-card {
+    padding: 8px 12px;
+    border: 1px solid #f0f0f0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #fafafa;
+
+    &:hover {
+      border-color: #1890ff;
+      background-color: #f6ffed;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .user-info-content {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+
+      .user-avatar {
+        margin-right: 6px;
+        flex-shrink: 0;
+
+        &.referrer {
+          .ant-avatar {
+            background-color: #52c41a;
+          }
+        }
+
+        &.invitee {
+          .ant-avatar {
+            background-color: #1890ff;
+          }
+        }
+      }
+
+      .user-details {
+        flex: 1;
+        min-width: 0;
+
+        .phone-row {
+          display: flex;
+          align-items: center;
+          margin-bottom: 2px;
+
+          .phone-icon {
+            font-size: 12px;
+            color: #666;
+            margin-right: 4px;
+          }
+
+          .phone-text {
+            font-size: 13px;
+            color: #262626;
+            font-weight: 600;
+          }
+        }
+
+        .invite-code-row {
+          margin-bottom: 2px;
+
+          .invite-code-text {
+            font-size: 11px;
+            background-color: #f0f0f0;
+            padding: 1px 4px;
+            border-radius: 2px;
+            font-family: monospace;
+            color: rgba(0, 0, 0, 0.45);
+          }
+        }
+
+        .uuid-row {
+          .uuid-text {
+            font-size: 10px;
+            color: #999;
+          }
+        }
+      }
+    }
+  }
+
+  .turnover-progress {
+    .ant-progress {
+      margin-bottom: 4px;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: #666;
+    }
+  }
+
+  .time-info {
+    > div {
+      margin-bottom: 2px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // Status colors
+  .ant-tag {
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  // Action buttons
+  .ant-btn-link {
+    padding: 0;
+    height: auto;
+    line-height: 1.4;
+  }
+
+  .ant-btn-sm {
+    height: 28px;
+    padding: 0 8px;
+    font-size: 12px;
+  }
+}
+
+// Responsive table
+@media (max-width: 1200px) {
+  .invitation-table {
+    .ant-table {
+      font-size: 13px;
+    }
+
+    .user-info {
+      .phone {
+        font-size: 13px;
+      }
+
+      .invite-code,
+      .uuid {
+        font-size: 11px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .invitation-reward-page {
+    padding: 10px;
+  }
+
+  .invitation-header {
+    padding: 16px 16px 0;
+
+    .header-title {
+      h2 {
+        font-size: 20px;
+      }
+
+      .header-description {
+        font-size: 13px;
+      }
+    }
+
+    .invitation-tabs {
+      .invitation-tab-title {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+
+        .tab-label {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+
+  .invitation-filters {
+    padding: 16px;
+  }
+
+  .invitation-table {
+    .ant-table {
+      .ant-table-thead > tr > th,
+      .ant-table-tbody > tr > td {
+        padding: 8px 4px;
+        font-size: 12px;
+      }
+    }
+
+    .user-info {
+      .phone {
+        font-size: 12px;
+      }
+
+      .invite-code,
+      .uuid {
+        font-size: 10px;
+      }
+    }
+
+    .time-info {
+      font-size: 10px;
+    }
+  }
+}
+
+// Loading and empty states
+.ant-table-placeholder {
+  .ant-empty {
+    margin: 40px 0;
+  }
+}
+
+.ant-spin-container {
+  min-height: 200px;
+}
+
+// Progress bar customization
+.turnover-progress {
+  .ant-progress-bg {
+    transition: all 0.3s ease;
+  }
+
+  .ant-progress-success-bg {
+    background: #52c41a;
+  }
+}
+
+// Modal customization
+.ant-modal {
+  .ant-modal-header {
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .ant-modal-body {
+    padding: 24px;
+
+    p {
+      margin-bottom: 12px;
+      line-height: 1.6;
+
+      strong {
+        display: inline-block;
+        width: 140px;
+        color: #262626;
+      }
+    }
+  }
+
+  // Invitation detail modal specific styling
+  &.invitation-detail-modal {
+    .ant-modal-header {
+      background: linear-gradient(90deg, #f0f9ff 0%, #ffffff 100%);
+      border-bottom: 2px solid #1890ff;
+
+      .ant-modal-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1890ff;
+      }
+    }
+
+    .ant-modal-body {
+      padding: 24px;
+      background: #fafafa;
+    }
+
+    .invitation-detail-content {
+      .ant-card {
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        border: 1px solid #f0f0f0;
+
+        .ant-card-head {
+          background: #fafafa;
+          border-bottom: 1px solid #f0f0f0;
+          min-height: 48px;
+
+          .ant-card-head-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #262626;
+          }
+        }
+
+        .ant-card-body {
+          padding: 16px;
+        }
+      }
+
+      .ant-descriptions-item-label {
+        font-weight: 500;
+        color: #595959;
+        width: 100px;
+      }
+
+      .ant-descriptions-item-content {
+        color: #262626;
+      }
+
+      .ant-divider-horizontal.ant-divider-with-text-left {
+        font-size: 16px;
+        font-weight: 600;
+        color: #262626;
+        margin: 24px 0 16px 0;
+
+        &::before,
+        &::after {
+          border-top-color: #d9d9d9;
+        }
+
+        .ant-divider-inner-text {
+          color: #262626;
+          background: #fafafa;
+          padding: 0 16px;
+          border: 1px solid #d9d9d9;
+          border-radius: 6px;
+        }
+      }
+
+      .ant-progress {
+        .ant-progress-bg {
+          transition: all 0.4s ease;
+        }
+      }
+
+      .ant-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        font-weight: 500;
+        border-radius: 6px;
+      }
+    }
+  }
+}
+
+// Badge customization
+.ant-badge {
+  .ant-badge-count {
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    font-size: 12px;
+    line-height: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 0 1px #fff;
+  }
+}
+
+// Button group spacing
+.ant-space {
+  .ant-space-item {
+    display: flex;
+    align-items: center;
+  }
+}
+
+// Custom scrollbar for table
+.ant-table-body {
+  &::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
+}
+
+// Utility classes
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-nowrap {
+  white-space: nowrap;
+}
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

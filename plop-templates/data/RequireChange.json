@@ -1,0 +1,129 @@
+[
+    {
+      "title": "ID",
+      "dataIndex": "id",
+      "width": 60,
+      "fixed": "left",
+      "hideInTable": false,
+      "hideInSearch": true,
+      "hideInForm": true
+    },
+    {
+        "title": "Tên công việc",
+        "dataIndex": "jobId",
+        "width": 200,
+        "hasFilter": "true",
+        "hideInTable": false,
+        "hideInSearch": false,
+        "rules": [
+          {
+            "required": true,
+            "message": "Công việc không được trống"
+          }
+        ],
+        "formPattern": {
+          "card": "card1",
+          "row": 1,
+          "col": 1
+        }
+      },
+    {
+      "title": "Người tạo",
+      "dataIndex": "creatorId",
+      "width": 200,
+      "hasFilter": "true",
+      "hideInTable": false,
+      "hideInSearch": false,
+      "rules": [
+        {
+          "required": true,
+          "message": "Người tạo không được trống"
+        }
+      ],
+      "formPattern": {
+        "card": "card1",
+        "row": 1,
+        "col": 1
+      }
+    },
+    {
+      "title": "Người duyệt",
+      "dataIndex": "approveUserId",
+      "width": 120,
+      "filters": "true",
+      "hideInTable": false,
+      "hideInSearch": false,
+      "allowNull": true
+    },
+    {
+      "title": "Ngày duyệt",
+      "dataIndex": "approveDate",
+      "width": 150,
+      "valueType": "dateTime",
+      "hideInTable": false,
+      "hideInSearch": false,
+      "hideInForm": true,
+      "allowNull": true
+    },
+    {
+        "title": "Mô tả",
+        "dataIndex": "description",
+        "width": 150,
+        "valueType": "dateTime",
+        "hideInTable": false,
+        "hideInSearch": false,
+		"formPattern": {
+			"card": "Thông tin khác",
+			"row": 1,
+			"col": 1
+		}
+    },
+    {
+        "title": "DeadLine thay đổi",
+        "dataIndex": "deadlineChange",
+        "width": 150,
+        "valueType": "dateTime",
+        "hideInTable": false,
+        "hideInSearch": false,
+        "hideInForm": true
+      },
+      {
+        "title": "DeadLine hiện tại",
+        "dataIndex": "deadlineNow",
+        "width": 150,
+        "valueType": "dateTime",
+        "hideInTable": false,
+        "hideInSearch": false,
+        "hideInForm": true,
+        "allowNull": true
+      },
+      {
+		"title": "Trạng thái",
+		"dataIndex": "status",
+		"width": 200,
+		"filters": true,
+		"hasFilter": false,
+		"hideInTable": false,
+		"hideInSearch": false,
+		"valueEnum": {
+			"true": {
+				"text": "Đã duyệt",
+				"status": "approved",
+				"color": "#ec3b3b",
+				"isText": true
+			},
+			"false": {
+				"text": "Đang đợi",
+				"status": "pending",
+				"color": "#ec3b3b",
+				"isText": true
+			}
+		},
+		"formPattern": {
+			"card": "Thông tin khác",
+			"row": 2,
+			"col": 1
+		}
+	}
+    
+  ]

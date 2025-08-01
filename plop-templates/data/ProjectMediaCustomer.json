@@ -1,0 +1,93 @@
+[
+    {
+      "title": "ID",
+      "dataIndex": "id",
+      "width": 60,
+      "fixed": "left",
+      "sorter": true,
+      "hideInTable": false,
+      "hideInSearch": true,
+      "hideInForm": true
+    },
+    {
+        "title": "Tên người bán",
+        "dataIndex": "saleName",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "ProjectId",
+        "dataIndex": "projectId",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Tên khách quan tâm",
+        "dataIndex": "name",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Số điện thoại",
+        "dataIndex": "phone",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Địa chỉ",
+        "dataIndex": "address",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Email",
+        "dataIndex": "email",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Facebook",
+        "dataIndex": "facebook",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Bình luận",
+        "dataIndex": "comments",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    }
+]
+  

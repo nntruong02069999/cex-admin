@@ -1,0 +1,112 @@
+[
+  {
+    "title": "ID",
+    "dataIndex": "id",
+    "width": 60,
+    "fixed": "left",
+    "sorter": true,
+    "hideInTable": false,
+    "hideInSearch": true,
+    "hideInForm": true
+  },
+  {
+    "title": "Tên bài giảng",
+    "dataIndex": "name",
+    "width": 200,
+    "hasFilter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 1,
+      "col": 1
+    }
+  },
+  {
+    "title": "Hình ảnh",
+    "dataIndex": "thumbnail",
+    "width": 200,
+    "hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 3,
+      "col": 1
+    }
+  },
+  {
+    "title": "Lớp học",
+    "dataIndex": "classId",
+    "width": 200,
+    "hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 2,
+      "col": 2
+    }
+  },
+  {
+    "title": "Vị trí",
+    "dataIndex": "sequence",
+    "width": 200,
+    "hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 4,
+      "col": 1
+    }
+  },
+  {
+    "title": "Trạng thái",
+    "dataIndex": "isActive",
+    "width": 200,
+    "filters": true,
+    "hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "valueEnum": {
+      "true": {
+        "text": "Hoạt động",
+        "status": "Processing",
+        "color": "#ec3b3b",
+        "isText": true
+      },
+      "false": {
+        "text": "Dừng",
+        "status": "Default",
+        "color": "#ec3b3b",
+        "isText": true
+      }
+    },
+    "formPattern": {
+      "card": "Thông tin khác",
+      "row": 2,
+      "col": 1
+    }
+  },
+  {
+    "title": "Ngày tạo",
+    "dataIndex": "createdAt",
+    "width": 150,
+    "valueType": "dateTime",
+    "sorter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "hideInForm": true
+  },
+  {
+    "title": "Ngày sửa",
+    "dataIndex": "updatedAt",
+    "width": 150,
+    "valueType": "dateTime",
+    "sorter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "hideInForm": true
+  }
+]

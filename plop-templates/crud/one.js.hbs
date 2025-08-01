@@ -1,0 +1,177 @@
+import React, { useEffect, useState } from 'react';
+import { Card, Button, Form, Col, Row, Popover } from 'antd';
+import _ from 'lodash';
+import { CloseCircleOutlined } from '@ant-design/icons';
+import { connect, routerRedux } from 'dva';
+import { FormInputRender } from 'packages/pro-table/form';
+import { useIntl } from 'packages/pro-table/component/intlContext';
+import FooterToolbar from 'packages/FooterToolbar';
+{{#if hasUpload}}
+import Upload from 'components/Upload';
+{{/if}}
+import * as enums from 'util/enums';
+import { camelCaseToDash } from 'util/helpers';
+
+const RESOURCE = "{{camelCase pageName}}";
+const fieldLabels = {{{JSONstringify fieldLabels}}};
+const {{pascalCase pageName}}Form = ({ {{camelCase pageName}}: { formTitle, formData }, dispatch, submitting, match: { params }, history, ...rest }) => {
+  const intl = useIntl();
+  const [form] = Form.useForm();
+  const [error, setError] = useState([]);
+  const [width, setWidth] = useState('100%');
+  const getErrorInfo = (errors) => {
+    const errorCount = errors.filter((item) => item.errors.length > 0).length;
+    if (!errors || errorCount === 0) {
+      return null;
+    }
+    const scrollToField = (fieldKey) => {
+      const labelNode = document.querySelector(`label[for="${fieldKey}"]`);
+      if (labelNode) {
+        labelNode.scrollIntoView(true);
+      }
+    };
+    const errorList = errors.map((err) => {
+      if (!err || err.errors.length === 0) {
+        return null;
+      }
+      const key = err.name[0];
+      return (
+        <li key={key} className="nv-error-list-item" onClick={() => scrollToField(key)}>
+          <CloseCircleOutlined className="nv-error-icon" />
+          <div className="nv-error-message">{err.errors[0]}</div>
+          <div className="nv-error-field">{fieldLabels[key]}</div>
+        </li>
+      );
+    });
+    return (
+      <span className="nv-error-icon">
+        <Popover
+          title="Thông tin lỗi"
+          content={errorList}
+          overlayClassName="nv-error-popover"
+          trigger="click"
+          getPopupContainer={(trigger) => {
+            if (trigger && trigger.parentNode) {
+              return trigger.parentNode;
+            }
+            return trigger;
+          }}
+        >
+          <CloseCircleOutlined /> &nbsp;{errorCount || 0} lỗi
+        </Popover>
+      </span>
+    );
+  };
+
+  const onFinish = (values) => {
+    setError([]);
+    const data = _.cloneDeep(values);
+    dispatch({
+      type: `${RESOURCE}/submit`,
+      payload: data,
+			callback: (res) => {
+				if (res && !res.error) {
+          history.goBack();
+        }
+			}
+    });
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+    setError(errorInfo.errorFields);
+  };
+
+  useEffect(() => {
+    dispatch({
+      type: `${RESOURCE}/loadForm`,
+      payload: {
+        type: params.id !== 'add' ? 'E' : 'A',
+        id: params.id !== 'add' ? params.id : null
+      },
+    });
+  },[])
+
+  useEffect(() => {
+    form.resetFields();
+    form.setFieldsValue({
+      ...formData
+    });
+  },[formData]);
+
+  useEffect(() => {
+    function resizeFooterToolbar() {
+      requestAnimationFrame(() => {
+        const sider = document.querySelectorAll('.ant-layout-sider')[0];
+        if (sider) {
+          const widthCur = `calc(100% - ${sider.style.width})`;
+          if (width !== widthCur) {
+            setWidth(width);
+          }
+        }
+      });
+    };
+    window.addEventListener('resize', resizeFooterToolbar, { passive: true });
+    return function cleanup() {
+      window.removeEventListener('resize', resizeFooterToolbar);
+    };
+  })
+
+  if(params.id === 'add' || (formData && formData.id && formData.id !== 'add')){
+    return (
+      <Form
+        className="ant-advanced-search-form"
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        hideRequiredMark
+        initialValues=\{{ ...formData }}
+      >
+        <Card title="Thông tin cơ bản" className="gx-card" bordered={false}>
+          {{#each dataForm}}
+          <Row gutter={24}>
+            {{#each cols}}
+              <Col xxl={18} xl={18} lg={18} md={18} sm={24} xs={24}>
+                <Form.Item
+                  label={fieldLabels['{{col.dataIndex}}']}
+                  name="{{col.dataIndex}}"
+                  {{#if col.rules}}
+                  rules={ {{{JSONstringify col.rules}}} }
+                  {{/if}}
+                >
+                  {{#if (unlessEq col.valueType "avatar")}}
+                  <FormInputRender
+                    item={ {{{JSONstringify col}}} }
+                    intl={intl}
+                  />
+                  {{/if}}
+                  {{#if (eq col.valueType "avatar")}}
+                  <Upload />
+                  {{/if}}
+                </Form.Item>
+              </Col>
+            {{/each}}
+          </Row>
+          {{/each}}
+        </Card>
+        <FooterToolbar style=\{{ width }}>
+          {getErrorInfo(error)}
+          <Button type="primary" onClick={() => form.submit()} loading={submitting}>
+            {params.id === 'add' ? "Thêm mới" : "Chỉnh sửa"}
+          </Button>
+          <Button type="default" style=\{{ color: '#fa5656' }} onClick={() => { history.goBack() }}>
+            {`Quay lại`}
+          </Button>
+        </FooterToolbar>
+      </Form>
+    );
+  }
+  return <></>;
+};
+
+export default connect(({ {{camelCase pageName}}, loading, router }) => ({
+  submitting: loading.effects['{{camelCase pageName}}/submit'],
+  {{camelCase pageName}},
+	router
+}))({{pascalCase pageName}}Form);

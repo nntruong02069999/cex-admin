@@ -1,0 +1,257 @@
+import dayjs from 'dayjs';
+import { message } from 'antd';
+import get from 'lodash/get';
+import * as {{camelCase pageName}}Services from 'services/{{camelCase pageName}}';
+
+const RESOURCE = '{{camelCase pageName}}';
+const transfromDocument = (record) => {
+
+  if (record.createdAt) {
+    const createdAt = record.createdAt;
+    record.createdAt = dayjs(createdAt);
+  }
+  if (record.updatedAt) {
+    const updatedAt = record.updatedAt;
+    record.updatedAt = dayjs(updatedAt);
+  }
+  if (record.isActive) {
+    record.isActive = `${record.isActive}`;
+  }
+
+  return record;
+};
+
+export default {
+  namespace: `${RESOURCE}`,
+
+  state: {
+    data: {
+      list: [],
+      pagination: {
+        total: 0,
+        totalPages: 0,
+        page: 1,
+        current: 1,
+        pageSize: parseInt(process.env.PAGE_SIZE || 10, 10)
+      },
+    },
+    submitting: false,
+    formTitle: '',
+    formID: '',
+    formVisible: false,
+    formData: {},
+  },
+
+  effects: {
+    *fetch({ payload, callback }, { call, put }) {
+      const pageSize = get(payload, ["pageSize"], parseInt(process.env.PAGE_SIZE || 10, 10));
+      let payloadRet = {};
+      let list = [];
+      try {
+        const { status, data = {} } = yield call({{camelCase pageName}}Services.getList, payload);
+        if (status == 200) {
+          let list = [];
+          if (data.data) {
+            list = get(data, "data", []).map(item => {
+              transfromDocument(item);
+              return item;
+            });
+          }
+          payloadRet = {
+            list,
+            pagination: {
+              defaultCurrent: get(payload, "current", 1),
+              defaultPageSize: pageSize,
+              pageSize,
+              page: get(payload, "page", 1),
+              current: get(payload, "current", 1),
+              skip: get(payload, "skip", 0),
+              limit: get(payload, "limit", pageSize),
+              total: get(data, "count", 0),
+              totalPages: Math.floor((get(data, "count", 0) + pageSize - 1) / pageSize)
+            }
+          };
+          yield put({
+            type: 'save',
+            payload: payloadRet
+          });
+        }
+      } catch (error) {
+        message.error(error.message);
+        // throw error;
+      }
+      if (callback) {
+        callback(list);
+      }
+    },
+    *loadForm({ payload, callback }, { put, all }) {
+      yield put({
+        type: 'changeFormVisible',
+        payload: true,
+      });
+
+      yield all([
+        put({
+          type: 'saveFormType',
+          payload: payload.type,
+        }),
+        put({
+          type: 'saveFormID',
+          payload: '',
+        })
+      ]);
+      if (payload.type === 'A') {
+        yield all([
+          put({
+            type: 'saveFormTitle',
+            payload: 'Thêm mới',
+          }),
+          put({
+            type: 'saveFormData',
+            payload: {
+              status: "true"
+            },
+          }),
+        ]);
+      }
+      else if (payload.type === 'E') {
+        yield all([
+          put({
+            type: 'saveFormTitle',
+            payload: `Chỉnh sửa ${payload.id}`,
+          }),
+          put({
+            type: 'saveFormID',
+            payload: payload.id,
+          }),
+          put({
+            type: 'fetchForm',
+            payload: {
+              id: payload.id
+            },
+          }),
+        ]);
+      }
+      if (callback) {
+        callback();
+      }
+    },
+    *fetchForm({ payload, callback }, { call, put }) {
+      let response;
+      let record;
+      try {
+        response = yield call({{camelCase pageName}}Services.get, payload.id, payload);
+        if (response && response.data && response.data.data && response.data.data.length > 0) {
+          record = transfromDocument(response.data.data[0]);
+        }
+        yield [
+          put({
+            type: 'saveFormData',
+            payload: record,
+          }),
+        ];
+      } catch (error) {
+        console.log('*fetch -> error', error);
+        message.error(error.message);
+        // throw error;
+      }
+      if (callback) {
+        callback(record);
+      }
+    },
+    *submit({ payload, callback }, { call, put, select }) {
+      yield put({
+        type: 'changeSubmitting',
+        payload: true,
+      });
+
+      const params = { ...payload };
+      const formType = yield select(state => state[`${RESOURCE}`].formType);
+
+      let success = false;
+      let response;
+      let errorObj;
+      try {
+        if (formType === 'E') {
+          const id = yield select(state => state[`${RESOURCE}`].formID);
+          if (!params.id) {
+            params.id = id;
+          }
+          response = yield call({{camelCase pageName}}Services.update, id, params);
+          if (response && response.status == 200 && response.data) {
+            success = true;
+          }
+        } else {
+          response = yield call({{camelCase pageName}}Services.create, params);
+          if (response && response.status == 200 && response.data) {
+            success = true;
+          }
+        }
+      } catch (error) {
+        success = false;
+        errorObj = {
+          message: error.message
+        };
+      }
+
+      yield put({
+        type: 'changeSubmitting',
+        payload: false,
+      });
+
+      if (success) {
+        message.success('Thành công');
+        yield put({
+          type: 'changeFormVisible',
+          payload: false,
+        });
+        // yield put({
+        //   type: 'fetch',
+        // });
+        if (callback) {
+          callback(response);
+        }
+      } else {
+        message.error(errorObj.message, 10);
+        if (callback) {
+          callback({ error: errorObj });
+        }
+      }
+    },
+  },
+
+  reducers: {
+    save(state, action) {
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          list: action.payload.list,
+          pagination: action.payload.pagination
+        },
+      };
+    },
+    changeFormVisible(state, { payload }) {
+      return { ...state, formVisible: payload };
+    },
+    saveFormTitle(state, { payload }) {
+      return { ...state, formTitle: payload };
+    },
+    saveFormType(state, { payload }) {
+      return { ...state, formType: payload };
+    },
+    saveFormID(state, { payload }) {
+      return { ...state, formID: payload };
+    },
+    saveFormData(state, { payload }) {
+      return { ...state, formData: payload };
+    },
+    changeSubmitting(state, { payload }) {
+      return { ...state, submitting: payload };
+    },
+  },
+
+  subscription: {
+
+  }
+};

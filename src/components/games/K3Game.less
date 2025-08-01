@@ -1,0 +1,348 @@
+@import '../../theme.less';
+
+// Variables
+@primary-color: #0a8d9e;
+@secondary-color: #077888;
+@background-color: #f5f5f5;
+@text-color: #333;
+@border-color: #ddd;
+@active-color: #0a8d9e;
+@header-bg: #0a8d9e;
+@table-header-bg: #0a8d9e;
+@table-row-odd: #f9f9f9;
+@table-row-even: #fff;
+@button-primary: #0a8d9e;
+@button-secondary: #f0f0f0;
+
+// Game container
+.k3-game-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  .game-header {
+    padding: 15px 0;
+
+    h2 {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0 0 12px 0;
+      color: @text-color;
+    }
+  }
+}
+
+// Game info buttons
+.game-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
+
+  button {
+    background-color: @primary-color;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s;
+    
+    &:hover {
+      background-color: @secondary-color;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+// Time intervals
+.time-tabs {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 20px;
+
+  button {
+    background-color: @button-secondary;
+    border: 1px solid @border-color;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    
+    &:hover {
+      background-color: darken(@button-secondary, 5%);
+    }
+    
+    &.active, &[type="primary"] {
+      background-color: @button-primary;
+      color: white;
+      border-color: @button-primary;
+    }
+  }
+}
+
+// Game current status
+.game-current {
+  margin-bottom: 15px;
+  border: 1px solid @border-color;
+  border-top: none;
+
+  .section-title {
+    background-color: @header-bg;
+    color: white;
+    padding: 8px 12px;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+}
+
+.game-numbers {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 0;
+  background-color: #fff;
+
+  .number-circle {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: @primary-color;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
+    
+    &.dot-highlight {
+      background-color: #ee2634;
+      font-size: 32px;
+      line-height: 0.3;
+      padding-bottom: 5px;
+    }
+  }
+}
+
+// Game details
+.current-game-info {
+  display: flex;
+  padding: 10px 15px;
+  
+  .game-header-info {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 13px;
+    
+    span {
+      font-weight: 500;
+    }
+  }
+}
+
+// Game table
+.bet-tables-container {
+  overflow-x: auto;
+
+  .bet-table-section, .total-number-table {
+    margin-bottom: 10px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .k3-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 10px;
+    
+    th, td {
+      border: 1px solid @border-color;
+      padding: 6px 4px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    
+    th {
+      background-color: @table-header-bg;
+      color: white;
+      font-weight: 500;
+      padding: 8px 5px;
+    }
+    
+    .first-cell, .number-category {
+      background-color: rgb(0, 171, 190);
+      color: white;
+      font-weight: bold;
+      width: 50px;
+      min-width: 100px;
+      max-width: 150px;
+      text-align: center;
+      vertical-align: middle;
+
+    }
+    
+    .bet-category {
+      background-color: #f0f0f0;
+      font-weight: 500;
+      width: 140px;
+      text-align: left;
+      padding-left: 10px;
+    }
+    
+    .sub-label {
+      background-color: #f5f5f5;
+      font-weight: 500;
+      width: 140px;
+      text-align: left;
+      padding-left: 10px;
+    }
+    
+    .centered-text {
+      text-align: center;
+      font-weight: 500;
+    }
+    
+    .empty-spacer {
+      background-color: #f9f9f9;
+      border: none;
+      width: 20px;
+    }
+    
+    tr:nth-child(odd) {
+      background-color: @table-row-odd;
+    }
+    
+    tr:nth-child(even) {
+      background-color: @table-row-even;
+    }
+
+    .section-title {
+      background-color: #2f8e9e;
+      color: white;
+      font-weight: bold;
+      width: 50px;
+      min-width: 50px;
+      max-width: 50px;
+      text-align: center;
+      vertical-align: middle;
+      padding: 5px 0;
+      writing-mode: vertical-lr;
+      transform: rotate(180deg);
+    }
+  }
+}
+
+// Upcoming bets & game history
+.upcoming-bets, .game-history {
+  margin-bottom: 20px;
+  border: 1px solid @border-color;
+  border-top: none;
+  
+  .section-title {
+    background-color: @header-bg;
+    color: white;
+    padding: 8px 12px;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  
+  .k3-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    
+    th {
+      background-color: #f5f5f5;
+      font-weight: 600;
+      padding: 10px 5px;
+      font-size: 14px;
+    }
+    
+    td {
+      padding: 8px 5px;
+      border: 1px solid @border-color;
+    }
+    
+    input {
+      width: 100%;
+    }
+    
+    button {
+      padding: 0 10px;
+      background-color: @button-primary;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      
+      &:hover {
+        background-color: @secondary-color;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 1200px) {
+  .k3-game-container {
+    .current-game-info .game-header-info {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .k3-table {
+      display: block;
+      overflow-x: auto;
+    }
+  }
+}
+
+.game-countdown {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px 0;
+  
+  .countdown-digits {
+    display: flex;
+    align-items: center;
+    background: #f0f2f5;
+    padding: 8px 16px;
+    border-radius: 4px;
+    
+    .countdown-digit {
+      background: #1890ff;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 24px;
+      font-weight: bold;
+      min-width: 40px;
+      text-align: center;
+    }
+    
+    .countdown-separator {
+      margin: 0 8px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #1890ff;
+    }
+  }
+}

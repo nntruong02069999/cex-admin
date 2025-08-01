@@ -1,0 +1,123 @@
+[
+  {
+    "title": "ID",
+    "dataIndex": "id",
+    "width": 60,
+    "fixed": "left",
+    "sorter": true,
+    "hideInTable": false,
+    "hideInSearch": true,
+    "hideInForm": true
+  },
+  {
+    "title": "Câu hỏi",
+    "dataIndex": "name",
+    "width": 200,
+    "hasFilter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 1,
+      "col": 1
+    }
+  },
+  {
+    "title": "Bài thi",
+    "dataIndex": "examinationId",
+    "width": 200,
+    "hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 3,
+      "col": 1
+    }
+  },
+  {
+    "title": "Câu hỏi A",
+    "dataIndex": "answerA",
+    "width": 200,
+    "hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 2,
+      "col": 2
+    }
+  },
+  {
+    "title": "Câu hỏi B",
+    "dataIndex": "answerB",
+    "width": 200,
+    "hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 4,
+      "col": 1
+    }
+  },
+  {
+    "title": "Câu hỏi C",
+    "dataIndex": "answerC",
+    "width": 200,
+    "hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin khác",
+      "row": 1,
+      "col": 1
+    }
+  },
+  {
+    "title": "Câu hỏi D",
+    "dataIndex": "answerD",
+    "width": 200,
+    "hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin khác",
+      "row": 1,
+      "col": 1
+    }
+  },
+  {
+    "title": "Đáp án",
+    "dataIndex": "correctAnswer",
+    "width": 200,
+    "hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin khác",
+      "row": 1,
+      "col": 1
+    }
+  },
+  {
+    "title": "Ngày tạo",
+    "dataIndex": "createdAt",
+    "width": 150,
+    "valueType": "dateTime",
+    "sorter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "hideInForm": true
+  },
+  {
+    "title": "Ngày sửa",
+    "dataIndex": "updatedAt",
+    "width": 150,
+    "valueType": "dateTime",
+    "sorter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "hideInForm": true
+  }
+]

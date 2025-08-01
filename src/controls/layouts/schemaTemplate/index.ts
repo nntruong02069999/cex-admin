@@ -1,0 +1,5 @@
+export { default as DefaultCtrl } from './FormCtrl'
+export { default as ChatCtrl } from './ChatCtrl'
+export { default as ProductFormCtrl } from './ProductFormCtrl'
+export { default as FlashSaleFormCtrl } from './FlashSaleFormCtrl'
+export { default as FlashSaleVoucherCtrl } from './FlashSaleVoucherCtrl'

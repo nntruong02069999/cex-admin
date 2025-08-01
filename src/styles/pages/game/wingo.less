@@ -1,0 +1,629 @@
+.main-game-container {
+  padding: 12px;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  .main-game-title {
+    display: block;
+    font-size: 16px;
+    line-height: 19px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .main-game-time-config-groups {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 12px;
+    .ant-btn-primary + .ant-btn:not(.ant-btn-primary):not([disabled]) {
+      border-left-color: @grey-5;
+      &:hover {
+        border-color: @primary-color;
+      }
+    }
+
+    .ant-btn {
+      border-radius: 4px;
+    }
+  }
+}
+
+.main-game-table {
+  margin-bottom: 12px;
+  .ant-table {
+    .ant-table-thead {
+      tr th {
+        background: linear-gradient(to right, #f6f8fa, #e6f7ff);
+        color: #303133;
+        font-weight: bold;
+        text-transform: uppercase;
+        position: relative;
+
+        &:after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background: @primary-color;
+          opacity: 0.5;
+        }
+      }
+
+      // Special styling for alphabet headers (A, B, C, D, E)
+      tr th[class*="Điểm"],
+      tr th:nth-child(3),
+      tr th:nth-child(4),
+      tr th:nth-child(5),
+      tr th:nth-child(6),
+      tr th:nth-child(7) {
+        background: #e6f7ff;
+        color: #1890ff;
+        font-size: 16px;
+        font-weight: bold;
+
+        &:after {
+          background: #1890ff;
+          opacity: 0.8;
+        }
+      }
+
+      // Styling for category headers (Lớn nhỏ, Chẵn lẻ, Chọn số)
+      tr th.ant-table-column-has-sorters,
+      tr th[class*="large"],
+      tr th[class*="small"],
+      tr th[class*="even"],
+      tr th[class*="odd"],
+      tr th[class*="total"] {
+        background: #f0f7ff;
+        font-weight: bold;
+
+        &:after {
+          background: #5c6bc0;
+          opacity: 0.7;
+        }
+      }
+    }
+    .ant-table-title {
+      padding: 12px;
+      background: @primary-color;
+      border-color: @primary-color;
+      &:has(h5) {
+        background: @grey-2;
+        border-color: @grey-4;
+        .ant-typography {
+          color: @text-color;
+          font-size: 14px;
+          line-height: 17px;
+          font-weight: 400;
+          text-transform: capitalize;
+          .is-header-infos {
+            display: block;
+            span {
+              display: block;
+              margin-bottom: 8px;
+              &:last-child {
+                margin-bottom: 0;
+              }
+              b {
+                margin-left: 8px;
+                &.is-session {
+                  font-size: 14px;
+                  color: @black-color;
+                }
+                &.is-total-value {
+                  font-size: 16px;
+                  font-weight: 700;
+                  color: @primary-color;
+                }
+              }
+            }
+          }
+        }
+      }
+      .ant-typography {
+        margin-bottom: 0;
+        font-size: 16px;
+        line-height: 19px;
+        font-weight: 700;
+        color: @white-color;
+        text-transform: uppercase;
+      }
+    }
+    .ant-table-container {
+      .ant-table-thead {
+        .ant-table-cell {
+          padding: 12px;
+        }
+      }
+      .ant-table-body {
+        .ant-table-cell {
+          padding: 12px;
+          .ant-radio-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            .ant-radio-button-wrapper {
+              border-radius: 6px;
+              border-left-width: 1.02px;
+              &.ant-radio-button-wrapper-checked {
+                background: @primary-color;
+                color: @white-color;
+                border-color: @primary-color;
+              }
+              &::before {
+                display: none;
+              }
+            }
+          }
+          .ant-input-number {
+            width: 125px;
+          }
+          .is-btn-submit {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+.main-game-container {
+  .main-game-current-game {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    .main-game-current-game-header {
+      background: @primary-color;
+      padding: 12px;
+      .ant-typography {
+        color: @white-color;
+        font-size: 16px;
+        line-height: 19px;
+        margin-bottom: 0;
+      }
+    }
+    .main-game-current-countdown {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 12px 0;
+      gap: 8px;
+      .ant-btn {
+        border-radius: 4px;
+      }
+    }
+  }
+}
+
+.is-betting-statistics {
+  margin-bottom: 12px;
+  .ant-card-head {
+    padding: 0;
+    border-bottom: 0;
+    border-radius: 0;
+    .ant-card-head-wrapper {
+      .ant-card-head-title {
+        padding: 12px 0;
+      }
+    }
+  }
+  .ant-card-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 0;
+
+    &::before {
+      display: none !important;
+    }
+
+    .ant-card-grid {
+      box-shadow: none;
+      padding: 12px;
+      width: 100% !important;
+      border: none !important;
+      border-radius: 6px;
+      margin: 0 !important;
+
+      .betting-item-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+
+        .betting-main-info {
+          color: @white-color;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 1.4;
+          margin-right: 8px;
+        }
+
+        .balance-tag,
+        .total-tag {
+          background: @white-color;
+          color: @text-color;
+          border: none;
+          font-weight: 600;
+          border-radius: 4px;
+          padding: 4px 8px;
+          margin: 0;
+        }
+
+        .total-tag.negative {
+          color: #ff4d4f;
+        }
+
+        .total-tag.positive {
+          color: #52c41a;
+        }
+      }
+    }
+  }
+}
+
+.main-game-container {
+  .game-history {
+    border-radius: 6px;
+    .color-bets,
+    .number-bets,
+    .size-bets {
+      overflow: hidden;
+
+      .color-row,
+      .number-row,
+      .size-row {
+        display: flex;
+
+        > div {
+          padding: 8px 12px;
+          border-right: 1px solid #e8e8e8;
+          text-align: center;
+          flex: 1;
+
+          &:last-child {
+            border-right: none;
+          }
+        }
+
+        &:first-child {
+          background-color: #f5f5f5;
+          font-weight: bold;
+        }
+      }
+
+      .color-label,
+      .number-label,
+      .size-label,
+      .bet-label {
+        background-color: #f5f5f5;
+        font-weight: bold;
+        width: 120px;
+        flex: 0 0 120px;
+        max-width: calc(100% / 11);
+      }
+      .color-label,
+      .number-label,
+      .size-label,
+      .bet-label {
+        border-bottom: 1px solid #e8e8e8;
+      }
+      .color-label {
+        border-top: 1px solid #e8e8e8;
+      }
+      .number-row {
+        .number-item {
+          color: @white-color;
+        }
+      }
+      .bet-amount,
+      .size-big,
+      .size-small,
+      .color-green,
+      .color-pink,
+      .color-red {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .color-green {
+        background-color: rgba(82, 196, 26, 0.1);
+      }
+
+      .color-pink {
+        background-color: rgba(170, 0, 170, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .color-red {
+        background-color: rgba(229, 115, 115, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .size-big,
+      .size-small {
+        width: 50%;
+      }
+    }
+
+    .number-bets {
+      .number-row {
+        > div {
+          flex: 1;
+        }
+      }
+    }
+  }
+}
+
+.is-modal-recent-game {
+  .ant-modal-content {
+    .ant-modal-close {
+      color: @white-color;
+    }
+    .ant-modal-header {
+      background: @primary-color;
+      .ant-modal-title {
+        color: @white-color;
+        text-transform: uppercase;
+      }
+    }
+    .ant-modal-body {
+      .game-history {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// Responsive: mobile landscape
+@media screen and (min-width: @screen-sm-min) {
+  .main-game-container {
+    .main-game-time-config-groups {
+      justify-content: center;
+      gap: 16px;
+    }
+    .main-game-current-game {
+    }
+  }
+  .main-game-table {
+    .ant-table {
+      .ant-table-title {
+        &:has(h5) {
+          .ant-typography {
+            .is-header-infos {
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+              gap: 8px;
+              span {
+                margin-bottom: 0px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive: tablet small
+@media screen and (min-width: @screen-sm-min) {
+  .is-betting-statistics {
+    .ant-card-body {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+
+      .ant-card-grid {
+        width: 100% !important;
+        margin: 0 !important;
+      }
+    }
+  }
+}
+
+// Responsive: ipad portrait
+@media screen and (min-width: @screen-md-min) {
+  .is-betting-statistics {
+    .ant-card-body {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+
+      .ant-card-grid {
+        width: 100% !important;
+        margin: 0 !important;
+      }
+    }
+  }
+  .main-game-table {
+    .ant-table {
+      .ant-table-title {
+        &:has(h5) {
+          .ant-typography {
+            .is-header-infos {
+              gap: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+// Responsive: ipad landscape & pc 1024x768px
+@media screen and (min-width: @screen-lg-min) {
+  .main-game-container {
+    padding: 24px;
+    .main-game-title {
+      font-size: 24px;
+      line-height: 36px;
+      margin-bottom: 24px;
+    }
+    .main-game-time-config-groups {
+      margin-bottom: 24px;
+    }
+    .main-game-current-game {
+      .main-game-current-countdown {
+        margin: 24px 0;
+      }
+    }
+  }
+  .is-betting-statistics {
+    margin-bottom: 24px;
+    .ant-card-head {
+      .ant-card-head-wrapper {
+        .ant-card-head-title {
+          padding: 16px 0;
+        }
+      }
+    }
+    .ant-card-body {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+
+      .ant-card-grid {
+        width: 100% !important;
+        margin: 0 !important;
+      }
+    }
+  }
+  .main-game-table {
+    margin-bottom: 24px;
+    .ant-table {
+      .ant-table-title {
+        &:has(h5) {
+          .ant-typography {
+            .is-header-infos {
+              gap: 24px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: @screen-xl-min) {
+  .main-game-container {
+    .main-game-time-config-groups {
+      .ant-btn-group .ant-btn {
+        font-size: 18px;
+      }
+    }
+  }
+  .is-betting-statistics {
+    .ant-card-body {
+      grid-template-columns: repeat(3, 1fr);
+
+      .ant-card-grid {
+        width: 100% !important;
+        margin: 0 !important;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: @screen-xxl-min) {
+  // styles for extra large desktop
+}
+@media screen and (min-width: 1900px) {
+  // styles for ultra wide screens
+}
+
+.current-running-round {
+  background-color: rgba(24, 144, 255, 0.05) !important;
+  td {
+    position: relative;
+    &:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background-color: #1890ff;
+    }
+  }
+
+  &:hover {
+    background-color: rgba(24, 144, 255, 0.1) !important;
+  }
+}
+
+// Custom table styles for different sections
+.game-current-table {
+  .ant-table-thead > tr > th {
+    background: linear-gradient(to right, #f0f7ff, #e6f7ff);
+    font-weight: bold;
+    position: relative;
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: @primary-color;
+      opacity: 0.5;
+    }
+  }
+}
+
+.next-round-table {
+  .ant-table-thead > tr > th {
+    background: linear-gradient(to bottom, #f6f8fa, #e9ecef);
+    color: #1890ff;
+    font-weight: bold;
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #1890ff;
+      opacity: 0.6;
+    }
+  }
+
+  // Special styling for label headers (Điểm A, Điểm B, etc.)
+  .ant-table-thead > tr > th:nth-child(3),
+  .ant-table-thead > tr > th:nth-child(4),
+  .ant-table-thead > tr > th:nth-child(5),
+  .ant-table-thead > tr > th:nth-child(6),
+  .ant-table-thead > tr > th:nth-child(7) {
+    background: #e6f7ff;
+    color: #1890ff;
+    font-size: 16px;
+    font-weight: bold;
+  }
+}
+
+.completed-round-table {
+  .ant-table-thead > tr > th {
+    background: linear-gradient(to right, #f8f9fa, #e9ecef);
+    font-weight: bold;
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #7986cb;
+      opacity: 0.5;
+    }
+  }
+}

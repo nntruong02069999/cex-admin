@@ -1,0 +1,298 @@
+@import "../../variables.less";
+@import "../../global/mixin.less";
+
+.@{class-prefix}-editor-module {
+  position: relative;
+  .flex-display(flex, row, wrap);
+  margin: -@layout-main-content-padding -@layout-main-content-padding 0;
+  flex: 1;
+
+  @media screen and (max-width: @screen-xs-max) {
+    margin: -(@layout-main-content-padding-res + 5px) -@layout-main-content-padding-res 0;
+  }
+
+  .@{class-prefix}-container-wrap & {
+    margin: 0;
+    margin-bottom: @gx-card-margin-base;
+  }
+}
+
+.@{class-prefix}-editor-side {
+  position: relative;
+  z-index: 2;
+  .flex-display(flex, column, nowrap);
+  .flex(0, 1, @app-sidebar-width);
+  min-width: @app-sidebar-width;
+
+  @media screen and (max-width: @screen-md-max) {
+    min-width: @sidebar-width - 20px;
+    background-color: @white-color;
+  }
+}
+
+.@{class-prefix}-editor-side-header {
+  padding: 10px;
+  min-height: @layout-header-height + 7px;
+  border-bottom: @border-style-base @border-width-base @border-color;
+  .flex-display(flex, column, nowrap);
+  .justify-content(center);
+  .align-items(center);
+  background-color: lighten(@grey-2, 0.5%);
+  color: darken(@grey-8, 2%);
+
+  @media screen and (max-width: @screen-md-max) {
+    min-height: @layout-header-height;
+  }
+}
+
+.@{class-prefix}-editor-logo {
+  .flex-display(flex, row, wrap);
+  font-size: 20px;
+
+  & i {
+    font-size: 28px;
+    line-height: 18px;
+  }
+}
+
+.@{class-prefix}-editor-side-scroll {
+  height: calc(100vh ~"-" 201px) !important;
+
+  .framed-layout & {
+    height: calc(100vh~"-"201px - 2 * @framed-layout-base) !important;
+  }
+
+  @media screen and (max-width: @screen-md-max) {
+    height: calc(100vh ~"-" @layout-header-height) !important;
+
+    .framed-layout & {
+      height: calc(100vh ~"-" @layout-header-height) !important;
+    }
+  }
+
+  & > div:first-child {
+    overflow-y: scroll !important;
+  }
+}
+
+.@{class-prefix}-edtor-add-task {
+  .flex-display(flex, row, wrap);
+  padding: 24px;
+
+  & .ant-btn {
+    margin-bottom: 0;
+  }
+}
+
+.@{class-prefix}-editor-side-content {
+  .flex-display(flex, column, nowrap);
+  .flex-only(1);
+}
+
+.@{class-prefix}-editor-sidenav {
+  background-color: @white-color;
+  border-right: @border-style-base @border-width-base @border-color;
+  position: relative;
+  z-index: 9;
+
+  & .@{class-prefix}-chat-sidenav-main {
+    max-width: 300px;
+    min-width: 300px;
+    width: 90%;
+  }
+}
+
+/* properties in sidenav */
+.@{class-prefix}-editor-avatar {
+  min-width: 50px;
+
+  .@{class-prefix}-editor-properties-row & {
+    padding: 0 5px;
+    min-width: 10px;
+  }
+
+  .@{class-prefix}-chat-user-hd & {
+    cursor: pointer;
+  }
+}
+
+.@{class-prefix}-editor-properties {
+  .flex-display(flex, column, nowrap);
+
+  &.@{class-prefix}-chat-user-center {
+    .justify-content(center);
+    .align-items(center);
+
+    & .@{class-prefix}-chat-avatar {
+      margin-left: auto;
+    }
+  }
+
+  &-item {
+    padding: 16px;
+    .flex-display(flex, column, nowrap);
+    .justify-content(center);
+    cursor: pointer;
+    max-height: 96px;
+
+    &:not(:last-child) {
+      border-bottom: @border-style-base @border-width-base @border-color;
+    }
+
+    &.active,
+    &:hover {
+      background-color: @primary-1;
+    }
+  }
+
+  &-row {
+    margin: 0 -5px;
+    .flex-display(flex, row, wrap);
+    .align-items(center);
+  }
+}
+
+.@{class-prefix}-editor-info {
+  max-width: calc(100% ~"-" 80px);
+  padding: 0 5px;
+  .flex-only(1);
+
+  & p {
+    margin-bottom: 0;
+  }
+
+  & .h4 {
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  &-des {
+    color: @grey-8;
+    font-size: 13px;
+  }
+}
+
+.@{class-prefix}-editor-orderable-col {
+  max-width: calc(100% ~"-" 50px);
+  padding: 0 5px;
+  .flex-only(1);
+
+  & p {
+    margin-bottom: 0;
+  }
+
+  & .h4 {
+    display: block;
+    margin-bottom: 3px;
+  }
+}
+
+.@{class-prefix}-editor-add-task {
+  .flex-display(flex, row, wrap);
+  padding: 24px;
+
+  & .ant-btn {
+    margin-bottom: 0;
+  }
+}
+
+//1150 921 231 1152
+.@{class-prefix}-editor-box {
+  position: relative;
+  z-index: 2;
+  .flex-display(flex, column, nowrap);
+  .flex(1, 1, auto);
+  max-width: calc(100%~"-"@app-sidebar-width - 1px);
+
+  @media screen and (max-width: @screen-md-max) {
+    max-width: 100%;
+  }
+}
+
+.@{class-prefix}-editor-box-header {
+  padding: 10px 26px;
+  min-height: 79px;
+  .flex-display(flex, row, nowrap);
+  .justify-content(space-between);
+  .align-items(center);
+  background-color: @white-color;
+  border-bottom: @border-style-base @border-width-base @border-color;
+
+  @media screen and (max-width: @screen-md-max) {
+    position: relative;
+    min-height: 58px;
+    padding: 5px 26px 5px 110px;
+  }
+
+  &_info {
+    .flex-display(flex, column, nowrap);
+    .justify-content(center);
+  }
+
+  &_setting{
+    .align-items(center);
+  }
+
+  & .@{class-prefix}-drawer-btn {
+    @media screen and (max-width: @screen-md-max) {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 1;
+      border-right: @border-style-base @border-width-base @border-color;
+      height: 58px;
+      width: 98px;
+      .flex-display(flex, column, nowrap);
+      .justify-content(center);
+      .align-items(center);
+      .border-radius(0);
+      font-size: 22px;
+      text-align: center;
+    }
+  }
+}
+
+.@{class-prefix}-editor-box-content {
+  background-color: @white-color;
+  .flex-display(flex, column, nowrap);
+  .flex(1);
+}
+
+.@{class-prefix}-form-editor {
+  padding-left: @card-padding-base;
+  padding-right: @card-padding-base;
+}
+
+.@{class-prefix}-array-editor{
+  & > .ant-row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+}
+
+.@{class-prefix}-wrapper-select-table {
+  background: rgb(194, 191, 191);
+  padding: 5px;
+  border-radius: 6px;
+
+  &>*>.ant-card {
+    margin-bottom: 0px;
+  }
+}
+
+.@{custom-prefix}-detail-item-wrapper {
+  margin-bottom: 7px;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+  line-height: 1.5715;
+
+  .@{custom-prefix}-detail-item-label {
+    display: inline-block;
+    margin-right: 8px;
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+  .@{custom-prefix}-detail-item-content {
+    font-weight: bolder;
+  }
+}

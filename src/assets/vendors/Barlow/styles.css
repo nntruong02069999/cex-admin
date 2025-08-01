@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: 'Barlow';
+  src: url('Barlow-Regular.ttf') format('truetype'),
+    url('Barlow-Black.ttf') format('truetype'),
+    url('Barlow-BlackItalic.ttf') format('truetype'),
+    url('Barlow-Bold.ttf') format('truetype'),
+    url('Barlow-BoldItalic.ttf') format('truetype'),
+    /* url('Barlow-ExtraBold.ttf') format('truetype'), */
+    /* url('Barlow-ExtraBoldItalic.ttf') format('truetype'), */
+    /* url('Barlow-ExtraLight.ttf') format('truetype'), */
+    /* url('Barlow-ExtraLightItalic.ttf') format('truetype'), */
+    url('Barlow-Italic.ttf') format('truetype'),
+    url('Barlow-Light.ttf') format('truetype'),
+    url('Barlow-LightItalic.ttf') format('truetype'),
+    url('Barlow-Medium.ttf') format('truetype'),
+    url('Barlow-MediumItalic.ttf') format('truetype'),
+    url('Barlow-SemiBold.ttf') format('truetype'),
+    url('Barlow-SemiBoldItalic.ttf') format('truetype'),
+    url('Barlow-Thin.ttf') format('truetype'),
+    url('Barlow-ThinItalic.ttf') format('truetype');
+}

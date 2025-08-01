@@ -1,0 +1,106 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# List System Architecture Guide
+
+## Overview
+The List system is a comprehensive data grid solution consisting of multiple interconnected components that handle data display, filtering, sorting, pagination, and CRUD operations.
+
+## Core Components Structure
+
+### Main List Components
+- **Entry Point**: [ListViewer.tsx](mdc:src/routes/default/list/ListViewer.tsx) - Router entry and container
+- **Core Logic**: [ListCtrl.tsx](mdc:src/controls/layouts/gridTemplate/ListCtrl.tsx) - Main data grid component
+- **Grid Template**: [src/controls/layouts/gridTemplate/](mdc:src/controls/layouts/gridTemplate) - Layout templates
+
+### Configuration Components
+- **Grid Editor**: [GridEditor.tsx](mdc:src/controls/editors/GridEditor.tsx) - Column configuration
+- **Schema Editor**: [SchemaEditor.tsx](mdc:src/controls/editors/SchemaEditor.tsx) - Form schema definition
+- **Button Editor**: [ButtonEditor.tsx](mdc:src/controls/editors/ButtonEditor.tsx) - Action buttons config
+
+### Schema Components for List Fields
+- **Array Selection**: [ArrayModel.tsx](mdc:src/packages/pro-component/schema/ArrayModel.tsx) - Multi-select modal
+- **Single Selection**: [SingleModel.tsx](mdc:src/packages/pro-component/schema/SingleModel.tsx) - Single-select modal
+- **Array Dropdown**: [ArraySelect.tsx](mdc:src/packages/pro-component/schema/ArraySelect.tsx) - Multi-select dropdown
+- **Core Table**: [ArrayTable.tsx](mdc:src/packages/pro-component/schema/ArrayTable.tsx) - Reusable table component
+
+### Pro-Table System
+- **Main Table**: [Table.tsx](mdc:src/packages/pro-table/Table.tsx) - Enhanced Ant Design table
+- **Components**: [src/packages/pro-table/component/](mdc:src/packages/pro-table/component) - Table utilities
+- **Form Integration**: [src/packages/pro-table/form/](mdc:src/packages/pro-table/form) - Search forms
+
+## Data Flow Patterns
+
+### 1. List Rendering Flow
+```
+Router → ListViewer → Parse Query → Fetch PageInfo → ListCtrl → ProTable → API
+```
+
+### 2. Column Configuration Flow
+```
+GridEditor → Column Definition → ListCtrl → ProTable Columns → Cell Rendering
+```
+
+### 3. Schema Field Flow
+```
+SchemaEditor → Field Definition → Schema Widgets → Form Components → Value Handling
+```
+
+## Key File Locations
+
+### Controllers and Layouts
+- Grid controls: `src/controls/layouts/gridTemplate/`
+- Detail templates: `src/controls/layouts/detailTemplate/`
+- Schema templates: `src/controls/layouts/schemaTemplate/`
+
+### Editors
+- All editors: `src/controls/editors/`
+- Grid-specific: `GridEditor.tsx`, `ArrayEditor.tsx`
+
+### Schema Widgets
+- All widgets: `src/packages/pro-component/schema/`
+- List-related: `ArrayModel.tsx`, `SingleModel.tsx`, `ArraySelect.tsx`
+
+### Pro-Table Package
+- Main package: `src/packages/pro-table/`
+- Advanced features: `src/packages/pro-table/advancedForm/`
+
+## Common Patterns
+
+### 1. Creating New List Page
+1. Define pageInfo in backend
+2. Configure columns via GridEditor
+3. Set up schema for forms via SchemaEditor
+4. Customize actions via ButtonEditor
+
+### 2. Adding Custom Column Type
+1. Extend GridEditor with new column type
+2. Create corresponding schema widget if needed
+3. Update ListCtrl rendering logic
+4. Add to pro-table column types
+
+### 3. Custom Field Selection
+1. Use ArrayModel/SingleModel for related data
+2. Configure modelSelectField for display
+3. Set up pageId for data source
+4. Handle value transformation
+
+## Helper Utilities
+- **Control Helper**: [controlHelper.ts](mdc:src/controls/controlHelper.ts) - API calls and utilities
+- **Array Utils**: [src/packages/pro-utils/array-utils/](mdc:src/packages/pro-utils/array-utils) - Array manipulation
+- **Pro Utils**: [src/packages/pro-utils/](mdc:src/packages/pro-utils) - General utilities
+
+## Debugging Tips
+1. Check pageInfo configuration first
+2. Verify API endpoints and data structure
+3. Review column definitions in GridEditor
+4. Test schema widgets independently
+5. Use browser dev tools for ProTable debugging
+
+## Performance Considerations
+- Use pagination for large datasets
+- Implement proper caching for pageInfo
+- Optimize column rendering for complex widgets
+- Consider virtual scrolling for very large lists

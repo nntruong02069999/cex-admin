@@ -1,0 +1,607 @@
+// Deposit Page Styles
+.deposit-page {
+  padding: 24px;
+  background: #f8f9fa;
+  min-height: 100vh;
+
+  @media (max-width: 768px) {
+    padding: 12px;
+  }
+}
+
+.deposit-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+
+  .ant-card-body {
+    padding: 0;
+  }
+}
+
+// Header Styles
+.deposit-header {
+  padding: 24px 24px 0;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: #fff;
+
+  .header-title {
+    margin-bottom: 24px;
+
+    h2 {
+      color: #fff;
+      margin: 0 0 8px 0;
+      font-size: 24px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-description {
+      color: rgba(255, 255, 255, 0.85);
+      margin: 0;
+      font-size: 14px;
+    }
+  }
+
+  .deposit-tabs {
+    .ant-tabs-nav {
+      margin-bottom: 0;
+
+      &::before {
+        border: none;
+      }
+    }
+
+    .ant-tabs-tab {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: rgba(255, 255, 255, 0.85);
+      margin-right: 8px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+      }
+
+      &.ant-tabs-tab-active {
+        background: #fff;
+        color: #6366f1;
+        border-color: #fff;
+
+        .deposit-tab-title {
+          color: #6366f1;
+        }
+      }
+    }
+
+    .deposit-tab-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .tab-label {
+        font-weight: 500;
+      }
+
+      .ant-spin {
+        margin-left: 4px;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 16px 16px 0;
+
+    .header-title h2 {
+      font-size: 20px;
+    }
+
+    .deposit-tabs {
+      .ant-tabs-tab {
+        margin-right: 4px;
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+// Filters Styles
+.deposit-filters {
+  padding: 24px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+
+  .ant-row {
+    .ant-col {
+      margin-bottom: 8px;
+    }
+  }
+
+  // Search fields responsive layout
+  @media (max-width: 1200px) {
+    .ant-col {
+      &[data-type="search-field"] {
+        flex: 1;
+        min-width: 200px;
+      }
+    }
+  }
+
+  .ant-input,
+  .ant-select,
+  .ant-picker {
+    border-radius: 6px;
+  }
+
+  .ant-btn {
+    border-radius: 6px;
+    font-weight: 500;
+  }
+
+  // Filter Summary Styles
+  .filter-summary {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 1px solid #bae6fd;
+    border-radius: 8px;
+
+    .ant-card-body {
+      padding: 12px 16px;
+    }
+
+    .ant-btn {
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 16px;
+
+    .ant-row {
+      .ant-col {
+        margin-bottom: 12px;
+      }
+    }
+
+    .ant-space {
+      width: 100%;
+      justify-content: center;
+
+      .ant-space-item {
+        flex: 1;
+
+        .ant-btn {
+          width: 100%;
+        }
+      }
+    }
+
+    // Mobile filter summary
+    .filter-summary {
+      .ant-row {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 8px;
+      }
+
+      .ant-col:last-child {
+        align-self: flex-end;
+      }
+    }
+  }
+}
+
+// Table Styles
+.deposit-table {
+  .ant-table {
+    .ant-table-thead > tr > th {
+      background: #f8f9fa;
+      border-bottom: 2px solid #e9ecef;
+      font-weight: 600;
+      color: #495057;
+    }
+
+    .ant-table-tbody > tr {
+      &:hover > td {
+        background: #f8f9ff;
+      }
+
+      > td {
+        border-bottom: 1px solid #f0f0f0;
+        vertical-align: top;
+        padding: 12px 8px;
+      }
+    }
+  }
+
+  // Customer Info Card Styles - Compact & Beautiful
+  .customer-card-compact {
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin: 2px 0;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: transparent;
+      transition: all 0.2s ease;
+    }
+
+    &.main::before {
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    }
+
+    &.invite::before {
+      background: linear-gradient(90deg, #10b981, #34d399);
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-color: #3b82f6;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.12);
+    }
+
+    .customer-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+
+      .customer-avatar-main {
+        background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+        border: 2px solid #ffffff;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.15);
+      }
+
+      .customer-avatar-invite {
+        background: linear-gradient(135deg, #10b981, #059669) !important;
+        border: 2px solid #ffffff;
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.15);
+      }
+
+      .customer-main-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+
+        .customer-id-primary {
+          line-height: 1.2;
+        }
+
+        .customer-phone-primary {
+          display: flex;
+          align-items: center;
+          line-height: 1;
+        }
+      }
+    }
+
+    .customer-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .customer-name-secondary {
+        font-size: 11px;
+        color: #6b7280;
+        font-weight: 500;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .invite-code-compact {
+        background: linear-gradient(90deg, #f0fdf4, #dcfce7);
+        color: #059669;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 600;
+        border: 1px solid #bbf7d0;
+      }
+    }
+  }
+
+  // Financial Info Styles
+  .financial-info {
+    .financial-card {
+      border: 1px solid #e0f2fe;
+      background: #f0f9ff;
+      border-radius: 6px;
+
+      .ant-card-body {
+        padding: 8px;
+      }
+
+      .amount-main,
+      .amount-usdt-primary {
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
+      }
+
+      .amount-inr-secondary {
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
+      }
+
+      .amount-bonus,
+      .amount-usdt,
+      .amount-total {
+        text-align: center;
+        margin-bottom: 2px;
+      }
+    }
+  }
+
+  // Payment Info Styles
+  .payment-info {
+    .order-id-primary {
+      display: flex;
+      align-items: center;
+      margin-bottom: 6px;
+      padding: 4px 6px;
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+        border-radius: 6px 6px 0 0;
+      }
+    }
+
+    .payment-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 3px;
+
+      .anticon {
+        color: #9ca3af;
+        font-size: 11px;
+      }
+    }
+  }
+
+  // Time Info Styles
+  .time-info {
+    > div {
+      margin-bottom: 4px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // Actions Column Styles
+  .ant-table-tbody {
+    .ant-space {
+      .ant-space-item {
+        .ant-btn {
+          margin: 2px 0;
+
+          &.ant-btn-primary {
+            background: #10b981;
+            border-color: #10b981;
+
+            &:hover {
+              background: #34d399;
+              border-color: #34d399;
+            }
+          }
+
+          &.ant-btn-dangerous {
+            &:hover {
+              background: #f87171;
+              border-color: #f87171;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .ant-table {
+      .ant-table-tbody > tr > td {
+        padding: 8px 4px;
+      }
+    }
+
+    .customer-card-compact {
+      padding: 6px 8px;
+
+      .customer-header {
+        gap: 6px;
+        margin-bottom: 4px;
+
+        .customer-main-info {
+          gap: 1px;
+        }
+      }
+
+      .customer-meta {
+        .customer-name-secondary {
+          font-size: 10px;
+          max-width: 100px;
+        }
+
+        .invite-code-compact {
+          font-size: 9px;
+          padding: 1px 4px;
+        }
+      }
+    }
+
+    .financial-info .financial-card .ant-card-body {
+      padding: 6px;
+    }
+
+    // Mobile action buttons
+    .ant-space {
+      flex-direction: column;
+      width: 100%;
+
+      .ant-space-item {
+        width: 100%;
+
+        .ant-btn {
+          width: 100%;
+          margin: 1px 0;
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}
+
+// Detail Modal Styles
+.deposit-detail-modal {
+  .deposit-detail-content {
+    .ant-card {
+      margin-bottom: 16px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .ant-descriptions-item-label {
+      font-weight: 500;
+      color: #6b7280;
+    }
+
+    .ant-descriptions-item-content {
+      color: #374151;
+    }
+
+    .ant-divider {
+      margin: 20px 0 16px 0;
+
+      .ant-divider-inner-text {
+        font-weight: 600;
+        color: #374151;
+      }
+    }
+
+    // Financial cards in modal
+    .ant-card {
+      border: 1px solid #f3f4f6;
+
+      .ant-card-body {
+        text-align: center;
+        padding: 16px;
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 1200px) {
+  .deposit-table {
+    .ant-table {
+      font-size: 12px;
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .deposit-page {
+    padding: 16px;
+  }
+
+  .deposit-header {
+    padding: 16px 16px 0;
+  }
+
+  .deposit-filters {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .deposit-page {
+    padding: 8px;
+  }
+
+  .deposit-header {
+    padding: 12px 12px 0;
+
+    .header-title h2 {
+      font-size: 18px;
+    }
+  }
+
+  .deposit-filters {
+    padding: 12px;
+  }
+
+  .deposit-table {
+    .ant-table {
+      font-size: 11px;
+
+      .ant-table-tbody > tr > td {
+        padding: 6px 4px;
+      }
+    }
+  }
+
+  .deposit-detail-modal {
+    .ant-modal {
+      margin: 0;
+      max-width: 100vw;
+      top: 0;
+    }
+
+    .ant-modal-content {
+      border-radius: 0;
+    }
+  }
+}
+
+// Accessibility and Focus States
+.deposit-table {
+  .customer-card-compact {
+    &:focus {
+      outline: 2px solid #3b82f6;
+      outline-offset: 2px;
+    }
+  }
+}
+
+// Dark Mode Support (if needed)
+@media (prefers-color-scheme: dark) {
+  .deposit-page {
+    background: #1f2937;
+  }
+
+  .deposit-card {
+    background: #374151;
+    border: 1px solid #4b5563;
+  }
+}

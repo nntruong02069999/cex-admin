@@ -1,0 +1,149 @@
+import React, { useEffect, useState } from 'react';
+import { Dropdown, Tag } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
+import intersectionBy from 'lodash/intersectionBy';
+import get from 'lodash/get';
+import isObject from 'lodash/isObject';
+import List{{pascalCase pageName}} from './List{{pascalCase pageName}}';
+import * as {{camelCase pageName}}Services from 'services/{{camelCase pageName}}';
+
+const resolveData = (origin, value) => {
+  if (isObject(value) && !Array.isArray(value)) {
+    value = [value];
+  }
+  if (isObject(origin) && !Array.isArray(origin)) {
+    origin = [origin];
+  }
+  if (!origin) {
+    origin = [];
+  }
+  if (!value) {
+    value = [];
+  }
+  let interIds = intersectionBy(origin, value || [], 'id');
+  if (interIds.length === 0 && value && value.length > 0) {
+    // interIds = cloneDeep(value);
+    interIds = [...origin, ...value];
+  }
+  const filValue = (value || []).filter(i => !interIds.map(j => j.id).includes(i.id));
+  const filOrigin = (origin || []).filter(i => !interIds.map(j => j.id).includes(i.id));
+  return [...filOrigin, ...filValue, ...interIds];
+};
+
+const List{{pascalCase pageName}}Select = ({ value, onChange, limit, modeChoose = 'radio', paramsList = {}, ...rest }) => {
+  const [visible, setVisible] = useState(false);
+  const [dataValue, setDataValue] = useState(() => {
+    if (modeChoose === 'checkbox') {
+      return [];
+    } else {
+      return {};
+    }
+  });
+
+  useEffect(() => {
+    (async function anyNameFunction() {
+      let {{camelCase pageName}} = [];
+      if (value && value !== '') {
+        try {
+          const resData = await {{camelCase pageName}}Services.getList({
+            queryInput: {
+              id: Array.isArray(value) ? value : [value]
+            }
+          }, false);
+          if (resData && resData.data && resData.data.data) {
+            {{camelCase pageName}} = get(resData, "data.data", []);
+          }
+        } catch (error) {
+          console.log('🚀 ~ file: index.js ~ line 38 ~ anyNameFunction ~ error', error);
+        }
+      }
+      if (modeChoose === 'checkbox') {
+        setDataValue({{camelCase pageName}});
+      } else if ({{camelCase pageName}}.length > 0) {
+        setDataValue({{camelCase pageName}}[0] || {});
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    try {
+      if (value && typeof value === 'object') {
+        if (modeChoose === 'checkbox') {
+          setDataValue(origin => {
+            return resolveData(origin, value);
+          });
+        } else {
+          setDataValue(value || {});
+        }
+      }
+    } catch (error) {
+      console.log('🚀 ~ file: index.js ~ line 63 ~ useEffect ~ error', error);
+    }
+  }, [value, modeChoose]);
+
+  const handleClick = e => {
+    return e.preventDefault();
+  };
+
+  const handleVisibleChange = flag => {
+    setVisible(flag);
+  };
+
+  const handleChange = ({ key, data }) => {
+    if (modeChoose === 'radio') {
+			setDataValue(data || {});
+			if (onChange) {
+				onChange(data);
+			}
+		} else {
+			const newDataValue = resolveData(dataValue, data);
+			setDataValue(newDataValue);
+			if (onChange) {
+				onChange(newDataValue);
+			}
+		}
+  };
+  const menu = (<List{{pascalCase pageName}} modeChoose={modeChoose} onChange={handleChange} limit={limit || 5} paramsList={paramsList} />);
+
+  const get{{pascalCase pageName}}Identity = (r) => {
+    // const id = get(r, "{{key}}", "");
+    const name = get(r, "{{value}}", "");
+
+    return <Tag key={ r.{{key}} } closable={!rest.disabled} onClose={() => {
+      setDataValue(origin => {
+        let newValue;
+        if (modeChoose === 'radio') {
+          newValue = null;
+        } else {
+          newValue = origin.filter(i => i.{{key}} !== r.{{key}});
+        }
+        if (onChange) {
+          onChange(newValue);
+        }
+        return newValue;
+      });
+
+    }}>{ name }</Tag>;
+  };
+
+  return (
+    <Dropdown
+      overlay={menu}
+      trigger={['click']}
+      placement="bottomCenter"
+      onVisibleChange={handleVisibleChange}
+      visible={visible}
+      {...rest}
+    >
+      <div style=\{{ border: "1px solid #cfcfcf", padding: "5px",borderRadius: '6px' }}>
+        {modeChoose === 'checkbox'
+          ? (dataValue && dataValue.length > 0 ? dataValue.map(i => get{{pascalCase pageName}}Identity(i)) : "Chọn {{pascalCase pageName}}")
+          : (dataValue && Object.keys(dataValue).length > 0 && get{{pascalCase pageName}}Identity(dataValue)) || "Chọn {{pascalCase pageName}}"
+        }
+        &nbsp;<a className="ant-dropdown-link" onClick={handleClick}><DownOutlined color="#1DA57A" /></a>
+      </div>
+    </Dropdown>
+  );
+};
+
+export default List{{pascalCase pageName}}Select;

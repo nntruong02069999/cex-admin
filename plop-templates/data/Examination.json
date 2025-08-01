@@ -1,0 +1,167 @@
+[
+  {
+    "title": "ID",
+    "dataIndex": "id",
+    "width": 60,
+    "fixed": "left",
+    "sorter": true,
+    "hideInTable": false,
+    "hideInSearch": true,
+    "hideInForm": true
+  },
+  {
+    "title": "Đề thi",
+    "dataIndex": "name",
+    "width": 200,
+    "hasFilter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 1,
+      "col": 1
+    }
+  },
+  {
+    "title": "Ngày bắt đầu",
+    "dataIndex": "startDate",
+    "width": 120,
+    "valueType": "dateTime",
+    "hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 2,
+      "col": 1
+    }
+  },
+  {
+    "title": "Ngày kết thúc",
+    "dataIndex": "endDate",
+    "width": 120,
+    "valueType": "dateTime",
+    "hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 2,
+      "col": 2
+    }
+  },
+  {
+    "title": "Lớp học",
+    "dataIndex": "classId",
+    "width": 200,
+    "hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 2,
+      "col": 2
+    }
+  },
+  {
+    "title": "Số câu hỏi",
+    "dataIndex": "totalQuestion",
+    "width": 200,
+    "hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 4,
+      "col": 1
+    }
+  },
+  {
+    "title": "Thời gian thi",
+    "dataIndex": "timeTestText",
+    "width": 200,
+    "hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 4,
+      "col": 1
+    }
+  },
+  {
+    "title": "Thời gian đếm",
+    "dataIndex": "timeTest",
+    "width": 200,
+    "hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 4,
+      "col": 1
+    }
+  },
+  {
+    "title": "Số câu hỏi tối thiểu đạt",
+    "placeholder": "Số câu hỏi đúng tối thiểu để hoàn thành bài thi",
+    "dataIndex": "minCorrectAnswer",
+    "width": 200,
+    "hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 4,
+      "col": 1
+    }
+  },
+  {
+    "title": "Trạng thái",
+    "dataIndex": "isActive",
+    "width": 200,
+    "filters": true,
+    "hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "valueEnum": {
+      "true": {
+        "text": "Hoạt động",
+        "status": "Processing",
+        "color": "#ec3b3b",
+        "isText": true
+      },
+      "false": {
+        "text": "Dừng",
+        "status": "Default",
+        "color": "#ec3b3b",
+        "isText": true
+      }
+    },
+    "formPattern": {
+      "card": "Thông tin khác",
+      "row": 2,
+      "col": 1
+    }
+  },
+  {
+    "title": "Ngày tạo",
+    "dataIndex": "createdAt",
+    "width": 150,
+    "valueType": "dateTime",
+    "sorter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "hideInForm": true
+  },
+  {
+    "title": "Ngày sửa",
+    "dataIndex": "updatedAt",
+    "width": 150,
+    "valueType": "dateTime",
+    "sorter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "hideInForm": true
+  }
+]

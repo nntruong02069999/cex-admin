@@ -1,0 +1,231 @@
+.intro-display {
+  margin: 8px 0 16px 0;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, #fafbfc 0%, #f7f8fc 100%);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  position: relative;
+
+  // Elegant shadow with multiple layers
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.05),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+
+  // Subtle accent border
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px 0 0 8px;
+  }
+
+  // Elegant corner decoration
+  &::after {
+    content: "";
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 4px;
+    height: 4px;
+    background: rgba(102, 126, 234, 0.3);
+    border-radius: 50%;
+    box-shadow: 6px 0 0 rgba(102, 126, 234, 0.2),
+      12px 0 0 rgba(102, 126, 234, 0.1);
+  }
+
+  &-content {
+    position: relative;
+  }
+
+  &-text {
+    color: rgba(0, 0, 0, 0.75);
+    font-size: 14px;
+    line-height: 1.6;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0;
+  }
+
+  &-html {
+    color: rgba(0, 0, 0, 0.75);
+    font-size: 14px;
+    line-height: 1.6;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    word-break: break-word;
+
+    // Ensure all content inherits proper styling
+    * {
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+    }
+
+    &-collapsed {
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 16px;
+        background: linear-gradient(
+          to bottom,
+          rgba(250, 251, 252, 0) 0%,
+          rgba(250, 251, 252, 0.7) 60%,
+          rgba(247, 248, 252, 0.9) 85%,
+          rgba(247, 248, 252, 1) 100%
+        );
+        pointer-events: none;
+        z-index: 1;
+      }
+    }
+
+    // Style HTML elements
+    p {
+      margin: 0 0 8px 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    ul,
+    ol {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin: 4px 0;
+    }
+
+    strong,
+    b,
+    [style*="font-weight"] {
+      font-weight: 700 !important;
+      color: inherit !important;
+    }
+
+    // Handle TinyMCE specific bold formatting
+    span[style*="font-weight: bold"],
+    span[style*="font-weight:bold"],
+    span[style*="font-weight: 700"],
+    span[style*="font-weight:700"] {
+      font-weight: 700 !important;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    code {
+      background: #fafafa;
+      border: 1px solid #d9d9d9;
+      border-radius: 2px;
+      padding: 2px 4px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier,
+        monospace;
+      font-size: 12px;
+    }
+
+    pre {
+      background: #fafafa;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 8px 12px;
+      margin: 8px 0;
+      overflow: auto;
+
+      code {
+        background: none;
+        border: none;
+        padding: 0;
+      }
+    }
+
+    a {
+      color: #1890ff;
+      text-decoration: none;
+
+      &:hover {
+        color: #40a9ff;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &-toggle {
+    margin-top: 8px;
+    display: flex;
+    justify-content: center;
+
+    &-btn {
+      padding: 4px 12px;
+      height: auto;
+      font-size: 12px;
+      font-weight: 500;
+      color: #667eea;
+      background: rgba(102, 126, 234, 0.05);
+      border: 1px solid rgba(102, 126, 234, 0.15);
+      border-radius: 16px;
+      transition: all 0.2s ease;
+
+      &:hover,
+      &:focus {
+        color: #5a67d8;
+        background: rgba(102, 126, 234, 0.1);
+        border-color: rgba(102, 126, 234, 0.25);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.15);
+      }
+
+      .anticon {
+        font-size: 10px;
+        margin-left: 4px;
+        transition: transform 0.2s ease;
+      }
+
+      &:hover .anticon {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+// Animation for smooth height transitions
+.intro-display-html {
+  transition: max-height 0.3s ease-in-out;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .intro-display {
+    padding: 14px 16px;
+    margin: 6px 0 12px 0;
+
+    &::after {
+      top: 12px;
+      right: 12px;
+    }
+
+    &-text,
+    &-html {
+      font-size: 13px;
+      line-height: 1.5;
+      letter-spacing: 0.1px;
+    }
+
+    &-toggle-btn {
+      font-size: 11px;
+      padding: 3px 10px;
+    }
+  }
+}

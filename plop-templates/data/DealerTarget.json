@@ -1,0 +1,52 @@
+[   
+    {
+        "title": "ID",
+        "dataIndex": "id",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Dự án",
+        "dataIndex": "projectId",
+        "width": 100,
+        "fixed": "left",
+        "sorter": false,
+        "hideInTable": false
+    },
+    
+    {
+        "title": "Trạng thái",
+        "dataIndex": "status",
+        "width": 100,
+        "fixed": "left",
+        "sorter": false,
+        "hideInTable": false
+    },
+    {
+		"title": "Ngày tạo",
+		"dataIndex": "createdAt",
+		"width": 150,
+		"valueType": "date",
+		"hideInTable": false,
+		"hideInSearch": false
+	},
+    {
+		"title": "Ngày sửa",
+		"dataIndex": "updatedAt",
+		"width": 150,
+		"valueType": "date",
+		"hideInTable": false,
+		"hideInSearch": false
+	},
+    {
+		"title": "Màu",
+		"dataIndex": "color",
+		"width": 70,
+		"hideInTable": false,
+		"hideInSearch": false
+	}
+]

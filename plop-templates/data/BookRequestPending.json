@@ -1,0 +1,36 @@
+[
+    {
+        "title": "ID",
+        "dataIndex": "id",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Tên căn hộ",
+        "dataIndex": "fullCode",
+        "width": 200,
+        "hasFilter": true,
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "Giá căn hộ",
+        "dataIndex": "moneyCollect",
+        "width": 200,
+        "hasFilter": true,
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "ID khác hàng",
+        "dataIndex": "customerId",
+        "width": 200,
+        "hasFilter": true,
+        "hideInTable": false,
+        "hideInSearch": false
+    }
+]

@@ -1,0 +1,70 @@
+
+import React from 'react';
+import { Image, Drawer, Row, Col } from 'antd';
+import TableStatus from 'packages/pro-table/component/status';
+import get from 'lodash/get';
+import * as enums from 'util/enums';
+import { formatDate } from 'util/helpers';
+
+const DescriptionItem = ({ title, content }) => (
+  <div className="nv-detail-item-wrapper">
+    <p className="nv-detail-item-label">{title}:</p>
+    <span className="nv-detail-item-content">{content}</span>
+  </div>
+);
+
+const ImagesItem = ({ title, images }) => (
+  <div className="nv-detail-item-wrapper">
+    <p className="nv-detail-item-label">{title}:</p>
+    <div>
+      {images.map(item => (
+        <Image width={80} src={item.url} />
+      ))}
+    </div>
+  </div>
+);
+
+const {{pascalCase pageName}}Detail = ({ record, drawerVisible, onChange }) => {
+  const triggerChange = (v) => {
+    if (onChange) {
+      onChange(v);
+    }
+  };
+
+  const onClose = () => {
+    triggerChange(false);
+  };
+/*   const genderStatus = get(enums.genderEnum[get(record, "gender", "-")], "status", null);
+  const Status = TableStatus[genderStatus || 'Init'];
+  const genderText = get(enums.genderEnum[get(record, "gender", "-")], "text", "-"); */
+
+  return (
+    <Drawer
+      width={640}
+      style=\{{ width: "640px !important" }}
+      className="nv-drawer-detail"
+      title={<span style=\{{ color: "#f09b1b" }}>{`Chi tiết ${get(record, "name", "-").toUpperCase()}`}</span>}
+      placement="right"
+      closable={true}
+      onClose={onClose}
+      visible={drawerVisible}
+    >
+    {{#each dataForm}}
+      <Row gutter={16}>
+        {{#each cols}}
+        <Col xxl={12} xl={12} lg={12} md={12} sm={24} xs={24}>
+          {{#or (eq col.valueType "date") (eq col.valueType "datetime")}}
+          <DescriptionItem title="{{title}}" content={formatDate(get(record, "{{dataIndex}}" , "-" ))} />
+          {{/or}}
+          {{#or (unlessEq col.valueType "date") (unlessEq col.valueType "datetime")}}
+          <DescriptionItem title="{{title}}" content={get(record, "{{dataIndex}}" , "-" )} />
+          {{/or}}
+        </Col>
+        {{/each}}
+      </Row>
+    {{/each}}
+    </Drawer>
+  );
+};
+
+export default {{pascalCase pageName}}Detail;

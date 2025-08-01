@@ -1,0 +1,182 @@
+.commission-rate-container {
+  .commission-rate-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+  }
+
+  .commission-rate-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h3 {
+      margin: 0;
+      color: #1f1f1f;
+    }
+  }
+
+  .commission-rate-tabs {
+    .ant-tabs-tab {
+      position: relative;
+
+      .pending-indicator {
+        color: #ff4d4f;
+        font-size: 18px;
+        margin-left: 6px;
+        animation: pulse 1.5s infinite;
+      }
+    }
+
+    .ant-tabs-content-holder {
+      padding-top: 16px;
+    }
+  }
+
+  .commission-rate-table-container {
+    margin-bottom: 24px;
+
+    .commission-rate-table {
+      .ant-table-thead > tr > th:first-child {
+        background: #f0f2f5;
+        font-weight: 600;
+      }
+
+      .ant-table-tbody > tr > td:first-child {
+        background: #fafafa;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .commission-rate-cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 32px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #f5f5f5;
+
+      .edit-btn {
+        opacity: 1;
+      }
+    }
+
+    &.editing {
+      background: #e6f7ff;
+      border: 1px solid #1890ff;
+    }
+
+    .cell-value {
+      font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+      font-size: 12px;
+      color: #262626;
+      font-weight: 500;
+    }
+
+    .edit-btn {
+      opacity: 0;
+      transition: opacity 0.2s;
+      color: #1890ff;
+
+      &:hover {
+        color: #40a9ff;
+      }
+    }
+
+    .cell-actions {
+      .save-btn {
+        color: #52c41a;
+
+        &:hover {
+          color: #73d13d;
+          background: #f6ffed;
+        }
+      }
+
+      .cancel-btn {
+        color: #ff4d4f;
+
+        &:hover {
+          color: #ff7875;
+          background: #fff2f0;
+        }
+      }
+    }
+  }
+
+  .commission-rate-actions {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0;
+    border-top: 1px dashed #d9d9d9;
+    margin-top: 16px;
+  }
+}
+
+// Animation for pending indicator
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .commission-rate-container {
+    .commission-rate-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+
+      h3 {
+        font-size: 18px;
+      }
+    }
+
+    .commission-rate-table {
+      font-size: 12px;
+
+      .commission-rate-cell {
+        padding: 2px 4px;
+        min-height: 28px;
+
+        .cell-value {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}
+
+// Print styles
+@media print {
+  .commission-rate-container {
+    .commission-rate-header {
+      .ant-space {
+        display: none;
+      }
+    }
+
+    .commission-rate-actions {
+      display: none;
+    }
+
+    .edit-btn,
+    .cell-actions {
+      display: none !important;
+    }
+  }
+}

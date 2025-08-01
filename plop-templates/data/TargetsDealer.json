@@ -1,0 +1,52 @@
+[
+    {
+        "title": "ID",
+        "dataIndex": "id",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Đại lý",
+        "dataIndex": "agencyId",
+        "width": 200,
+        "hasFilter": true,
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "Dự án",
+        "dataIndex": "agencyId",
+        "width": 200,
+        "hasFilter": true,
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "Số lượng",
+        "dataIndex": "customerId",
+        "width": 70,
+        "valueType": "number",
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "Tháng",
+        "dataIndex": "month",
+        "width": 70,
+        "valueType": "number",
+        "hideInTable": false,
+        "hideInSearch": false
+    },
+    {
+        "title": "Năm",
+        "dataIndex": "year",
+        "width": 70,
+        "valueType": "number",
+        "hideInTable": false,
+        "hideInSearch": false
+    }
+]

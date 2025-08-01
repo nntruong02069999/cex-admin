@@ -1,0 +1,169 @@
+[
+	{
+		"title": "ID",
+		"dataIndex": "id",
+		"width": 60,
+		"fixed": "left",
+		"hideInTable": false,
+		"hideInSearch": true,
+		"hideInForm": true,
+    "show": false
+	},
+	{
+		"title": "Tên",
+		"dataIndex": "name",
+		"width": 200,
+		"hasFilter": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 1,
+			"col": 1
+		}
+	},
+	{
+		"title": "Ảnh đại diện",
+		"dataIndex": "thumbnail",
+		"width": 80,
+		"hasFilter": false,
+		"hideInTable": false,
+		"hideInSearch": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 2,
+			"col": 1
+		}
+	},
+	{
+		"title": "Thư viện ảnh",
+		"dataIndex": "images",
+		"width": 80,
+		"hasFilter": false,
+		"hideInTable": true,
+		"hideInSearch": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 2,
+			"col": 2
+		}
+	},
+	{
+		"title": "Thương hiệu",
+		"dataIndex": "brandId",
+		"width": 200,
+		"hasFilter": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 3,
+			"col": 1
+		}
+	},
+	{
+		"title": "Danh mục",
+		"dataIndex": "category",
+		"width": 200,
+		"hasFilter": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 3,
+			"col": 2
+		}
+	},
+	{
+		"title": "Kho",
+		"dataIndex": "quantities",
+		"width": 200,
+		"hasFilter": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 2,
+			"col": 2
+		}
+	},
+	{
+		"title": "Giá gốc",
+		"dataIndex": "originPrice",
+		"width": 200,
+		"hasFilter": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 4,
+			"col": 1
+		}
+	},
+	{
+		"title": "Giá bán",
+		"dataIndex": "paymentCash",
+		"width": 200,
+		"hasFilter": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 4,
+			"col": 2
+		}
+	},
+	{
+		"title": "Điểm đổi",
+		"dataIndex": "paymentPoint",
+		"width": 200,
+		"hasFilter": false,
+		"hideInTable": true,
+		"hideInSearch": true,
+		"hideInForm": true,
+		"formPattern": {
+			"card": "Thông tin hóa đơn",
+			"row": 5,
+			"col": 1
+		}
+	},
+	{
+		"title": "Điểm tặng",
+		"dataIndex": "valueAccumulatePoints",
+		"width": 200,
+		"hasFilter": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 5,
+			"col": 2
+		}
+	},
+	{
+		"title": "Mô tả",
+		"dataIndex": "description",
+		"width": 200,
+		"hasFilter": true,
+		"formPattern": {
+			"card": "Thông tin khác",
+			"row": 1,
+			"col": 1
+		}
+	},
+	{
+		"title": "Trạng thái",
+		"dataIndex": "status",
+		"width": 200,
+		"hasFilter": true,
+		"formPattern": {
+			"card": "Thông tin khác",
+			"row": 2,
+			"col": 1
+		}
+	},
+	{
+		"title": "Ngày tạo",
+		"dataIndex": "createdAt",
+		"width": 150,
+		"valueType": "dateTime",
+		"hideInTable": false,
+		"hideInSearch": false,
+		"hideInForm": true
+	},
+	{
+		"title": "Ngày sửa",
+		"dataIndex": "updatedAt",
+		"width": 150,
+		"valueType": "dateTime",
+		"hideInTable": false,
+		"hideInSearch": false,
+		"hideInForm": true
+	}
+]

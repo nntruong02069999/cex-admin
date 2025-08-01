@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Components Organization Guide
+
+The [`src/components/`](mdc:src/components) directory contains reusable UI components, organized by feature or type (e.g., [`mail/`](mdc:src/components/mail), [`dashboard/`](mdc:src/components/dashboard)).
+
+Each feature directory contains related components (e.g., [`Compose/`](mdc:src/components/mail/Compose), [`Listing/`](mdc:src/components/dashboard/Listing)). Components are typically implemented as React function or class components, and may import styles, utilities, or constants as needed.
+
+Components are imported and used in containers, routes, or other components to build the application's UI.

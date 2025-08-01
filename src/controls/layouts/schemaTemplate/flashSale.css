@@ -1,0 +1,14 @@
+.row-dragging {
+  background: #fafafa;
+  border: 1px solid #ccc;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  visibility: visible;
+  opacity: 1 !important;
+  z-index: 10000;
+}
+
+.row-dragging td {
+  padding: 16px;
+}

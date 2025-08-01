@@ -1,0 +1,97 @@
+import { Component } from 'react'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import { helper } from '../controlHelper'
+import CustomScrollbars from '@src/util/CustomScrollbars'
+
+class OrderableList extends Component<{
+  name?: string
+  items?: any
+  activeIndex?: any
+  onChange?: (val: any) => void
+  headerButtons?: (val?: any) => any
+  renderItem?: (item: any, index: number) => any
+}> {
+  onDragEnd(result: any) {
+    const items = helper.reorder(
+      this.props.items,
+      result.source.index,
+      result.destination.index
+    )
+    let activeIndex = this.props.activeIndex
+    //calculate active index
+    const tmpArr = [
+      result.source.index,
+      result.destination.index,
+      activeIndex,
+    ].sort()
+    if (activeIndex === result.source.index) {
+      activeIndex = result.destination.index
+    } else {
+      if (tmpArr[1] === activeIndex) {
+        if (activeIndex > result.source.index) {
+          activeIndex--
+        } else {
+          activeIndex++
+        }
+      }
+    }
+    if (this.props.onChange) {
+      this.props.onChange({ items, activeIndex })
+    }
+  }
+
+  render() {
+    if (!this.props.items) return <p>Không có dữ liệu</p>
+    return (
+      <div className="gx-editor-side orderable-list">
+        <DragDropContext onDragEnd={this.onDragEnd.bind(this)}>
+          <Droppable droppableId="droppable">
+            {(provided: any) => (
+              <div ref={provided.innerRef}>
+                <div className="gx-editor-side-header">
+                  <div className="gx-editor-logo">
+                    <i className="icon icon-check-circle-o gx-mr-4" />
+                    {this.props.name}
+                  </div>
+                </div>
+                <div className="gx-editor-side-content">
+                  <CustomScrollbars className="gx-editor-side-scroll">
+                    <div className="gx-editor-add-task">
+                      {this.props?.headerButtons?.() ?? <></>}
+                    </div>
+                    <div className="gx-editor-properties">
+                      {this.props.items.map((item: any, index: number) => {
+                        return (
+                          <Draggable
+                            key={index}
+                            draggableId={`item-${index}`}
+                            index={index}
+                          >
+                            {(provided: any) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                              >
+                                {this.props.renderItem
+                                  ? this.props.renderItem(item, index)
+                                  : null}
+                              </div>
+                            )}
+                          </Draggable>
+                        )
+                      })}
+                      {provided.placeholder}
+                    </div>
+                  </CustomScrollbars>
+                </div>
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
+    )
+  }
+}
+
+export default OrderableList

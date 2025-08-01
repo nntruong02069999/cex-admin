@@ -1,0 +1,108 @@
+[
+    {
+        "title": "ID",
+        "dataIndex": "id",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true,
+        "formPattern": {
+            "card": "Thông tin cơ bản",
+            "row": 3,
+            "col": 1
+          }
+    },
+    {
+        "title": "Tên chính sách",
+        "dataIndex": "name",
+        "width": 200,
+        "hasFilter": true,
+        "hideInTable": false,
+        "hideInSearch": false,
+        "formPattern": {
+            "card": "Thông tin cơ bản",
+            "row": 1,
+            "col": 1
+        }
+    },
+    {
+        "title": "Mô tả",
+        "dataIndex": "description",
+        "width": 200,
+        "hasFilter": true,
+        "hideInTable": false,
+        "hideInSearch": false,
+        "formPattern": {
+            "card": "Thông tin cơ bản",
+            "row": 1,
+            "col": 2
+        }
+    },
+    {
+        "title": "Trạng thái",
+        "dataIndex": "isActive",
+        "width": 200,
+        "hasFilter": true,
+        "hideInTable": false,
+        "hideInSearch": false,
+        "formPattern": {
+            "card": "Thông tin cơ bản",
+            "row": 1,
+            "col": 3
+        }
+    },
+    {
+        "title": "Ngày bắt đầu",
+        "dataIndex": "startDate",
+        "width": 200,
+        "hasFilter": true,
+        "hideInTable": false,
+        "hideInSearch": false,
+        "formPattern": {
+            "card": "Thông tin cơ bản",
+            "row": 2,
+            "col": 1
+        }
+    },
+    {
+        "title": "Ngày kết thúc",
+        "dataIndex": "endDate",
+        "width": 200,
+        "hasFilter": true,
+        "hideInTable": false,
+        "hideInSearch": false,
+        "formPattern": {
+            "card": "Thông tin cơ bản",
+            "row": 2,
+            "col": 2
+        }
+    },
+    {
+        "title": "File",
+        "dataIndex": "file",
+        "width": 200,
+        "hasFilter": true,
+        "hideInTable": false,
+        "hideInSearch": false,
+        "formPattern": {
+            "card": "Thông tin cơ bản",
+            "row": 2,
+            "col": 3
+        }
+    },
+    {
+        "title": "proJect",
+        "dataIndex": "projectId",
+        "width": 200,
+        "hasFilter": true,
+        "hideInTable": false,
+        "hideInSearch": false,
+        "formPattern": {
+            "card": "Thông tin cơ bản",
+            "row": 3,
+            "col": 2
+          }
+    }
+]

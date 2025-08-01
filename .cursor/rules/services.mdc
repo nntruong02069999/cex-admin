@@ -1,0 +1,12 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Services Organization Guide
+
+The [`src/services/`](mdc:src/services) directory contains modules for API calls and business logic, organized by feature (e.g., [`auth.ts`](mdc:src/services/auth.ts), [`user.ts`](mdc:src/services/user.ts)).
+
+Each service typically exports functions that use the [`request`](mdc:src/util/request.ts) utility to interact with backend APIs. Service functions are named according to their purpose (e.g., `signInUserWithUserPasswordRequest`, `getCaptcha`).
+
+Services are imported and used in models, components, or containers to handle data fetching and business logic.

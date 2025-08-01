@@ -1,0 +1,191 @@
+[
+    {
+        "title": "ID",
+        "dataIndex": "id",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+
+    {
+        "title": "Trạng thái",
+        "dataIndex": "status",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Loại",
+        "dataIndex": "type",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+ 
+    {
+        "title": "Mã tòa nhà",
+        "dataIndex": "buildingCode",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Mã tầng",
+        "dataIndex": "floorCode",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Mã căn",
+        "dataIndex": "apartmentCode",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Vị trí",
+        "dataIndex": "cornerApartment",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "View",
+        "dataIndex": "view",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Số phòng ngủ",
+        "dataIndex": "type ",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Type",
+        "dataIndex": "numberRooms",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Khu vực trung tâm",
+        "dataIndex": "areaHeartWall",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Khu vực",
+        "dataIndex": "area",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Giá(chưa VAT)",
+        "dataIndex": "pricePerNotVAT",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Tổng giá(chưa VAT)",
+        "dataIndex": "totalPriceNotVAT",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+
+    {
+        "title": "Tầng",
+        "dataIndex": "row",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Chi nhánh",
+        "dataIndex": "subdivision",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Khu đất",
+        "dataIndex": "areaLand",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Khu tòa nhà",
+        "dataIndex": "areaBuilding",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    }
+
+
+
+
+
+
+]

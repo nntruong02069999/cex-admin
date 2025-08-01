@@ -1,0 +1,12 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Models Guide
+
+The [`src/models/`](mdc:src/models) directory contains data models and state management logic, organized by feature (e.g., [`user.ts`](mdc:src/models/user.ts), [`role.ts`](mdc:src/models/role.ts)).
+
+Each model typically defines a namespace, state shape, effects (for async logic and API calls), and reducers (for state updates). Models import service functions (e.g., from [`user.ts`](mdc:src/services/user.ts)) to fetch or update data.
+
+Models are used by the application's state management system (such as DVA or Redux) to manage and update application state.

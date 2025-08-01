@@ -1,0 +1,207 @@
+[
+	{
+		"title": "ID",
+		"dataIndex": "id",
+		"width": 60,
+		"fixed": "left",
+    "show": false,
+    "sorter": true,
+		"hideInTable": false,
+		"hideInSearch": true,
+		"hideInForm": true
+	},
+  {
+    "title": "Dự án",
+    "dataIndex": "projectId",
+    "width": 200,
+    "show": false,
+    "hasFilter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 1,
+      "col": 1
+    }
+  },
+  {
+    "title": "Ngày ký HĐ",
+    "dataIndex": "timeSign",
+    "width": 150,
+    "valueType": "dateTime",
+    "show": true,
+    "sorter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "hideInForm": true,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 4,
+      "col": 1
+    }
+  },
+  {
+    "title": "Tên thủ tục",
+    "dataIndex": "name",
+    "width": 100,
+    "show": true,
+    "hasFilter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "valueEnum": {
+      "Hợp đồng mua bán": { "text": "Hợp đồng mua bán", "status": "Processing", "color": "#ec3b3b", "isText": true },
+      "Hợp đồng vay vốn": { "text": "Hợp đồng vay vốn", "status": "Default", "color": "#ec3b3b", "isText": true },
+      "Thỏa thuận đặt cọc": { "text": "Thỏa thuận đặt cọc", "status": "Success", "color": "#ec3b3b", "isText": true }
+    },
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 2,
+      "col": 1
+    }
+  },
+	{
+		"title": "Ảnh",
+		"dataIndex": "images",
+		"width": 120,
+    "show": true,
+		"hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "filters": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 1,
+			"col": 1
+		}
+	},
+	{
+		"title": "Giá",
+		"dataIndex": "totalPriceCalcu",
+		"width": 120,
+    "show": true,
+		"hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "filters": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 2,
+			"col": 2
+		}
+	},
+	{
+		"title": "VAT",
+		"dataIndex": "vat",
+		"width": 200,
+    "show": false,
+		"hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 3,
+			"col": 1
+		}
+	},
+	{
+		"title": "Chính sách bán hàng",
+		"dataIndex": "salePolicyId",
+		"width": 200,
+    "valueType": "digit",
+    "show": true,
+		"hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 2,
+			"col": 2
+		}
+	},
+  {
+		"title": "Mã thủ tục",
+		"dataIndex": "fullcode",
+		"width": 120,
+    "show": false,
+    "filters": true,
+		"hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 4,
+			"col": 1
+		}
+	},
+  {
+		"title": "Id căn hộ",
+		"dataIndex": "apartmentId",
+		"width": 120,
+    "show": false,
+    "filters": true,
+		"hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 4,
+			"col": 1
+		}
+	},
+  {
+    "title": "Người bán",
+    "dataIndex": "userId",
+    "width": 120,
+    "show": false,
+    "filters": true,
+    "hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 4,
+      "col": 1
+    }
+  },
+	{
+		"title": "Trạng thái",
+		"dataIndex": "status",
+		"width": 120,
+    "show": false,
+    "filters": true,
+		"hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "valueEnum": {
+      "success": { "text": "Hoạt động", "status": "Processing", "color": "#ec3b3b", "isText": true },
+      "false": { "text": "Dừng", "status": "Default", "color": "#ec3b3b", "isText": true }
+    },
+		"formPattern": {
+			"card": "Thông tin khác",
+			"row": 2,
+			"col": 1
+		}
+	},
+	{
+		"title": "Ngày tạo",
+		"dataIndex": "createdAt",
+		"width": 150,
+    "show": false,
+		"valueType": "dateTime",
+    "sorter": true,
+		"hideInTable": false,
+		"hideInSearch": false,
+		"hideInForm": true
+	},
+	{
+		"title": "Ngày sửa",
+		"dataIndex": "updatedAt",
+		"width": 150,
+		"valueType": "dateTime",
+    "sorter": true,
+		"hideInTable": false,
+		"hideInSearch": false,
+		"hideInForm": true,
+    "show": false
+	}
+]

@@ -1,0 +1,12 @@
+[
+    {
+        "title": "ID",
+        "dataIndex": "id",
+        "width": 60,
+        "fixed": "left",
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true,
+        "sorter": true
+    }
+]

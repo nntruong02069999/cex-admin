@@ -1,0 +1,13 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Styles and Theming Guide
+
+The [`src/styles/`](mdc:src/styles) directory contains global and modular style files, organized by feature and type.
+
+- [`variables.less`](mdc:src/styles/variables.less): Defines global style variables (colors, border radius, etc.) and imports Ant Design theme defaults.
+- Other files and subdirectories (e.g., `global/`, `layout/`, `ui/`, `apps/`, `pages/`) provide modular and feature-specific styles.
+
+The project uses LESS for styling and supports theming via variable overrides. Styles are imported into components or at the app level as needed.

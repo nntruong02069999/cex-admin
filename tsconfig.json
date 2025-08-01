@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "noImplicitReturns": true,
+    "noUnusedLocals": false,
+    "experimentalDecorators": true,
+    "declaration": true,
+    "downlevelIteration": true
+  },
+  "exclude": [
+    "node_modules",
+    ".build",
+    "src/**/*.test.tsx"
+  ],
+  "include": [
+    "src",
+    "typings.d.ts",
+    "environment.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js"
+  ],
+  "extends": "./tsconfig.paths.json"
+}

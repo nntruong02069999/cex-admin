@@ -1,0 +1,14 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Utilities Guide
+
+The [`src/util/`](mdc:src/util) directory contains utility modules and helpers used throughout the project.
+
+- [`request.ts`](mdc:src/util/request.ts): Centralized API request handler using Axios, with built-in error handling and token management.
+- [`utils.tsx`](mdc:src/util/utils.tsx): General-purpose utility functions for formatting, date handling, query parsing, and more.
+- Other files provide specialized helpers (e.g., [`local.ts`](mdc:src/util/local.ts) for local storage, [`Socket.ts`](mdc:src/util/Socket.ts) for socket connections).
+
+Utilities are imported as needed in services, components, and models to promote code reuse and consistency.

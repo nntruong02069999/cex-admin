@@ -1,0 +1,4 @@
+.ant-select-item-option-content {
+    text-overflow: unset;
+    white-space: normal !important;
+}

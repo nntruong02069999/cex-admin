@@ -1,0 +1,175 @@
+[
+	{
+		"title": "ID",
+		"dataIndex": "id",
+		"width": 60,
+		"fixed": "left",
+    "show": false,
+    "sorter": true,
+		"hideInTable": false,
+		"hideInSearch": true,
+		"hideInForm": true
+	},
+  {
+    "title": "Chỉ tiêu",
+    "dataIndex": "name",
+    "fixed": "left",
+    "width": 200,
+    "hasFilter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 1,
+      "col": 1
+    }
+  },
+  {
+    "title": "Năm",
+    "dataIndex": "year",
+    "width": 100,
+    "hasFilter": true,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "formPattern": {
+      "card": "Thông tin cơ bản",
+      "row": 2,
+      "col": 1
+    }
+  },
+	{
+		"title": "Tháng",
+		"dataIndex": "month",
+		"width": 120,
+		"hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "filters": true,
+    "valueEnum": {
+      "1": { "text": "Tháng 1", "status": "Processing", "color": "#ec3b3b", "isText": true },
+        "2": { "text": "Tháng 2", "status": "Default", "color": "#ec3b3b", "isText": true },
+        "3": { "text": "Tháng 3", "status": "Error", "color": "#ec3b3b", "isText": true },
+        "4": { "text": "Tháng 4", "status": "Success", "color": "#ec3b3b", "isText": true },
+        "5": { "text": "Tháng 5", "status": "Success", "color": "#ec3b3b", "isText": true },
+        "6": { "text": "Tháng 6", "status": "Processing", "color": "#ec3b3b", "isText": true },
+        "7": { "text": "Tháng 7", "status": "Default", "color": "#ec3b3b", "isText": true },
+        "8": { "text": "Tháng 8", "status": "Error", "color": "#ec3b3b", "isText": true },
+        "9": { "text": "Tháng 9", "status": "Success", "color": "#ec3b3b", "isText": true },
+        "10": { "text": "Tháng 10", "status": "Success", "color": "#ec3b3b", "isText": true },
+        "11": { "text": "Tháng 11", "status": "Success", "color": "#ec3b3b", "isText": true },
+        "12": { "text": "Tháng 12", "status": "Success", "color": "#ec3b3b", "isText": true }
+    },
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 1,
+			"col": 1
+		}
+	},
+	{
+		"title": "Tuần",
+		"dataIndex": "week",
+		"width": 120,
+		"hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "filters": true,
+    "valueEnum": {
+      "Tuần 1": { "text": "Tuần 1", "status": "Processing", "color": "#ec3b3b", "isText": true },
+      "Tuần 2": { "text": "Tuần 2", "status": "Default", "color": "#ec3b3b", "isText": true },
+      "Tuần 3": { "text": "Tuần 3", "status": "Error", "color": "#ec3b3b", "isText": true },
+      "Tuần 4": { "text": "Tuần 4", "status": "Success", "color": "#ec3b3b", "isText": true },
+      "Tuần 5": { "text": "Tuần 5", "status": "Success", "color": "#ec3b3b", "isText": true }
+    },
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 2,
+			"col": 2
+		}
+	},
+	{
+		"title": "Số lượng",
+		"dataIndex": "amount",
+		"width": 200,
+		"hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 3,
+			"col": 1
+		}
+	},
+	{
+		"title": "Dự án",
+		"dataIndex": "projectId",
+		"width": 200,
+		"hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 2,
+			"col": 2
+		}
+	},
+	{
+		"title": "Nhóm",
+		"dataIndex": "group",
+		"width": 120,
+    "filters": true,
+		"hasFilter": false,
+    "hideInTable": true,
+    "hideInSearch": true,
+    "valueEnum": {
+      "Quỹ căn": { "text": "Quỹ căn", "status": "Processing", "color": "#ec3b3b", "isText": true },
+      "Chỉ tiêu": { "text": "Chỉ tiêu", "status": "Default", "color": "#ec3b3b", "isText": true },
+      "Đủ cọc": { "text": "Đủ cọc", "status": "Error", "color": "#ec3b3b", "isText": true },
+      "Thủ tục": { "text": "Thủ tục", "status": "Success", "color": "#ec3b3b", "isText": true }
+    },
+		"formPattern": {
+			"card": "Thông tin cơ bản",
+			"row": 4,
+			"col": 1
+		}
+	},
+	{
+		"title": "Trạng thái",
+		"dataIndex": "isActive",
+		"width": 120,
+    "filters": true,
+		"hasFilter": false,
+    "hideInTable": false,
+    "hideInSearch": false,
+    "valueEnum": {
+      "true": { "text": "Hoạt động", "status": "Processing", "color": "#ec3b3b", "isText": true },
+      "false": { "text": "Dừng", "status": "Default", "color": "#ec3b3b", "isText": true }
+    },
+		"formPattern": {
+			"card": "Thông tin khác",
+			"row": 2,
+			"col": 1
+		}
+	},
+	{
+		"title": "Ngày tạo",
+		"dataIndex": "createdAt",
+		"width": 150,
+		"valueType": "dateTime",
+    "sorter": true,
+		"hideInTable": false,
+		"hideInSearch": false,
+		"hideInForm": true,
+    "show": true
+	},
+	{
+		"title": "Ngày sửa",
+		"dataIndex": "updatedAt",
+		"width": 150,
+		"valueType": "dateTime",
+    "sorter": true,
+		"hideInTable": false,
+		"hideInSearch": false,
+		"hideInForm": true,
+    "show": false
+	}
+]

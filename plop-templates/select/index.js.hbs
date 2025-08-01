@@ -1,0 +1,183 @@
+import React, { useState, useEffect } from 'react';
+import { Modal, Input, Form, message } from 'antd';
+import concat from 'lodash/concat';
+import cloneDeep from 'lodash/cloneDeep';
+import { PlusCircleOutlined } from '@ant-design/icons';
+import Select from '../index';
+import { errorMessage } from '../../../utils/helpers';
+{{!-- import session from '../../../utils/session'; --}}
+import * as {{camelCase pageName}}Services from '../../../services/{{camelCase pageName}}';
+
+const initValueSelect = (data, value, callback, mode) => {
+  if (data && data.length > 0 && value) {
+    let curVal = value;
+    if (curVal && typeof curVal === "string" && curVal.split(',').length > 0) {
+			if (mode == 'simple') {
+				callback({ key: value })
+			} else {
+				curVal = curVal.split(',');
+				callback(origin => {
+					return curVal.map(j => {
+						const iFind = data.find(i => i.key == j);
+						if (iFind) {
+							return iFind;
+						}
+						return j;
+					});
+				});
+			}
+    } else if(data && data.length > 0) {
+			if (mode == 'simple') {
+				callback(value)
+			} else {
+				callback(origin => {
+					const iFind = data.find(i => value == i.key);
+					if (iFind) {
+						return iFind;
+					}
+					return value;
+				});
+			}
+    }
+  } else { callback([]); }
+}
+
+const {{pascalCase pageName}}Select = (props) => {
+  const {
+		mode = "multiple",
+		...rest
+	} = props;
+  const [val, setVal] = useState([]);
+  const [{{camelCase pageName}}, set{{pascalCase pageName}}] = useState([]);
+	const [visibleModal, setVisibleModal] = useState(false);
+	const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const rescurse{{pascalCase pageName}} = async (data, page, callback) => {
+		page = page || 1;
+		const pageSize = 200;
+		try {
+			const res{{pascalCase pageName}} = await {{camelCase pageName}}Services.getList({
+				page,
+				pageSize,
+				sort: "-id",
+			});
+			if (res{{pascalCase pageName}} && res{{pascalCase pageName}}.rows) {
+				data = concat(data, res{{pascalCase pageName}}.rows);
+			}
+			if (
+				res{{pascalCase pageName}} &&
+				res{{pascalCase pageName}}.totalPages &&
+				res{{pascalCase pageName}}.page &&
+				res{{pascalCase pageName}}.page < res{{pascalCase pageName}}.totalPages
+			) {
+				await rescurse{{pascalCase pageName}}(data, res{{pascalCase pageName}}.page + 1, callback)
+			} else {
+				callback(data)
+			}
+		} catch (error) {
+			console.log(`🚀 ~ file: res{{pascalCase pageName}} ~ error`, error);
+		}
+  }
+
+  const callback{{pascalCase pageName}} = (data) => {
+    data = cloneDeep(data || []).map(item => ({
+      key: item.{{camelCase key}},
+      value: item.{{camelCase value}},
+      label: item.{{camelCase value}}
+    }));
+    initValueSelect(data, props.value, setVal)
+    set{{pascalCase pageName}}(data);
+    {{!-- session.set("{{camelCase pageName}}-select-data", JSON.stringify(data)); --}}
+  }
+
+	const handleAdd{{pascalCase pageName}} = async (e) => {
+		let values;
+		try {
+			setConfirmLoading(true);
+			values = await form.validateFields();
+			const res = await {{pascalCase pageName}}Services.create(values, false);
+			if (res && res.id) {
+				setTimeout(async () => {
+					await rescurse{{pascalCase pageName}}([], 1, callback{{pascalCase pageName}});
+					if (mode == "simple") {
+							setVal({ key: res.id, value: res.name, label: res.name });
+							if (props.onChange) {
+								props.onChange({ key: res.id, value: res.name, label: res.name });
+							}
+						} else {
+							setVal(origin => [...origin,{ key: res.id, value: res.name, label: res.name }]);
+							if (props.onChange) {
+								props.onChange([...(props.value || []), { key: res.id, value: res.name, label: res.name }]);
+							}
+						}
+					setVisibleModal(false);
+					setConfirmLoading(false);
+				}, 5000)
+			}
+		} catch (error) {
+			errorMessage(error);
+			setConfirmLoading(false);
+		}
+	};
+
+  useEffect(() => {
+    initValueSelect({{camelCase pageName}}, props.value, setVal)
+  }, [props.value, {{camelCase pageName}}]);
+
+  useEffect(() => {
+    (async function anyNameFunction() {
+      {{!-- const dataSes = session.get("{{camelCase pageName}}-select-data");
+      if (dataSes && dataSes.length > 0) {
+        set{{pascalCase pageName}}(dataSes);
+      } else --}}
+      await rescurse{{pascalCase pageName}}([], '', callback{{pascalCase pageName}})
+    })();
+  }, []);
+
+  return (
+		<div style=\{{ display: 'flex' , justifyContent: 'center' , alignItems: 'center' }}>
+      { {{camelCase pageName}} && <Select
+        data={ {{camelCase pageName}} }
+        {...rest}
+				mode={mode}
+        value={val}
+      />}
+			<div style=\{{ marginLeft: '5px' }}>
+				<PlusCircleOutlined
+					style=\{{ fontSize: '20px', color: '#faad14' }}
+					onClick={() => { setVisibleModal(true); }}
+				/>
+			</div>
+			<Modal
+				title={`Thêm bản ghi`}
+				visible={visibleModal}
+				onOk={ handleAdd{{camelCase pageName}} }
+				confirmLoading={confirmLoading}
+				onCancel={() => { setVisibleModal(false); }}
+				okText={`Thực hiện`}
+				cancelText={`Hủy`}
+			>
+				<Form
+					form={form}
+				>
+					<Form.Item
+						rules={[
+							{
+								"required": true,
+								"message": "Tên không được trống"
+							}
+						]}
+						name={`name`}
+					>
+						<Input
+							placeHolder={`Tên`}
+							onPressEnter={ handleAdd{{camelCase pageName}} }
+						/>
+					</Form.Item>
+				</Form>
+			</Modal>
+    </div>
+  );
+}
+
+export default {{pascalCase pageName}}Select;

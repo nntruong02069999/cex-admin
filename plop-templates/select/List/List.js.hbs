@@ -1,0 +1,249 @@
+import React, { useState, useRef, useMemo } from 'react';
+import { Input, Button, Space, Tooltip } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import ProTable from 'packages/pro-table/Table';
+import dayjs from 'dayjs';
+import get from 'lodash/get';
+import assign from 'lodash/assign';
+import * as enums from 'util/enums';
+import { getValue } from 'util/helpers';
+import * as {{camelCase pageName}}Services from 'services/{{camelCase pageName}}';
+
+const List{{pascalCase pageName}} = (props) => {
+  const {
+    value,
+    onChange,
+    paramsList
+  } = props;
+
+  const searchInput = useRef();
+  const [, setSelectedRows] = useState([]);
+  const [, setSelectedRowKeys] = useState([]);
+  // const [formValues, setFormValues] = useState({});
+  const [current, setCurrent] = useState(1);
+  const [listSearch, setListSearch] = useState({});
+  const [data, setData] = useState({
+    list: [],
+    pagination: {
+      total: 0,
+      current: 1,
+      totalPages: 0
+    },
+  });
+
+  const pagination = {
+    ...(data && data.pagination),
+    pageSize: props.limit || ((process.env.REACT_APP_PAGESIZE && !Number.isNaN(process.env.REACT_APP_PAGESIZE)) ? Number(process.env.REACT_APP_PAGESIZE) : 5)
+  };
+
+  const fetchData = async (params, sort, filter) => {
+    console.log('fetchData -> params, sort, filter', params, sort, filter);
+    filter = Object.keys(filter).reduce((obj, key) => {
+      const newObj = { ...obj };
+      if (filter[key] !== null) newObj[key] = getValue(filter[key]);
+      return newObj;
+    }, {});
+
+    const pageSize = Number(pagination.pageSize);
+    params = assign(params, {
+      skip: (Number(pagination.current) - 1) * Number(pagination.pageSize),
+      limit: pageSize,
+    }, { queryInput: { ...filter, ...(params.queryInput || {}) } });
+
+    const response = await {{camelCase pageName}}Services.getList(params);
+    let data = get(response, "data", {});
+    let total = get(data, "count", 0);
+    let list = [];
+    if (data && data.data) {
+      list = data.data.map(item => {
+        if (item.createdAt) {
+          const createdAt = item.createdAt;
+          item.createdAt = dayjs(createdAt);
+        }
+        if (item.updatedAt) {
+          const updatedAt = item.updatedAt;
+          item.updatedAt = dayjs(updatedAt);
+        }
+        {{!-- if (item.isActive) {
+          item.isActive = `${item.isActive}`;
+        } --}}
+        return item;
+      });
+    }
+    setCurrent(current + 1);
+    const dataRes = {
+      // list,
+      pagination: {
+        pageSize,
+        total,
+        totalPages: Math.floor((get(data, "count", 0) + pageSize - 1) / pageSize),
+        current: params.current
+      }
+    };
+    setData(dataRes);
+    return {
+      data: list,
+      total,
+      success: true
+    };
+  };
+
+  const handleSelectRows = (keys, rows) => {
+    setSelectedRows(rows);
+    setSelectedRowKeys(keys);
+    if (props.modeChoose === 'radio') {
+      if (keys.length > 0) {
+        triggerChange(keys[0], rows[0]);
+      }
+    } else {
+      triggerChange(keys, rows);
+    }
+  };
+
+  const handleSearchFilter = (selectedKeys, confirm, dataIndex) => {
+    setListSearch({
+      ...listSearch,
+      [`search_${dataIndex}`]: selectedKeys[0],
+    });
+    confirm();
+  };
+
+  const getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style=\{{ padding: 8 }}>
+        <Input
+          ref={searchInput}
+          placeholder={`Tìm kiếm ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearchFilter(selectedKeys, confirm, dataIndex)}
+          /* onKeyDown={e => {
+            if (e.key === 'Enter') {
+              onChange(e.target.value)
+            }
+          }} */
+          style=\{{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearchFilter(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style=\{{ width: 90 }}
+          >
+            Tìm
+          </Button>
+          <Button onClick={() => handleReset(clearFilters, confirm, dataIndex)} size="small" style=\{{ width: 90 }}>
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: filtered => <SearchOutlined style=\{{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => searchInput.current.select());
+      }
+    },
+    onFilter: (value, record) => record
+    /* onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    render: text =>
+      this.state.searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle=\{{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[this.state.searchText]}
+          autoEscape
+          textToHighlight={text.toString()}
+        />
+      ) : (
+          text
+        ), */
+  });
+
+  const handleReset = (clearFilters, confirm, dataIndex) => {
+    clearFilters();
+    setListSearch({
+      ...listSearch,
+      [`search_${dataIndex}`]: '',
+    });
+    confirm();
+  };
+
+  const triggerChange = (key, data) => {
+    if (onChange) {
+      onChange({ key, data });
+    }
+  };
+
+  const columns = [
+    {
+      title: '{{uppercase key}}',
+      dataIndex: '{{key}}',
+      width: 60,
+      fixed: 'left',
+      hideInSearch: true,
+    },
+    {
+      title: '{{value}}',
+      dataIndex: '{{value}}',
+      width: 200,
+      hideInSearch: true,
+      ...getColumnSearchProps('{{value}}'),
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'isActive',
+      width: 120,
+      filters: true,
+      valueEnum: {
+        true: { "text": "Hoạt động", "status": "Processing", "color": "#ec3b3b", "isText": "true", },
+        false: { "text": "Dừng", "status": "Default", "color": "#ec3b3b", "isText": "true", },
+      },
+      hideInSearch: true,
+    },
+  ];
+
+  const getParams = useMemo(() => {
+    let params = {
+      queryInput: {
+        ...paramsList
+      }
+    };
+    return params;
+  }, [value, paramsList]);
+
+  return (
+    <div className="nv-wrapper-select-table">
+      <ProTable
+        tableClassName="gx-table-responsive"
+        request={fetchData}
+        params={getParams}
+        search={false}
+        headerTitle={"Danh sách {{pascalCase pageName}}"}
+        rowKey="id"
+        toolBarRender={false}
+        tableAlertRender={false}
+        pagination={pagination}
+        columns={columns}
+        rowSelection=\{{
+          type: props.modeChoose || 'checkbox',
+          renderCell: (checked, record, index, originNode) => {
+            return (
+              <Tooltip title={"Chọn {{pascalCase pageName}}"}>
+                {originNode}
+              </Tooltip>
+            );
+          },
+          onChange: handleSelectRows
+        }}
+        // onChange={handleStandardTableChange}
+        dateFormatter="string"
+        type="table"
+      />
+    </div>
+  );
+};
+
+export default List{{pascalCase pageName}};

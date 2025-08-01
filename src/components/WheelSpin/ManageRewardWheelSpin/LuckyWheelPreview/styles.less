@@ -1,0 +1,74 @@
+.lucky-wheel-preview {
+  .wheel-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    
+    canvas {
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .wheel-controls {
+    margin-bottom: 20px;
+  }
+
+  .reward-info {
+    text-align: left;
+    
+    .reward-count {
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .reward-list-preview {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #f0f0f0;
+      border-radius: 6px;
+      padding: 8px;
+
+      .reward-item-preview {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 12px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .reward-color {
+          width: 12px;
+          height: 12px;
+          border-radius: 2px;
+          margin-right: 8px;
+          flex-shrink: 0;
+        }
+
+        .reward-name {
+          flex: 1;
+          color: #666;
+        }
+      }
+    }
+  }
+
+  &.empty-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+  }
+
+  @media (max-width: 768px) {
+    .wheel-container {
+      canvas {
+        width: 280px !important;
+        height: 280px !important;
+      }
+    }
+  }
+} 

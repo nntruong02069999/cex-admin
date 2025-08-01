@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('Gilroy-Bold1.otf') format('truetype'),
+    url('Gilroy-Light1.otf') format('truetype'),
+    url('Gilroy-Medium1.otf') format('truetype'),
+    url('Gilroy-Regular1.otf') format('truetype');
+}

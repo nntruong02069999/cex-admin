@@ -1,0 +1,32 @@
+.reward-list {
+  .reward-list-header {
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .reward-tabs {
+    .ant-tabs-content-holder {
+      padding-top: 0;
+    }
+  }
+
+  .ant-table {
+    .ant-table-tbody > tr > td {
+      vertical-align: middle;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .ant-table {
+      .ant-table-thead > tr > th,
+      .ant-table-tbody > tr > td {
+        &:nth-child(5),
+        &:nth-child(6) {
+          display: none;
+        }
+      }
+    }
+  }
+} 

@@ -1,0 +1,39 @@
+import { stringify } from 'qs';
+import omit from 'lodash/omit';
+import request from 'util/request';
+
+export async function getList(params = {}, notification) {
+  let queryInput;
+  let query = omit(params, "queryInput", {});
+  if (params.queryInput){
+    queryInput = JSON.stringify(params.queryInput);
+
+  }
+  if (queryInput){
+    return request(`{{api}}?queryInput=${queryInput}&${stringify(query)}`, {
+    }, notification);
+  }
+  return request(`{{api}}?${stringify(query)}`, {
+  }, notification);
+}
+
+export async function get(id, params = {}, notification) {
+  if (params !== null && Object.keys(params).length > 0) {
+    return request(`{{api}}?queryInput=${JSON.stringify({ id: Number(id) })}`, { params }, notification);
+  }
+  return request(`{{api}}?queryInput=${JSON.stringify({ id: Number(id) })}`, { }, notification);
+}
+
+export async function create(data, notification) {
+  return request(`{{api}}`, {
+    method: 'post',
+    data,
+  }, notification);
+}
+
+export async function update(id, data, notification) {
+  return request(`{{api}}/${id}`, {
+    method: 'patch',
+    data,
+  }, notification);
+}

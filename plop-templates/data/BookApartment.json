@@ -1,0 +1,38 @@
+[
+    {
+        "title": "ID",
+        "dataIndex": "id",
+        "width": 60,
+        "fixed": "left",
+        "sorter": true,
+        "hideInTable": false,
+        "hideInSearch": true,
+        "hideInForm": true
+    },
+    {
+        "title": "Tên căn hộ",
+        "dataIndex": "name",
+        "width": 200,
+        "hasFilter": true,
+        "hideInTable": false,
+        "hideInSearch": false,
+        "formPattern": {
+            "card": "Thông tin cơ bản",
+            "row": 1,
+            "col": 1
+        }
+    },
+    {
+        "title": "Trạng thái",
+        "dataIndex": "state",
+        "width": 200,
+        "hasFilter": true,
+        "hideInTable": false,
+        "hideInSearch": false,
+        "formPattern": {
+            "card": "Thông tin cơ bản",
+            "row": 1,
+            "col": 2
+        }
+    }
+]
