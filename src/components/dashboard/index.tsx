@@ -251,7 +251,7 @@ const Dashboard: React.FC = () => {
               backgroundColor="#5cb85c"
               value={`${new Intl.NumberFormat("en-US").format(
                 state.summaryData.revenue
-              )} ₹`}
+              )} USDT`}
               title="Doanh thu"
             />
           </Col>
@@ -265,7 +265,7 @@ const Dashboard: React.FC = () => {
               backgroundColor="#d9534f"
               value={`${new Intl.NumberFormat("en-US").format(
                 state.summaryData.expenses
-              )} ₹`}
+              )} USDT`}
               title="Chi phí"
             />
           </Col>
@@ -277,7 +277,7 @@ const Dashboard: React.FC = () => {
               backgroundColor="#5cb85c"
               value={`${new Intl.NumberFormat("en-US").format(
                 state.summaryData.profit
-              )} ₹`}
+              )} USDT`}
               title="Lợi nhuận"
             />
           </Col>
