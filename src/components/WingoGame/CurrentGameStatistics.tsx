@@ -1,9 +1,9 @@
 import { get } from "lodash";
 import { ARRAY_UNIT_DIGITS, CURRENCY } from "@src/constants/constants";
-import { WingoGameCompletedRound } from "@src/interfaces/WingoGame";
+import { GameCompletedRound } from "@src/interfaces/WingoGame";
 
 interface CurrentGameStatisticsProps {
-  currentGameInfos: Partial<WingoGameCompletedRound>;
+  currentGameInfos: Partial<GameCompletedRound>;
 }
 
 const CurrentGameStatistics: React.FC<CurrentGameStatisticsProps> = (
@@ -14,42 +14,39 @@ const CurrentGameStatistics: React.FC<CurrentGameStatisticsProps> = (
   return (
     <div className="game-history">
       <div className="color-bets">
-        <div className="color-row">
-          <div className="color-label">Màu sắc</div>
-          <div
-            style={{ backgroundColor: "#27ae60", color: "white" }}
-            className="color-green"
-          >
-            Xanh
-          </div>
-          <div
-            style={{ backgroundColor: "#9b59b6", color: "white" }}
-            className="color-pink"
-          >
-            Tím
-          </div>
-          <div
-            style={{ backgroundColor: "#e74c3c", color: "white" }}
-            className="color-red"
-          >
-            Đỏ
+         <div className="color-row">
+          <div className="bet-label">Phiên</div>
+          <div className="bet-amount">
+            {currentGameInfos?.issueNumber}
           </div>
         </div>
         <div className="color-row">
-          <div className="bet-label">Tổng đặt</div>
+          <div className="color-label">Đã chọn</div>
+          <div
+            style={{ backgroundColor: "rgb(49, 204, 101)", color: "white" }}
+            className="color-green"
+          >
+            Mua
+          </div>
+          <div
+            style={{ backgroundColor: "rgb(209, 47, 36)", color: "white" }}
+            className="color-pink"
+          >
+            Bán
+          </div>
+        </div>
+        <div className="color-row">
+          <div className="bet-label">Tổng tiền</div>
           <div className="bet-amount">
-            {get(currentGameInfos, "totalGreenBets", 0) + CURRENCY}
+            {CURRENCY + get(currentGameInfos, "totalBuy", 0) }
           </div>
           <div className="bet-amount">
-            {get(currentGameInfos, "totalPurpleBets", 0) + CURRENCY}
-          </div>
-          <div className="bet-amount">
-            {get(currentGameInfos, "totalRedBets", 0) + CURRENCY}
+            {CURRENCY +  get(currentGameInfos, "totalSell", 0) }
           </div>
         </div>
       </div>
 
-      <div className="number-bets">
+      <div className="number-bets" style={{display: "none"}}>
         <div className="number-row">
           <div className="number-label">Số</div>
           {ARRAY_UNIT_DIGITS.map((item) => (
@@ -79,7 +76,7 @@ const CurrentGameStatistics: React.FC<CurrentGameStatisticsProps> = (
         </div>
       </div>
 
-      <div className="size-bets">
+      <div className="size-bets" style={{display: "none"}}>
         <div className="size-row">
           <div className="size-label">Lớn nhỏ</div>
           <div

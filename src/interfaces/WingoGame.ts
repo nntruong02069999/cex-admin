@@ -1,53 +1,47 @@
-import { WINGO_TIME_CONFIG } from "@src/constants/enums"
+import { GAME_RESULT_GENERATION_TYPE, GAME_RESULT_SIDE_WINNER, GAME_STATE, WINGO_TIME_CONFIG } from "@src/constants/enums"
 import { StatisticCustomersOrder } from "./GlobalGame"
 
 export interface GetListCompletedRoundParams {
     skip: number
     limit: number
-    timeConfig: WINGO_TIME_CONFIG
 }
 
-export interface SetWingoGameResultParams {
+export interface SetGameResultParams {
     issueNumber: string
-    result: number
+    result: GAME_RESULT_SIDE_WINNER
 }
 
-export interface WingoGameCompletedRound {
-    id: number
+export interface GameCompletedRound {
     createdAt: number
     updatedAt: number
+    id: number
+    symbol: "BTC/USDT"
+    timeframe: string
     issueNumber: string
-    startTime: string
-    endTime: string
-    resultNumber: number | null
-    resultColor: string | null
-    resultSize: string | null
-    totalBetAmount: number
-    totalWinAmount: number
-    totalGreenBets: number
-    totalPurpleBets: number
-    totalRedBets: number
-    totalBigBets: number
-    totalSmallBets: number
-    totalBetNumber0: number
-    totalBetNumber1: number
-    totalBetNumber2: number
-    totalBetNumber3: number
-    totalBetNumber4: number
-    totalBetNumber5: number
-    totalBetNumber6: number
-    totalBetNumber7: number
-    totalBetNumber8: number
-    totalBetNumber9: number
+    open: number
+    high: number
+    low: number
+    close: number
+    volume: number
+    timestamp: number
+    order: number
+    closeCandlestick: boolean
+    state: GAME_STATE
+    totalBuy: number
+    totalSell: number
+    houseProfit: number
     isAdminConfigManually: boolean
+    sideWinner: GAME_RESULT_SIDE_WINNER | null
     playerCount: number
-    wingoTimeConfig: WINGO_TIME_CONFIG
-    state: string;
-    syntheticSuccess: boolean
+    resultGenerationType: GAME_RESULT_GENERATION_TYPE
+    syntheticSuccess: false
+
+    // Additional fields for the Wingo game
+    tempWinner?: GAME_RESULT_SIDE_WINNER | null
 }
 
 export interface WingoGameStatisticCurrentRound {
-    currentRound: WingoGameCompletedRound
+    currentRound: GameCompletedRound
     statisticCustomersOrder: StatisticCustomersOrder[]
     startTime: string
     endTime: string

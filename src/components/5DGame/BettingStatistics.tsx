@@ -19,19 +19,20 @@ export const BettingStatistics: React.FC<BettingStatisticsProps> = (
 
   return statisticCustomersOrder?.length > 0 ? (
     <Card
-      title={`Thống kê đặt cược: ${statisticCustomersOrder?.length} người đặt`}
+      title={`Thống kê đặt: ${statisticCustomersOrder?.length} người đặt`}
       bordered={false}
       className="is-betting-statistics"
     >
       {statisticCustomersOrder?.map((item: StatisticCustomersOrder) => {
-        const total = Number(
-          (item?.totalWinAmount - item?.totalBetAmount).toFixed(2)
-        );
-        const isWingoGame = item?.isWingoGame === true;
+        // const total = Number(
+        //   (item?.totalWinAmount - item?.totalBetAmount).toFixed(2)
+        // );
+        // const isWingoGame = item?.isWingoGame === true;
+        const isWingoGame = false
         let backgroundColor = "";
         if (isWingoGame) {
           // Try to convert item?.selectValue to number if true, if not return 0
-          const number = Number(item?.selectValue);
+          const number = Number(item?.amount);
           if (isNaN(number)) {
             backgroundColor = item?.color || "#fb5b5b";
           } else {
@@ -59,17 +60,17 @@ export const BettingStatistics: React.FC<BettingStatisticsProps> = (
           >
             <div className="betting-item-container">
               <span className="betting-main-info">
-                ID: {item?.customerId} | Bet: {item?.selectValue}{" "}
-                {formatCurrency(item?.totalBet)} {CURRENCY}
+                ID: {item?.customerId} chọn {item?.side}{" với giá: "}
+                {CURRENCY + formatCurrency(item?.amount)}
               </span>
-              <Tag className="balance-tag">
+              {/* <Tag className="balance-tag">
                 Số dư: {formatCurrency(item?.balance)} {CURRENCY}
-              </Tag>
-              <Tag
+              </Tag> */}
+              {/* <Tag
                 className={`total-tag ${total >= 0 ? "positive" : "negative"}`}
               >
                 Tổng: {formatCurrency(total)} {CURRENCY}
-              </Tag>
+              </Tag> */}
             </div>
           </Card.Grid>
         );

@@ -1,11 +1,10 @@
+import { GAME_RESULT_SIDE_WINNER } from "@src/constants/enums"
+
 export interface StatisticCustomersOrder {
     customerId: number
-    totalBet: number
-    totalBetAmount: number
-    totalWinAmount: number
-    balance: number
-    selectValue?: string
-    amount?: number
-    color: string
-    isWingoGame?: boolean
+    amount: number
+    totalTradeAmount: number
+    totalTradeAmountWin: number
+    side: GAME_RESULT_SIDE_WINNER
+    color?: string
 }

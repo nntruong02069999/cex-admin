@@ -76,6 +76,7 @@ class SidebarLogo extends Component<SidebarProps> {
                 height: "auto",
                 maxHeight: "40px",
                 objectFit: "contain",
+                filter: "invert(50%) sepia(87%) saturate(1841%) hue-rotate(341deg) brightness(101%) contrast(105%)",
               }}
             />
           ) : themeType === THEME_TYPE_LITE ? (
@@ -88,6 +89,7 @@ class SidebarLogo extends Component<SidebarProps> {
                 height: "auto",
                 maxHeight: "40px",
                 objectFit: "contain",
+                 filter: "invert(50%) sepia(87%) saturate(1841%) hue-rotate(341deg) brightness(101%) contrast(105%)",
               }}
             />
           ) : (
@@ -100,6 +102,7 @@ class SidebarLogo extends Component<SidebarProps> {
                 height: "auto",
                 maxHeight: "40px",
                 objectFit: "contain",
+                 filter: "invert(50%) sepia(87%) saturate(1841%) hue-rotate(341deg) brightness(101%) contrast(105%)",
               }}
             />
           )}

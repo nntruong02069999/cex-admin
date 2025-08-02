@@ -1,13 +1,12 @@
 import { DEFAULT_ERROR_MESSAGE } from '@src/constants/constants'
-import { WINGO_TIME_CONFIG } from '@src/constants/enums'
 import HttpStatusCode from '@src/constants/HttpStatusCode'
-import { GetListCompletedRoundParams, SetWingoGameResultParams } from '@src/interfaces/WingoGame'
+import { GetListCompletedRoundParams, SetGameResultParams } from '@src/interfaces/WingoGame'
 import request from '@src/util/request'
 
 export async function getListCompletedRoundsWingo(data: GetListCompletedRoundParams) {
   const token = localStorage.getItem('token')
   const res: any = await request({
-    url: '/admin/wingo/get-completed-round',
+    url: '/admin/game/get-completed-round',
     options: {
       method: 'post',
       data,
@@ -26,10 +25,10 @@ export async function getListCompletedRoundsWingo(data: GetListCompletedRoundPar
   }
 }
 
-export async function getListNextRoundsWingo(timeConfig: WINGO_TIME_CONFIG) {
+export async function getListNextRoundsWingo() {
   const token = localStorage.getItem('token')
   const res: any = await request({
-    url: `/admin/wingo/get-next-rounds?timeConfig=${timeConfig}`,
+    url: '/admin/game/get-next-rounds',
     options: {
       method: 'get',
       headers: {
@@ -47,10 +46,10 @@ export async function getListNextRoundsWingo(timeConfig: WINGO_TIME_CONFIG) {
   }
 }
 
-export async function setWingoGameResult(data: SetWingoGameResultParams) {
+export async function setWingoGameResult(data: SetGameResultParams) {
   const token = localStorage.getItem('token')
   const res: any = await request({
-    url: '/admin/wingo/set-result',
+    url: '/admin/game/set-result',
     options: {
       method: 'post',
       data,
@@ -69,10 +68,10 @@ export async function setWingoGameResult(data: SetWingoGameResultParams) {
   }
 }
 
-export async function getStatisticCurrentRoundWingo(timeConfig: WINGO_TIME_CONFIG) {
+export async function getStatisticCurrentRoundWingo() {
   const token = localStorage.getItem('token')
   const res: any = await request({
-    url: `/admin/wingo/get-statistic-current-round?timeConfig=${timeConfig}`,
+    url: '/admin/game/get-statistic-current-round',
     options: {
       method: 'get',
       headers: {

@@ -3,12 +3,12 @@ import { get } from "lodash";
 import { useState } from "react";
 
 import * as wingoGameServices from "@src/services/wingo-game";
-import { WingoGameCompletedRound } from "@src/interfaces/WingoGame";
+import { GameCompletedRound } from "@src/interfaces/WingoGame";
 import { SECONDS_TO_DISABLE_SET_RESULT_GAME } from "@src/constants/constants";
 
 interface BtnSetResultProps {
   value: string;
-  record: WingoGameCompletedRound;
+  record: GameCompletedRound;
   setIsSetResultSuccess: (data: boolean) => void;
   secondsLeft: number;
   isFirstRow: boolean;
@@ -34,15 +34,16 @@ const BtnSetResult: React.FC<BtnSetResultProps> = (
     loadingNextRound;
 
   const setWingoGameResult = async () => {
-    const resultNumber = get(record, "resultNumber", null);
-    if (resultNumber == null) {
+    const sideWinner = get(record, "sideWinner", null);
+    console.log("🚀 ~ setWingoGameResult ~ sideWinner:", sideWinner)
+    if (sideWinner === null || !sideWinner) {
       message.error("Please choose the result number");
       setIsSetResultSuccess(false);
       return;
     }
     const params = {
       issueNumber: value,
-      result: resultNumber,
+      result: sideWinner,
     };
     setIsLoading(true);
     const result = await wingoGameServices.setWingoGameResult(params);

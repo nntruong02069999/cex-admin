@@ -1,4 +1,4 @@
-import { FIVE_D_GAME_DIGIT, WINGO_TIME_CONFIG } from "./enums"
+import { FIVE_D_GAME_DIGIT, GAME_RESULT_SIDE_WINNER, WINGO_TIME_CONFIG } from "./enums"
 
 export const COLORS = [
   'magenta',
@@ -68,7 +68,7 @@ export const ARRAY_FIVE_D_GAME_DIGITS = [
 
 export const DEFAULT_ERROR_MESSAGE = 'Hệ thống đang bận vui lòng thực hiện sau'
 
-export const CURRENCY = '₹'
+export const CURRENCY = '$'
 
 export const DEFAULT_PAGINATION = {
   skip: 0,
@@ -79,3 +79,8 @@ export const DEFAULT_PAGINATION = {
 }
 
 export const SECONDS_TO_DISABLE_SET_RESULT_GAME = 5
+
+export const ARRAY_GAME_RESULT_SIDE_WINNERS = [
+  { id: 1, name: "Mua", value: GAME_RESULT_SIDE_WINNER.BUY },
+  { id: 2, name: "Bán", value: GAME_RESULT_SIDE_WINNER.SELL },
+];

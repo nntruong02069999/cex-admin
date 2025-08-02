@@ -23,3 +23,15 @@ export function getSecondsLeftFromIST(endTimeISTString: string): number {
     return 60
   }
 }
+
+// Tính số giây còn lại từ chuỗi thời gian IST
+export function getSecondsLeftFromISTWithoutTimeZone(endTimeISTString: string): number {
+  try {
+    const endTimeNumber = Number(endTimeISTString) * 1000
+    const diff = dayjs(endTimeNumber).utc().diff(dayjs().utc().valueOf(), "seconds");
+    return Math.max(0, Math.floor(diff))
+  } catch (error) {
+    console.error('Lỗi khi tính thời gian còn lại từ IST:', error)
+    return 30
+  }
+}

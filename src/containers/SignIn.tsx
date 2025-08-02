@@ -206,7 +206,8 @@ class SignIn extends React.Component<
                 <img
                   src={logoBackground}
                   alt="MediaOne"
-                  style={{ width: "100%", height: "auto" }}
+
+                  style={{ width: "100%", height: "auto", filter: "invert(50%) sepia(87%) saturate(1841%) hue-rotate(341deg) brightness(101%) contrast(105%)", }}
                 />
               </div>
               <div className="gx-app-logo">

@@ -6,20 +6,21 @@ import BtnSetResult from "./BtnSetResult";
 import BtnRecentGame from "./BtnRecentGame";
 import * as gameHelpers from "@src/util/gameHelpers";
 import {
-  ARRAY_UNIT_DIGITS,
+  ARRAY_GAME_RESULT_SIDE_WINNERS,
   CURRENCY,
   SECONDS_TO_DISABLE_SET_RESULT_GAME,
 } from "@src/constants/constants";
-import { WingoGameCompletedRound } from "@src/interfaces/WingoGame";
+import { GameCompletedRound } from "@src/interfaces/WingoGame";
+import { GAME_RESULT_SIDE_WINNER } from "@src/constants/enums";
 
 // Assuming ARRAY_UNIT_DIGITS items have a structure like this, define it for better type safety
 interface UnitDigitOption {
-  id: string | number;
+  id: number;
   name: string;
-  value: number;
+  value: GAME_RESULT_SIDE_WINNER;
 }
 
-export const columnsCompletedRound: ColumnsType<WingoGameCompletedRound> = [
+export const columnsCompletedRound: ColumnsType<GameCompletedRound> = [
   {
     title: "Phiên",
     dataIndex: "issueNumber",
@@ -28,23 +29,38 @@ export const columnsCompletedRound: ColumnsType<WingoGameCompletedRound> = [
     width: 120,
   },
   {
-    title: "Tổng giá trị",
-    dataIndex: "totalBetAmount",
-    key: "totalBetAmount",
+    title: "Tổng mua",
+    dataIndex: "totalBuy",
+    key: "totalBuy",
     align: "center" as AlignType,
     width: 100,
-    render: (value: number) => `${value + CURRENCY}`,
+   render: (value: number) => {
+       return <span>{CURRENCY + value}</span>;
+    },
+  },
+  {
+    title: "Tổng bán",
+    dataIndex: "totalSell",
+    key: "totalSell",
+    align: "center" as AlignType,
+    width: 100,
+   render: (value: number) => {
+       return <span>{CURRENCY + value}</span>;
+    },
   },
   {
     title: "Kết quả",
-    dataIndex: "resultNumber",
-    key: "resultNumber",
+    dataIndex: "sideWinner",
+    key: "sideWinner",
     align: "center" as AlignType,
     width: 120,
-    render: (value: number) => {
+    render: (value: GAME_RESULT_SIDE_WINNER) => {
+      const findSideWinner = ARRAY_GAME_RESULT_SIDE_WINNERS.find(
+        (item: UnitDigitOption) => item.value === value
+      );
       return (
         <Tag color="#ee2634" key={value}>
-          {value}
+          {findSideWinner?.name}
         </Tag>
       );
     },
@@ -55,22 +71,26 @@ export const columnsCompletedRound: ColumnsType<WingoGameCompletedRound> = [
     key: "totalWinAmount",
     align: "center" as AlignType,
     width: 150,
-    render: (value: number) => (
-      <span style={{ color: "#ee2634" }}>
-        {value ? value + CURRENCY : 0 + CURRENCY}
-      </span>
-    ),
+    render: (value: number) => gameHelpers.renderShowAmount(value),
+  },
+  {
+    title: "Lợi nhuận",
+    dataIndex: "houseProfit",
+    key: "houseProfit",
+    align: "center" as AlignType,
+    width: 150,
+    render: (value: number) => gameHelpers.renderShowAmount(value),
   },
   {
     title: "Thời gian",
-    dataIndex: "id",
-    key: "id",
+    dataIndex: "timestamp",
+    key: "timestamp",
     align: "center" as AlignType,
     width: 150,
-    render: (value: string, record: WingoGameCompletedRound) => {
-      const date = dayjs(record?.startTime).format("DD/MM/YYYY");
-      const startTime = dayjs(record?.startTime).format("HH:mm");
-      const endTime = dayjs(record?.endTime).format("HH:mm");
+    render: (value: number) => {
+      const date = dayjs(value * 1000).format("DD/MM/YYYY");
+      const startTime = dayjs(value * 1000).format("HH:mm:ss");
+      const endTime = dayjs(value * 1000).add(29, "second").format("HH:mm:ss");
       return `${date + "  " + startTime + " > " + endTime}`;
     },
   },
@@ -80,7 +100,7 @@ export const columnsCompletedRound: ColumnsType<WingoGameCompletedRound> = [
     dataIndex: "id",
     align: "center" as AlignType,
     width: 120,
-    render: (value: string, record: WingoGameCompletedRound) => {
+    render: (value: string, record: GameCompletedRound) => {
       return <BtnRecentGame currentGameInfos={record} />;
     },
   },
@@ -92,16 +112,16 @@ export const columnsNextRound = (
   setIsSetResultSuccess: (data: boolean) => void,
   onResultChange: (
     issueNumber: string,
-    newResult: number | null
+    newResult: GAME_RESULT_SIDE_WINNER | null
   ) => void
-): ColumnsType<WingoGameCompletedRound> => [
+): ColumnsType<GameCompletedRound> => [
   {
     title: "Phiên",
     dataIndex: "issueNumber",
     key: "issueNumber",
     align: "center" as AlignType,
     width: 140,
-    render: (text: string, record: WingoGameCompletedRound, index: number) => {
+    render: (text: string, record: GameCompletedRound, index: number) => {
       const isFirstRow = index === 0;
       const countdownTextArr =
         gameHelpers.renderArrayTextCountdown(secondsLeft);
@@ -122,15 +142,15 @@ export const columnsNextRound = (
   },
   {
     title: "Thời gian",
-    dataIndex: "id",
-    key: "id",
+    dataIndex: "timestamp",
+    key: "timestamp",
     align: "center" as AlignType,
     width: 400,
-    render: (value: string, record: WingoGameCompletedRound, index: number) => {
+    render: (value: number, record: GameCompletedRound, index: number) => {
       const isFirstRow = index === 0;
-      const date = dayjs(record?.startTime).format("DD/MM/YYYY");
-      const startTime = dayjs(record?.startTime).format("HH:mm");
-      const endTime = dayjs(record?.endTime).format("HH:mm");
+      const date = dayjs(value * 1000).format("DD/MM/YYYY");
+      const startTime = dayjs(value * 1000).format("HH:mm:ss");
+      const endTime = dayjs(value * 1000).add(29, "second").format("HH:mm:ss");
       return (
         <span style={{ fontWeight: isFirstRow ? "bold" : "normal" }}>
           {date + "  " + startTime + " > " + endTime}
@@ -140,13 +160,13 @@ export const columnsNextRound = (
   },
   {
     title: "Kết quả",
-    dataIndex: "resultNumber",
-    key: "resultNumber",
+    dataIndex: "sideWinner",
+    key: "sideWinner",
     align: "center" as AlignType,
     width: 120,
     render: (
-      value: number | null,
-      record: WingoGameCompletedRound,
+      value: GAME_RESULT_SIDE_WINNER | null,
+      record: GameCompletedRound,
       index: number
     ) => {
       const isFirstRow = index === 0;
@@ -156,7 +176,7 @@ export const columnsNextRound = (
 
       const handleChange = (e: RadioChangeEvent) => {
         const radioValue = e.target.value;
-        const newResultNumber = radioValue !== null ? Number(radioValue) : null;
+        const newResultNumber = radioValue !== null ? radioValue : null;
         onResultChange(record.issueNumber, newResultNumber);
       };
 
@@ -167,7 +187,7 @@ export const columnsNextRound = (
           onChange={handleChange}
           name={`wingo-completed-round-${record.id}`}
           optionType="button"
-          options={ARRAY_UNIT_DIGITS.map((item: UnitDigitOption) => ({
+          options={ARRAY_GAME_RESULT_SIDE_WINNERS.map((item: UnitDigitOption) => ({
             label: item.name,
             value: item.value,
           }))}
@@ -181,7 +201,7 @@ export const columnsNextRound = (
     key: "issueNumber",
     align: "center" as AlignType,
     width: 100,
-    render: (value: string, record: WingoGameCompletedRound, index: number) => {
+    render: (value: string, record: GameCompletedRound, index: number) => {
       const isFirstRow = index === 0;
       return (
         <BtnSetResult

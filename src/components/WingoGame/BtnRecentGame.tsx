@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Button, Modal } from "antd";
-import { WingoGameCompletedRound } from "@src/interfaces/WingoGame";
+import { GameCompletedRound } from "@src/interfaces/WingoGame";
 import CurrentGameStatistics from "./CurrentGameStatistics";
 
 interface BtnRecentGameProps {
-  currentGameInfos: WingoGameCompletedRound;
+  currentGameInfos: GameCompletedRound;
 }
 
 const BtnRecentGame: React.FC<BtnRecentGameProps> = (props: BtnRecentGameProps) => {

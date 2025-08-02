@@ -7,7 +7,7 @@ import {
   DEFAULT_PAGINATION,
 } from "@src/constants/constants";
 import {
-  WingoGameCompletedRound,
+  GameCompletedRound,
   GetListCompletedRoundParams,
   WingoGameStatisticCurrentRound,
 } from "@src/interfaces/WingoGame";
@@ -15,23 +15,24 @@ import { Pagination } from "@src/interfaces";
 import * as wingoGameServices from "@src/services/wingo-game";
 import * as TableColumns from "@src/components/WingoGame/TableColumns";
 import * as gameHelpers from "@src/util/gameHelpers";
-import { getSecondsLeftFromIST } from "@src/util/timeUtils";
+import { getSecondsLeftFromISTWithoutTimeZone } from "@src/util/timeUtils";
 import { BettingStatistics } from "@src/components/5DGame/BettingStatistics";
 import CurrentGameStatistics from "@src/components/WingoGame/CurrentGameStatistics";
+import { GAME_RESULT_SIDE_WINNER } from "@src/constants/enums";
 
 const WingoGame: React.FC<any> = () => {
   const [selectedWingoTimeConfig, setSelectedWingoTimeConfig] = useState(
     ARRAY_WINGO_TIME_CONFIGS[0]
   );
-  const [secondsLeft, setSecondsLeft] = useState(60);
+  const [secondsLeft, setSecondsLeft] = useState(30);
   const [loadingRecentGame, setLoadingRecentGame] = useState(false);
   const [listCompletedRound, setListCompletedRound] = useState<
-    WingoGameCompletedRound[]
+    GameCompletedRound[]
   >([]);
   const [pagination, setPagination] = useState<Pagination>(DEFAULT_PAGINATION);
 
   const [loadingNextRound, setLoadingNextRound] = useState(false);
-  const [listNextRound, setListNextRound] = useState<WingoGameCompletedRound[]>(
+  const [listNextRound, setListNextRound] = useState<GameCompletedRound[]>(
     []
   );
 
@@ -47,7 +48,7 @@ const WingoGame: React.FC<any> = () => {
     return {
       skip: pagination.skip,
       limit: pagination.limit,
-      timeConfig: selectedWingoTimeConfig.value,
+      // timeConfig: selectedWingoTimeConfig.value,
     };
   };
 
@@ -84,7 +85,7 @@ const WingoGame: React.FC<any> = () => {
       const newParams = {
         skip: (page - 1) * pagination.limit,
         limit: pagination.limit,
-        timeConfig: selectedWingoTimeConfig.value,
+        // timeConfig: selectedWingoTimeConfig.value,
       };
       await getListCompletedRounds(newParams);
     },
@@ -121,9 +122,7 @@ const WingoGame: React.FC<any> = () => {
   const getListNextRounds = async () => {
     setLoadingNextRound(true);
     try {
-      const response: any = await wingoGameServices.getListNextRoundsWingo(
-        selectedWingoTimeConfig.value
-      );
+      const response: any = await wingoGameServices.getListNextRoundsWingo();
       if (response?.code === 0) {
         setListNextRound(response?.data);
       } else {
@@ -139,21 +138,19 @@ const WingoGame: React.FC<any> = () => {
   // Handler for when a result is changed in the "Next Round" table
   const handleNextRoundResultChange = (
     issueNumber: string,
-    newResult: number | null
+    newResult: GAME_RESULT_SIDE_WINNER | null
   ) => {
     setListNextRound((prevData) =>
       prevData.map((round) =>
-        round.issueNumber === issueNumber ? { ...round, resultNumber: newResult } : round
+        issueNumber && round.issueNumber === issueNumber ? { ...round, sideWinner: newResult } : round
       )
     );
   };
-  
+
   const getStatisticCurrentRound = async () => {
     setLoadingStatisticCurrentRound(true);
     try {
-      const response: any = await wingoGameServices.getStatisticCurrentRoundWingo(
-        selectedWingoTimeConfig.value
-      );
+      const response: any = await wingoGameServices.getStatisticCurrentRoundWingo();
       if (response?.code === 0) {
         setStatisticCurrentRoundAllInfos(response?.data);
       } else {
@@ -202,10 +199,10 @@ const WingoGame: React.FC<any> = () => {
     if (statisticCurrentRoundAllInfos) {
       const endTime = get(
         statisticCurrentRoundAllInfos,
-        "currentRound.endTime",
+        "endTime",
         ""
       );
-      const timeEnd = getSecondsLeftFromIST(endTime);
+      const timeEnd = getSecondsLeftFromISTWithoutTimeZone(endTime);
       setSecondsLeft(timeEnd);
     }
   }, [statisticCurrentRoundAllInfos]);
@@ -246,7 +243,7 @@ const WingoGame: React.FC<any> = () => {
         Thông tin game
       </Typography.Title>
 
-      <Button.Group className="main-game-time-config-groups">
+      {/* <Button.Group className="main-game-time-config-groups">
         {ARRAY_WINGO_TIME_CONFIGS.map((option) => {
           const isActive = selectedWingoTimeConfig.value === option.value;
           return (
@@ -259,7 +256,7 @@ const WingoGame: React.FC<any> = () => {
             </Button>
           );
         })}
-      </Button.Group>
+      </Button.Group> */}
       <section className="main-game-current-game">
         <div className="main-game-current-game-header">
           <Typography.Title level={4} className="">
