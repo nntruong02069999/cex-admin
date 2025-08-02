@@ -6,7 +6,7 @@ import Main from "./main/index";
 import ListViewer from "./default/list/ListViewer";
 import PageEditor from "./default/pageManager/PageEditor";
 import FormViewer from "./default/form/FormViewer";
-import WingoGame from "./game/wingo";
+import ChartGame from "./game/wingo";
 import TrxWingoGame from "./game/trxwingo";
 import HomeIndex from "./home";
 import FiveDGame from "./game/5d";
@@ -18,6 +18,7 @@ import InvitationReward from "@src/components/InvitationReward";
 import ManageRewardWheelSpin from "@src/components/WheelSpin/ManageRewardWheelSpin";
 import Deposit from "@src/components/Deposit";
 import Withdraw from "@src/components/Withdraw";
+import VipOverview from "@src/components/Vip";
 // import DashboardListing from './main/dashboard/Listing';
 /* PLOP_INJECT_IMPORT */
 
@@ -40,7 +41,7 @@ const App: React.FC<AppProps> = ({ match }) => {
         /> */}
         <Route path={`/dashboard`} component={HomeIndex} />
         <Route path={`/customer/:customerId`} component={CustomerPage} />
-        <Route path="/game/wingo" component={WingoGame} />
+        <Route path="/game/chart" component={ChartGame} />
         <Route path="/game/5d" component={FiveDGame} />
         <Route path="/game/trxwingo" component={TrxWingoGame} />
         <Route path="/game/k3" component={K3Game} />
@@ -48,6 +49,7 @@ const App: React.FC<AppProps> = ({ match }) => {
         <Route path="/agency/invitation-reward" component={InvitationReward} />
         <Route path="/deposit/manage" component={Deposit} />
         <Route path="/withdraw/manage" component={Withdraw} />
+        <Route path="/vip/dashboard" component={VipOverview} />
         <Route path={`${match.url}main`} component={Main} />
         <Route path={`${match.url}game`} component={Games} />
         <Route

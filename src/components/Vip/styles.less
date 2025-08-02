@@ -1,0 +1,456 @@
+// VIP Overview Page Styles
+@vip-primary: #2563eb;
+@vip-success: #10b981;
+@vip-warning: #f59e0b;
+@vip-danger: #ef4444;
+@vip-neutral: #6b7280;
+
+// Main page container
+.vip-overview-page {
+  .vip-overview-card {
+    .ant-card-body {
+      padding: 0;
+    }
+  }
+}
+
+// Header Styles
+.vip-header {
+  padding: 24px;
+  border-bottom: 1px solid #f0f0f0;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+
+  .vip-header-title {
+    .ant-typography-title {
+      background: linear-gradient(135deg, @vip-primary 0%, #1d4ed8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+  }
+}
+
+// Tab Styles
+.vip-tabs {
+  .ant-tabs-nav {
+    padding: 0 24px;
+    margin-bottom: 0;
+  }
+  
+  .ant-tabs-tab {
+    padding: 16px 24px;
+    font-weight: 500;
+    
+    &.ant-tabs-tab-active {
+      .ant-tabs-tab-btn {
+        color: @vip-primary;
+        font-weight: 600;
+      }
+    }
+  }
+  
+  .ant-tabs-content-holder {
+    padding: 24px;
+  }
+}
+
+// Content Layout
+.vip-content {
+  .vip-dashboard {
+    .vip-section {
+      margin-bottom: 24px;
+    }
+    
+    .vip-main-grid {
+      .ant-col {
+        margin-bottom: 24px;
+      }
+    }
+  }
+}
+
+// Summary Cards Styles
+.vip-summary-cards {
+  .metric-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+    
+    &.metric-card-primary {
+      border-color: fade(@vip-primary, 20%);
+      
+      &:hover {
+        border-color: @vip-primary;
+        box-shadow: 0 8px 24px fade(@vip-primary, 20%);
+      }
+    }
+    
+    &.metric-card-success {
+      border-color: fade(@vip-success, 20%);
+      
+      &:hover {
+        border-color: @vip-success;
+        box-shadow: 0 8px 24px fade(@vip-success, 20%);
+      }
+    }
+    
+    &.metric-card-warning {
+      border-color: fade(@vip-warning, 20%);
+      
+      &:hover {
+        border-color: @vip-warning;
+        box-shadow: 0 8px 24px fade(@vip-warning, 20%);
+      }
+    }
+    
+    &.metric-card-danger {
+      border-color: fade(@vip-danger, 20%);
+      
+      &:hover {
+        border-color: @vip-danger;
+        box-shadow: 0 8px 24px fade(@vip-danger, 20%);
+      }
+    }
+  }
+  
+  .top-customer-card {
+    .ant-avatar {
+      box-shadow: 0 2px 8px fade(@vip-primary, 30%);
+    }
+  }
+}
+
+// Distribution Chart Styles
+.vip-distribution-card {
+  .chart-type-button {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px fade(@vip-primary, 20%);
+    }
+    
+    &.active {
+      box-shadow: 0 2px 8px fade(@vip-primary, 30%);
+    }
+  }
+  
+  .distribution-content {
+    .distribution-summary {
+      .ant-tag {
+        border-radius: 6px;
+        padding: 4px 8px;
+        font-weight: 500;
+      }
+    }
+    
+    .level-details {
+      .level-detail-item {
+        transition: all 0.3s ease;
+        cursor: pointer;
+        
+        &:hover {
+          transform: scale(1.02);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+      }
+    }
+  }
+  
+  // Custom tooltip styles
+  .custom-tooltip {
+    .ant-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border: none;
+      border-radius: 8px;
+    }
+  }
+}
+
+// Commission Analytics Styles
+.vip-commission-card {
+  .commission-content {
+    .chart-section {
+      .ant-typography-title {
+        color: @vip-neutral;
+        margin-bottom: 8px;
+      }
+    }
+    
+    .ant-statistic {
+      .ant-statistic-title {
+        font-size: 12px;
+        color: @vip-neutral;
+        margin-bottom: 4px;
+      }
+      
+      .ant-statistic-content {
+        .ant-statistic-content-value {
+          font-weight: 600;
+        }
+      }
+    }
+    
+    .ant-list-item {
+      .ant-list-item-meta {
+        .ant-list-item-meta-title {
+          margin-bottom: 0;
+          font-size: 13px;
+        }
+      }
+      
+      .ant-avatar {
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+}
+
+// Ranking Overview Styles
+.vip-ranking-card {
+  .ranking-content {
+    .rankings-table {
+      .ant-table {
+        .ant-table-thead > tr > th {
+          background: #fafafa;
+          border-bottom: 2px solid #f0f0f0;
+          font-weight: 600;
+          font-size: 12px;
+          padding: 8px;
+        }
+        
+        .ant-table-tbody > tr > td {
+          padding: 8px;
+          border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .ant-table-tbody > tr {
+          &.rank-gold {
+            background: linear-gradient(90deg, #fff9e6 0%, #ffffff 100%);
+            
+            &:hover > td {
+              background: linear-gradient(90deg, #fff4d6 0%, #fafafa 100%) !important;
+            }
+          }
+          
+          &.rank-silver {
+            background: linear-gradient(90deg, #f6f6f6 0%, #ffffff 100%);
+            
+            &:hover > td {
+              background: linear-gradient(90deg, #eeeeee 0%, #fafafa 100%) !important;
+            }
+          }
+          
+          &.rank-bronze {
+            background: linear-gradient(90deg, #fef7e0 0%, #ffffff 100%);
+            
+            &:hover > td {
+              background: linear-gradient(90deg, #fef0c7 0%, #fafafa 100%) !important;
+            }
+          }
+          
+          &:hover > td {
+            background-color: #fafafa;
+          }
+        }
+      }
+    }
+    
+    .ant-statistic {
+      .ant-statistic-title {
+        font-size: 12px;
+        color: @vip-neutral;
+        margin-bottom: 4px;
+      }
+      
+      .ant-statistic-content-value {
+        font-size: 16px;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Activity Feed Styles
+.vip-activity-card {
+  .activity-content {
+    .ant-list {
+      .ant-list-item {
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        margin-bottom: 4px;
+        padding: 12px 8px;
+        
+        &:hover {
+          background-color: #fafafa;
+          transform: translateX(4px);
+        }
+        
+        .ant-list-item-meta {
+          .ant-list-item-meta-title {
+            margin-bottom: 4px;
+            line-height: 1.4;
+          }
+          
+          .ant-list-item-meta-description {
+            color: @vip-neutral;
+            line-height: 1.4;
+          }
+        }
+        
+        .ant-avatar {
+          transition: all 0.3s ease;
+          
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+        
+        .ant-tag {
+          border-radius: 4px;
+          font-size: 10px;
+          padding: 2px 6px;
+          line-height: 1.2;
+          margin: 2px 0;
+        }
+      }
+    }
+    
+    .ant-empty {
+      padding: 40px 20px;
+      
+      .ant-empty-description {
+        color: @vip-neutral;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 1199px) {
+  .vip-main-grid {
+    .ant-col {
+      margin-bottom: 16px;
+    }
+  }
+  
+  .vip-summary-cards {
+    .ant-col {
+      margin-bottom: 12px;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .vip-header {
+    padding: 16px;
+    
+    .vip-header-title {
+      text-align: center;
+      margin-bottom: 12px;
+      
+      .ant-typography-title {
+        font-size: 20px;
+      }
+    }
+    
+    .ant-space {
+      justify-content: center;
+      width: 100%;
+    }
+  }
+  
+  .vip-tabs {
+    .ant-tabs-nav {
+      padding: 0 16px;
+    }
+    
+    .ant-tabs-content-holder {
+      padding: 16px;
+    }
+  }
+  
+  .vip-summary-cards {
+    .metric-card {
+      height: auto;
+      min-height: 120px;
+    }
+  }
+  
+  .vip-distribution-card,
+  .vip-commission-card,
+  .vip-ranking-card,
+  .vip-activity-card {
+    height: auto;
+    min-height: 300px;
+  }
+}
+
+// Animation and Transitions
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vip-overview-page {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.metric-card,
+.vip-distribution-card,
+.vip-commission-card,
+.vip-ranking-card,
+.vip-activity-card {
+  animation: fadeInUp 0.6s ease-out;
+  
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+  &:nth-child(5) { animation-delay: 0.5s; }
+}
+
+// Loading State Styles
+.ant-skeleton {
+  .ant-skeleton-content {
+    .ant-skeleton-title,
+    .ant-skeleton-paragraph > li {
+      border-radius: 6px;
+    }
+  }
+}
+
+// Custom Scrollbar
+.vip-activity-card .activity-content,
+.vip-ranking-card .rankings-table {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #d9d9d9;
+    border-radius: 3px;
+    
+    &:hover {
+      background: #bfbfbf;
+    }
+  }
+}

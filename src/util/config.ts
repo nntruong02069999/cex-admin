@@ -1,1 +1,1 @@
-export const footerText = '© Powered by MediaOne';
+export const footerText = '© Powered by Bicoin Trade';

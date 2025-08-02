@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { Button, message, Table, TablePaginationConfig, Typography } from "antd";
 import get from "lodash/get";
@@ -21,7 +22,7 @@ import CurrentGameStatistics from "@src/components/WingoGame/CurrentGameStatisti
 import { GAME_RESULT_SIDE_WINNER } from "@src/constants/enums";
 
 const WingoGame: React.FC<any> = () => {
-  const [selectedWingoTimeConfig, setSelectedWingoTimeConfig] = useState(
+  const [selectedWingoTimeConfig, ] = useState(
     ARRAY_WINGO_TIME_CONFIGS[0]
   );
   const [secondsLeft, setSecondsLeft] = useState(30);
@@ -163,15 +164,6 @@ const WingoGame: React.FC<any> = () => {
     }
   };
 
-  const onSelectWingoTimeConfig = (option: any) => {
-    if (option.value === selectedWingoTimeConfig.value) {
-      return;
-    } else {
-      setSecondsLeft(0);
-      setSelectedWingoTimeConfig(option);
-    }
-  };
-
   const initData = () => {
     setPagination(DEFAULT_PAGINATION);
     getStatisticCurrentRound();
@@ -235,6 +227,7 @@ const WingoGame: React.FC<any> = () => {
     return () => {
       clearInterval(timer);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [secondsLeft]);
 
   return (
