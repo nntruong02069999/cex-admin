@@ -21,7 +21,7 @@ export const renderArrayTextCountdown = (secondsLeft: number) => {
 export const renderShowAmount = (amount: number) => {
   if (amount > 0) {
     return (
-      <span color="#16a34a">
+      <span style={{ color: "#16a34a" }}>
         {CURRENCY + amount}
       </span>
     )

@@ -14,7 +14,7 @@ const CurrentGameStatistics: React.FC<CurrentGameStatisticsProps> = (
   return (
     <div className="game-history">
       <div className="color-bets">
-         <div className="color-row">
+        <div className="color-row">
           <div className="bet-label">Phiên</div>
           <div className="bet-amount">
             {currentGameInfos?.issueNumber}
@@ -23,82 +23,28 @@ const CurrentGameStatistics: React.FC<CurrentGameStatisticsProps> = (
         <div className="color-row">
           <div className="color-label">Đã chọn</div>
           <div
-            style={{ backgroundColor: "rgb(49, 204, 101)", color: "white" }}
+            style={{ backgroundColor: "rgb(49, 204, 101)", color: "white", display: "flex", alignItems: "center", gap: "5px" }}
             className="color-green"
+
           >
+            <img alt="buy" src="https://fiboex.net/static/media/greenup.c951824017a7b11c0dda86fb784f0e6f.svg"></  img>
             Mua
           </div>
           <div
-            style={{ backgroundColor: "rgb(209, 47, 36)", color: "white" }}
+            style={{ backgroundColor: "rgb(209, 47, 36)", color: "white", display: "flex", alignItems: "center", gap: "5px" }}
             className="color-pink"
           >
+            <img alt="sell" src="https://fiboex.net/static/media/reddown.4e688600b1135732f6a23700e439250f.svg"></img>
             Bán
           </div>
         </div>
         <div className="color-row">
           <div className="bet-label">Tổng tiền</div>
           <div className="bet-amount">
-            {CURRENCY + get(currentGameInfos, "totalBuy", 0) }
+            {CURRENCY + get(currentGameInfos, "totalBuy", 0)}
           </div>
           <div className="bet-amount">
-            {CURRENCY +  get(currentGameInfos, "totalSell", 0) }
-          </div>
-        </div>
-      </div>
-
-      <div className="number-bets" style={{display: "none"}}>
-        <div className="number-row">
-          <div className="number-label">Số</div>
-          {ARRAY_UNIT_DIGITS.map((item) => (
-            <div
-              key={item.id}
-              style={{ background: item.backgroundColor }}
-              className="number-item"
-            >
-              {item.name}
-            </div>
-          ))}
-        </div>
-        <div className="number-row">
-          <div className="bet-label">Tổng đặt</div>
-          {ARRAY_UNIT_DIGITS.map((item) => {
-            const totalBetNumber = get(
-              currentGameInfos,
-              `totalBetNumber${item.value}`,
-              0
-            );
-            return (
-              <div key={item.id} className="bet-amount">
-                {totalBetNumber + CURRENCY}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="size-bets" style={{display: "none"}}>
-        <div className="size-row">
-          <div className="size-label">Lớn nhỏ</div>
-          <div
-            className="size-big"
-            style={{ backgroundColor: "#FEAA57", color: "white" }}
-          >
-            Lớn
-          </div>
-          <div
-            className="size-small"
-            style={{ backgroundColor: "#6EA8F4", color: "white" }}
-          >
-            Nhỏ
-          </div>
-        </div>
-        <div className="size-row">
-          <div className="bet-label">Tổng đặt</div>
-          <div className="bet-amount">
-            {get(currentGameInfos, "totalBigBets", 0) + CURRENCY}
-          </div>
-          <div className="bet-amount">
-            {get(currentGameInfos, "totalSmallBets", 0) + CURRENCY}
+            {CURRENCY + get(currentGameInfos, "totalSell", 0)}
           </div>
         </div>
       </div>
