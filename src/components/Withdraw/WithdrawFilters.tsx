@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import {
   Row,
   Col,
@@ -9,7 +9,6 @@ import {
   Space,
   Card,
   Typography,
-  Divider,
 } from "antd";
 import {
   SearchOutlined,
@@ -19,9 +18,8 @@ import {
   FilterOutlined,
   SortAscendingOutlined,
 } from "@ant-design/icons";
-import { debounce } from "lodash";
 import moment from "moment";
-import { WithdrawStatus, BankType, WithdrawListParams } from "./types";
+import { WithdrawStatus, WithdrawListParams } from "./types";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -41,7 +39,7 @@ const WithdrawFilters: React.FC<WithdrawFiltersProps> = ({
   totalCount = 0,
 }) => {
   const [localFilters, setLocalFilters] = useState({
-    phone: filters.phone || "",
+    nickname: filters.nickname || "",
     withdrawCode: filters.withdrawCode || "",
     customerId: filters.customerId?.toString() || "",
   });
@@ -50,16 +48,16 @@ const WithdrawFilters: React.FC<WithdrawFiltersProps> = ({
   const handleSearch = () => {
     const newFilters = {
       ...filters,
-      phone: localFilters.phone || undefined,
+      nickname: localFilters.nickname || undefined,
       withdrawCode: localFilters.withdrawCode || undefined,
       customerId: localFilters.customerId ? parseInt(localFilters.customerId, 10) : undefined,
     };
     onFiltersChange(newFilters);
   };
 
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setLocalFilters({ ...localFilters, phone: value });
+    setLocalFilters({ ...localFilters, nickname: value });
   };
 
   const handleWithdrawCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,12 +77,6 @@ const WithdrawFilters: React.FC<WithdrawFiltersProps> = ({
     });
   };
 
-  const handleBankTypeChange = (value: BankType | undefined) => {
-    onFiltersChange({
-      ...filters,
-      bankType: value,
-    });
-  };
 
   const handleDateRangeChange = (dates: any) => {
     if (dates && dates.length === 2) {
@@ -139,7 +131,7 @@ const WithdrawFilters: React.FC<WithdrawFiltersProps> = ({
       order: "desc",
     };
     setLocalFilters({
-      phone: "",
+      nickname: "",
       withdrawCode: "",
       customerId: "",
     });
@@ -147,22 +139,20 @@ const WithdrawFilters: React.FC<WithdrawFiltersProps> = ({
   };
 
   const hasActiveFilters = Boolean(
-    filters.phone ||
+    filters.nickname ||
     filters.withdrawCode ||
     filters.customerId ||
     filters.status ||
-    filters.bankType ||
     filters.startDate ||
     filters.endDate
   );
 
   const getActiveFiltersText = () => {
     const activeFilters = [];
-    if (filters.phone) activeFilters.push(`SĐT: ${filters.phone}`);
+    if (filters.nickname) activeFilters.push(`Nickname: ${filters.nickname}`);
     if (filters.withdrawCode) activeFilters.push(`Mã rút tiền: ${filters.withdrawCode}`);
     if (filters.customerId) activeFilters.push(`ID KH: ${filters.customerId}`);
     if (filters.status) activeFilters.push(`Trạng thái: ${getStatusText(filters.status)}`);
-    if (filters.bankType) activeFilters.push(`Loại: ${getBankTypeText(filters.bankType)}`);
     if (filters.startDate && filters.endDate) {
       activeFilters.push(
         `Thời gian: ${moment(filters.startDate).format("DD/MM")} - ${moment(filters.endDate).format("DD/MM")}`
@@ -184,16 +174,6 @@ const WithdrawFilters: React.FC<WithdrawFiltersProps> = ({
     }
   };
 
-  const getBankTypeText = (bankType: BankType) => {
-    switch (bankType) {
-      case BankType.BANK:
-        return "Ngân hàng";
-      case BankType.USDT:
-        return "USDT";
-      default:
-        return bankType;
-    }
-  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -216,10 +196,10 @@ const WithdrawFilters: React.FC<WithdrawFiltersProps> = ({
         <Row gutter={[16, 16]} align="middle">
           <Col xs={24} sm={8} md={6}>
             <Input
-              placeholder="Số điện thoại"
+              placeholder="Nickname"
               prefix={<SearchOutlined />}
-              value={localFilters.phone}
-              onChange={handlePhoneChange}
+              value={localFilters.nickname}
+              onChange={handleNicknameChange}
               onKeyPress={handleKeyPress}
               allowClear
             />
@@ -289,18 +269,6 @@ const WithdrawFilters: React.FC<WithdrawFiltersProps> = ({
               <Option value={WithdrawStatus.PENDING}>Chờ xử lý</Option>
               <Option value={WithdrawStatus.SUCCESS}>Thành công</Option>
               <Option value={WithdrawStatus.REJECTED}>Bị từ chối</Option>
-            </Select>
-          </Col>
-          <Col xs={24} sm={12} md={8} lg={6}>
-            <Select
-              placeholder="Loại tài khoản"
-              value={filters.bankType}
-              onChange={handleBankTypeChange}
-              allowClear
-              style={{ width: "100%" }}
-            >
-              <Option value={BankType.BANK}>Ngân hàng</Option>
-              <Option value={BankType.USDT}>USDT</Option>
             </Select>
           </Col>
           <Col xs={24} sm={12} md={16} lg={12}>

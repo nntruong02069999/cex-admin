@@ -12,55 +12,52 @@ export enum BankType {
 export interface CustomerInfo {
   id: number;
   name: string;
-  phone: string;
+  phone?: string;
+  nickname?: string;
   email?: string;
-  uuid: string;
-  inviteCode: string;
+  uuid?: string;
+  inviteCode?: string;
   inviterCustomerId?: number;
-  isBlocked: boolean;
-  userLoginDate: number;
-  createdAt: number;
-  updatedAt: number;
-}
-
-export interface BankAccount {
-  id: number;
-  bankId: number;
-  name: string;
-  customerId: number;
-  bankName: string;
-  bankType: string;
-  bankAccountNumber: string;
-  phoneNumber: string;
-  IFSCCode: string;
-  usdtAddress?: string;
-  isPinned: boolean;
-  createdAt: number;
-  updatedAt: number;
+  isBlocked?: boolean;
+  userLoginDate?: number;
+  createdAt?: number;
+  updatedAt?: number;
 }
 
 export interface WithdrawRecord {
+  createdAt: number | null;
+  updatedAt: number | null;
   id: number;
   withdrawCode: string;
   customerId: number;
+  Customer: CustomerInfo;
   amount: number;
   feeWithdraw: number;
-  status: WithdrawStatus;
-  bankAccountId: number;
-  createdAt: number;
-  updatedAt: number;
-  Customer: CustomerInfo;
-  bankAccount: BankAccount;
+  status: string;
+  type: string;
+  
+  // Admin fields
+  adminIdApproved: number | null;
+  adminIdRejected: number | null;
+  reasonRejected: string | null;
+  
+  // Transfer info
+  txHash: string | null;
+  fromAddress: string | null;
+  toAddress: string | null;
+
+  // Legacy fields for backward compatibility
+  bankAccountId?: number;
+  bankAccount?: any;
 }
 
 export interface WithdrawListParams {
   skip?: number;
   limit?: number;
-  phone?: string;
+  nickname?: string;
   customerId?: number;
   withdrawCode?: string;
   status?: WithdrawStatus;
-  bankType?: BankType;
   sort?: "createdAt" | "id" | "amount" | "feeWithdraw";
   order?: "asc" | "desc";
   startDate?: number;

@@ -128,15 +128,11 @@ const WithdrawPage: React.FC = () => {
                 <strong>Mã rút tiền:</strong> {record.withdrawCode}
               </p>
               <p>
-                <strong>Số tiền:</strong>{" "}
-                {new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "INR",
-                }).format(record.amount)}
+                <strong>Số tiền:</strong> {record.amount} USDT
               </p>
               <p>
-                <strong>Khách hàng:</strong> {record.Customer.name} (
-                {record.Customer.phone})
+                <strong>Khách hàng:</strong> {record.Customer.name}
+                {record.Customer.nickname && ` (${record.Customer.nickname})`}
               </p>
             </div>
           ),
@@ -172,15 +168,11 @@ const WithdrawPage: React.FC = () => {
                 <strong>Mã rút tiền:</strong> {record.withdrawCode}
               </p>
               <p>
-                <strong>Số tiền:</strong>{" "}
-                {new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "INR",
-                }).format(record.amount)}
+                <strong>Số tiền:</strong> {record.amount} USDT
               </p>
               <p>
-                <strong>Khách hàng:</strong> {record.Customer.name} (
-                {record.Customer.phone})
+                <strong>Khách hàng:</strong> {record.Customer.name}
+                {record.Customer.nickname && ` (${record.Customer.nickname})`}
               </p>
             </div>
           ),

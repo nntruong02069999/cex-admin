@@ -26,7 +26,7 @@ export const getWithdrawList = async (
   const token = localStorage.getItem('token');
 
   try {
-    const url = `/admin/withdraw/v2/get-list`;
+    const url = `/admin/withdraw/get-list`;
 
     const res: any = await request({
       url,

@@ -16,7 +16,6 @@ import {
 import {
   EyeOutlined,
   UserOutlined,
-  PhoneOutlined,
   DollarOutlined,
   CheckOutlined,
   CloseOutlined,
@@ -24,7 +23,7 @@ import {
   CalendarOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
-import { WithdrawRecord, WithdrawStatus, BankType } from "./types";
+import { WithdrawRecord, WithdrawStatus } from "./types";
 import { ColumnsType } from "antd/es/table";
 
 interface WithdrawTableProps {
@@ -57,13 +56,16 @@ const WithdrawTable: React.FC<WithdrawTableProps> = ({
     null
   );
 
-  const getStatusConfig = (status: WithdrawStatus) => {
+  const getStatusConfig = (status: string | WithdrawStatus) => {
     switch (status) {
       case WithdrawStatus.PENDING:
+      case "PENDING":
         return { color: "orange", text: "Chờ xử lý" };
       case WithdrawStatus.SUCCESS:
+      case "SUCCESS":
         return { color: "green", text: "Thành công" };
       case WithdrawStatus.REJECTED:
+      case "REJECTED":
         return { color: "red", text: "Bị từ chối" };
       default:
         return { color: "default", text: "Không xác định" };
@@ -71,17 +73,16 @@ const WithdrawTable: React.FC<WithdrawTableProps> = ({
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "INR",
-    }).format(amount);
+    return `${amount} USDT`;
   };
 
-  const formatDateTime = (timestamp: number) => {
+  const formatDateTime = (timestamp: number | null) => {
+    if (!timestamp) return 'N/A';
     return moment(timestamp).format("DD/MM/YYYY HH:mm");
   };
 
-  const formatFullDateTime = (timestamp: number) => {
+  const formatFullDateTime = (timestamp: number | null) => {
+    if (!timestamp) return 'N/A';
     return moment(timestamp).format("DD/MM/YYYY HH:mm:ss");
   };
 
@@ -113,12 +114,12 @@ const WithdrawTable: React.FC<WithdrawTableProps> = ({
               #{customerInfo.id}
             </Text>
           </div>
-          <div className="customer-phone-primary">
-            <PhoneOutlined
+          <div className="customer-nickname-primary">
+            <UserOutlined
               style={{ fontSize: "11px", marginRight: "4px", color: "#52c41a" }}
             />
             <Text strong style={{ fontSize: "12px", color: "#262626" }}>
-              {customerInfo.phone}
+              {customerInfo.nickname || customerInfo.name}
             </Text>
           </div>
         </div>
@@ -130,35 +131,39 @@ const WithdrawTable: React.FC<WithdrawTableProps> = ({
     </div>
   );
 
-  const renderBankAccountInfo = (bankAccount: any) => (
-    <div className="bank-account-card">
-      <div className="bank-header">
-        <div className="bank-badge">BANK</div>
-        <Text strong className="bank-name">
-          {bankAccount.bankName}
+  const renderTransferInfo = (record: WithdrawRecord) => (
+    <div className="transfer-info">
+      <div className="transfer-header">
+        <div className="transfer-badge">{record.type}</div>
+        <Text strong className="transfer-type">
+          {record.type === 'INTERNAL' ? 'Nội bộ' : 'Bên ngoài'}
         </Text>
       </div>
-      <div className="bank-details">
-        <div className="bank-row">
-          <Text className="bank-label">Tên:</Text>
-          <Text className="bank-value">{bankAccount.name}</Text>
-        </div>
-        <div className="bank-row">
-          <Text className="bank-label">Số TK:</Text>
-          <Text className="bank-value" code>
-            {bankAccount.bankAccountNumber}
-          </Text>
-        </div>
-        <div className="bank-row">
-          <Text className="bank-label">SĐT:</Text>
-          <Text className="bank-value">{bankAccount.phoneNumber}</Text>
-        </div>
-        <div className="bank-row">
-          <Text className="bank-label">IFSC:</Text>
-          <Text className="bank-value" code>
-            {bankAccount.IFSCCode}
-          </Text>
-        </div>
+      <div className="transfer-details">
+        {record.txHash && (
+          <div className="transfer-row">
+            <Text className="transfer-label">TX Hash:</Text>
+            <Text className="transfer-value" code>
+              {record.txHash.substring(0, 10)}...
+            </Text>
+          </div>
+        )}
+        {record.fromAddress && (
+          <div className="transfer-row">
+            <Text className="transfer-label">From:</Text>
+            <Text className="transfer-value" code>
+              {record.fromAddress.substring(0, 10)}...
+            </Text>
+          </div>
+        )}
+        {record.toAddress && (
+          <div className="transfer-row">
+            <Text className="transfer-label">To:</Text>
+            <Text className="transfer-value" code>
+              {record.toAddress.substring(0, 10)}...
+            </Text>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -231,7 +236,7 @@ const WithdrawTable: React.FC<WithdrawTableProps> = ({
     );
 
     // Confirm and Reject actions - only for PENDING status
-    if (record.status === WithdrawStatus.PENDING) {
+    if (record.status === WithdrawStatus.PENDING || record.status === "PENDING") {
       actions.push(
         <Button
           key="confirm"
@@ -282,7 +287,7 @@ const WithdrawTable: React.FC<WithdrawTableProps> = ({
           <Button key="close" onClick={() => setDetailVisible(false)}>
             Đóng
           </Button>,
-          selectedRecord.status === WithdrawStatus.PENDING && (
+          (selectedRecord.status === WithdrawStatus.PENDING || selectedRecord.status === "PENDING") && (
             <Button
               key="confirm"
               type="primary"
@@ -296,7 +301,7 @@ const WithdrawTable: React.FC<WithdrawTableProps> = ({
               Xác nhận
             </Button>
           ),
-          selectedRecord.status === WithdrawStatus.PENDING && (
+          (selectedRecord.status === WithdrawStatus.PENDING || selectedRecord.status === "PENDING") && (
             <Button
               key="reject"
               danger
@@ -324,11 +329,9 @@ const WithdrawTable: React.FC<WithdrawTableProps> = ({
           <Descriptions.Item label="Trạng thái" span={1}>
             <Tag color={statusConfig.color}>{statusConfig.text}</Tag>
           </Descriptions.Item>
-          <Descriptions.Item label="Loại tài khoản" span={1}>
+          <Descriptions.Item label="Loại giao dịch" span={1}>
             <Tag color="blue">
-              {selectedRecord.bankAccount.bankType === BankType.BANK
-                ? "Ngân hàng"
-                : "USDT"}
+              {selectedRecord.type === 'INTERNAL' ? 'Nội bộ' : 'Bên ngoài'}
             </Tag>
           </Descriptions.Item>
         </Descriptions>
@@ -344,14 +347,14 @@ const WithdrawTable: React.FC<WithdrawTableProps> = ({
               #{selectedRecord.Customer.id}
             </Button>
           </Descriptions.Item>
-          <Descriptions.Item label="Số điện thoại" span={1}>
-            <Text>{selectedRecord.Customer.phone}</Text>
+          <Descriptions.Item label="Nickname" span={1}>
+            <Text>{selectedRecord.Customer.nickname || 'N/A'}</Text>
           </Descriptions.Item>
           <Descriptions.Item label="Tên khách hàng" span={1}>
             <Text>{selectedRecord.Customer.name}</Text>
           </Descriptions.Item>
           <Descriptions.Item label="Mã giới thiệu" span={1}>
-            <Text code>{selectedRecord.Customer.inviteCode}</Text>
+            <Text code>{selectedRecord.Customer.inviteCode || 'N/A'}</Text>
           </Descriptions.Item>
         </Descriptions>
 
@@ -374,23 +377,31 @@ const WithdrawTable: React.FC<WithdrawTableProps> = ({
           </Descriptions.Item>
         </Descriptions>
 
-        <Divider orientation="left">Thông tin ngân hàng</Divider>
+        <Divider orientation="left">Thông tin chuyển tiền</Divider>
         <Descriptions bordered column={2} size="small">
-          <Descriptions.Item label="Tên ngân hàng" span={1}>
-            <Text strong>{selectedRecord.bankAccount.bankName}</Text>
+          <Descriptions.Item label="Loại giao dịch" span={1}>
+            <Tag color="blue">{selectedRecord.type === 'INTERNAL' ? 'Nội bộ' : 'Bên ngoài'}</Tag>
           </Descriptions.Item>
-          <Descriptions.Item label="Tên chủ tài khoản" span={1}>
-            <Text>{selectedRecord.bankAccount.name}</Text>
-          </Descriptions.Item>
-          <Descriptions.Item label="Số tài khoản" span={1}>
-            <Text code>{selectedRecord.bankAccount.bankAccountNumber}</Text>
-          </Descriptions.Item>
-          <Descriptions.Item label="Số điện thoại" span={1}>
-            <Text>{selectedRecord.bankAccount.phoneNumber}</Text>
-          </Descriptions.Item>
-          <Descriptions.Item label="Mã IFSC" span={2}>
-            <Text code>{selectedRecord.bankAccount.IFSCCode}</Text>
-          </Descriptions.Item>
+          {selectedRecord.txHash && (
+            <Descriptions.Item label="Transaction Hash" span={1}>
+              <Text code copyable>{selectedRecord.txHash}</Text>
+            </Descriptions.Item>
+          )}
+          {selectedRecord.fromAddress && (
+            <Descriptions.Item label="Địa chỉ gửi" span={1}>
+              <Text code copyable>{selectedRecord.fromAddress}</Text>
+            </Descriptions.Item>
+          )}
+          {selectedRecord.toAddress && (
+            <Descriptions.Item label="Địa chỉ nhận" span={1}>
+              <Text code copyable>{selectedRecord.toAddress}</Text>
+            </Descriptions.Item>
+          )}
+          {selectedRecord.reasonRejected && (
+            <Descriptions.Item label="Lý do từ chối" span={2}>
+              <Text type="danger">{selectedRecord.reasonRejected}</Text>
+            </Descriptions.Item>
+          )}
         </Descriptions>
 
         <Divider orientation="left">Thông tin thời gian</Divider>
@@ -434,10 +445,10 @@ const WithdrawTable: React.FC<WithdrawTableProps> = ({
       render: (_, record) => renderCustomerInfo(record.Customer),
     },
     {
-      title: "Thông tin ngân hàng",
-      key: "bankAccount",
+      title: "Thông tin chuyển tiền",
+      key: "transfer",
       width: 220,
-      render: (_, record) => renderBankAccountInfo(record.bankAccount),
+      render: (_, record) => renderTransferInfo(record),
     },
     {
       title: "Thông tin tài chính",
@@ -472,7 +483,7 @@ const WithdrawTable: React.FC<WithdrawTableProps> = ({
               Tạo: {formatDateTime(record.createdAt)}
             </Text>
           </div>
-          {record.updatedAt !== record.createdAt && (
+          {record.updatedAt && record.updatedAt !== record.createdAt && (
             <div>
               <Text style={{ fontSize: "12px", color: "#fa8c16" }}>
                 Cập nhật: {formatDateTime(record.updatedAt)}
