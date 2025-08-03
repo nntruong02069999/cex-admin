@@ -13,7 +13,7 @@ import {
 } from "antd";
 import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
 import moment, { Moment } from "moment";
-import { DepositListParams, ProviderPaymentCode } from "./types";
+import { DepositListParams } from "./types";
 
 interface DepositFiltersProps {
   filters: DepositListParams;
@@ -60,26 +60,20 @@ const DepositFilters: React.FC<DepositFiltersProps> = ({
   // Check if any filters are applied
   const hasActiveFilters = () => {
     return !!(
-      filters.phone ||
+      filters.nickname ||
       filters.orderId ||
       filters.customerId ||
-      filters.gatewayOrderId ||
       filters.startDate ||
-      filters.endDate ||
-      filters.providerPaymentCode
+      filters.endDate
     );
   };
 
   const getFilterSummary = () => {
     const activeFilters = [];
 
-    if (filters.phone) activeFilters.push(`SĐT: ${filters.phone}`);
+    if (filters.nickname) activeFilters.push(`Nickname: ${filters.nickname}`);
     if (filters.orderId) activeFilters.push(`Mã đơn hàng: ${filters.orderId}`);
     if (filters.customerId) activeFilters.push(`Mã KH: ${filters.customerId}`);
-    if (filters.gatewayOrderId)
-      activeFilters.push(`Mã cổng thanh toán: ${filters.gatewayOrderId}`);
-    if (filters.providerPaymentCode)
-      activeFilters.push(`Provider: ${filters.providerPaymentCode}`);
     if (filters.startDate && filters.endDate) {
       activeFilters.push(`Từ ${filters.startDate} đến ${filters.endDate}`);
     }
@@ -109,10 +103,10 @@ const DepositFilters: React.FC<DepositFiltersProps> = ({
       <Row gutter={[16, 16]} align="middle">
         <Col xs={24} sm={12} md={8} lg={5}>
           <Input
-            placeholder="Số điện thoại"
+            placeholder="Nickname"
             prefix={<SearchOutlined />}
-            value={filters.phone}
-            onChange={(e) => onFiltersChange({ phone: e.target.value })}
+            value={filters.nickname}
+            onChange={(e) => onFiltersChange({ nickname: e.target.value })}
             onPressEnter={onSearch}
             allowClear
           />
@@ -141,17 +135,6 @@ const DepositFilters: React.FC<DepositFiltersProps> = ({
         </Col>
 
         <Col xs={24} sm={12} md={8} lg={4}>
-          <Input
-            placeholder="Mã cổng thanh toán"
-            value={filters.gatewayOrderId}
-            onChange={(e) =>
-              onFiltersChange({ gatewayOrderId: e.target.value })
-            }
-            allowClear
-          />
-        </Col>
-
-        <Col xs={24} sm={12} md={8} lg={4}>
           <RangePicker
             placeholder={["Từ ngày", "Đến ngày"]}
             value={getDateRangeValue()}
@@ -159,24 +142,6 @@ const DepositFilters: React.FC<DepositFiltersProps> = ({
             format="DD/MM/YYYY"
             style={{ width: "100%" }}
           />
-        </Col>
-
-        <Col xs={24} sm={12} md={6} lg={2}>
-          <Select
-            placeholder="Nhà cung cấp"
-            value={filters.providerPaymentCode}
-            onChange={(value) =>
-              onFiltersChange({ providerPaymentCode: value })
-            }
-            style={{ width: "100%" }}
-            allowClear
-          >
-            {Object.values(ProviderPaymentCode).map((provider) => (
-              <Option key={provider} value={provider}>
-                {provider}
-              </Option>
-            ))}
-          </Select>
         </Col>
       </Row>
 

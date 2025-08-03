@@ -7,7 +7,7 @@ import {
   DollarOutlined,
   AppstoreOutlined,
 } from "@ant-design/icons";
-import { DepositStats, TabConfig, PaymentStatus } from "./types";
+import { DepositStats, TabConfig, PaymentStatus, DepositTransactionStatus } from "./types";
 
 interface DepositHeaderProps {
   activeTab: string;
@@ -26,17 +26,17 @@ const DepositHeader: React.FC<DepositHeaderProps> = ({
 }) => {
   const getTabConfig = (): TabConfig[] => [
     {
-      key: PaymentStatus.PENDING,
-      label: "Chờ thanh toán",
-      count: stats?.PENDING || 0,
-    },
-    {
-      key: PaymentStatus.SUCCESS,
+      key: DepositTransactionStatus.SUCCESS,
       label: "Thành công",
       count: stats?.SUCCESS || 0,
     },
     {
-      key: PaymentStatus.FAILED,
+      key: DepositTransactionStatus.PENDING,
+      label: "Chờ xử lý",
+      count: stats?.PENDING || 0,
+    },
+    {
+      key: DepositTransactionStatus.FAILED,
       label: "Thất bại",
       count: stats?.FAILED || 0,
     },
@@ -44,10 +44,13 @@ const DepositHeader: React.FC<DepositHeaderProps> = ({
 
   const getTabIcon = (key: string) => {
     switch (key) {
+      case DepositTransactionStatus.PENDING:
       case PaymentStatus.PENDING:
         return <ClockCircleOutlined />;
+      case DepositTransactionStatus.SUCCESS:
       case PaymentStatus.SUCCESS:
         return <CheckCircleOutlined />;
+      case DepositTransactionStatus.FAILED:
       case PaymentStatus.FAILED:
         return <CloseCircleOutlined />;
       default:
@@ -57,10 +60,13 @@ const DepositHeader: React.FC<DepositHeaderProps> = ({
 
   const getTabColor = (key: string) => {
     switch (key) {
+      case DepositTransactionStatus.PENDING:
       case PaymentStatus.PENDING:
         return "#ffa940"; // softer orange
+      case DepositTransactionStatus.SUCCESS:
       case PaymentStatus.SUCCESS:
         return "#73d13d"; // softer green
+      case DepositTransactionStatus.FAILED:
       case PaymentStatus.FAILED:
         return "#ff7875"; // softer red
       default:
@@ -93,10 +99,10 @@ const DepositHeader: React.FC<DepositHeaderProps> = ({
       <div className="header-title">
         <h2>
           <DollarOutlined style={{ marginRight: 8, color: "#1890ff" }} />
-          Quản lý nạp tiền
+          Quản lý giao dịch nạp tiền
         </h2>
         <p className="header-description">
-          Theo dõi và quản lý các giao dịch nạp tiền của khách hàng
+          Theo dõi và quản lý các giao dịch nạp USDT của khách hàng
         </p>
       </div>
 

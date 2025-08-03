@@ -13,7 +13,6 @@ import {
 import {
   EyeOutlined,
   UserOutlined,
-  PhoneOutlined,
   DollarOutlined,
   CreditCardOutlined,
   BankOutlined,
@@ -22,7 +21,7 @@ import {
   FileTextOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
-import { DepositRecord, PaymentStatus } from "./types";
+import { DepositRecord, PaymentStatus, DepositTransactionStatus } from "./types";
 import { ColumnsType } from "antd/es/table";
 
 interface DepositTableProps {
@@ -50,12 +49,15 @@ const DepositTable: React.FC<DepositTableProps> = ({
   onPaginationChange,
   onAction,
 }) => {
-  const getStatusConfig = (status: PaymentStatus) => {
+  const getStatusConfig = (status: DepositTransactionStatus | PaymentStatus) => {
     switch (status) {
+      case DepositTransactionStatus.PENDING:
       case PaymentStatus.PENDING:
-        return { color: "orange", text: "Chờ thanh toán" };
+        return { color: "orange", text: "Chờ xử lý" };
+      case DepositTransactionStatus.SUCCESS:
       case PaymentStatus.SUCCESS:
         return { color: "green", text: "Thành công" };
+      case DepositTransactionStatus.FAILED:
       case PaymentStatus.FAILED:
         return { color: "red", text: "Thất bại" };
       default:
@@ -63,12 +65,7 @@ const DepositTable: React.FC<DepositTableProps> = ({
     }
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "INR",
-    }).format(amount);
-  };
+  // Remove unused function - formatting is handled directly in components
 
   const formatDateTime = (timestamp: number) => {
     return moment(timestamp).format("DD/MM/YYYY HH:mm");
@@ -96,12 +93,12 @@ const DepositTable: React.FC<DepositTableProps> = ({
               #{customerInfo.id}
             </Text>
           </div>
-          <div className="customer-phone-primary">
-            <PhoneOutlined
+          <div className="customer-nickname-primary">
+            <UserOutlined
               style={{ fontSize: "11px", marginRight: "4px", color: "#52c41a" }}
             />
             <Text strong style={{ fontSize: "12px", color: "#262626" }}>
-              {customerInfo.phone}
+              {customerInfo.nickname}
             </Text>
           </div>
         </div>
@@ -114,38 +111,20 @@ const DepositTable: React.FC<DepositTableProps> = ({
   );
 
   const renderFinancialInfo = (record: DepositRecord) => {
-    const totalAmount = record.amount + record.bonusAmount;
-    const hasBonus = record.bonusAmount > 0;
-    const hasUsdt = record.usdtAmount && record.usdtAmount > 0;
+    const totalAmount = record.usdtAmount + (record.bonusAmount || 0);
+    const hasBonus = record.bonusAmount && record.bonusAmount > 0;
+    const asset = record.asset || 'USDT';
 
     return (
       <div className="financial-info">
         <Card size="small" className="financial-card">
           <Row gutter={8}>
-            {/* USDT Amount - Priority Display */}
-            {hasUsdt && (
-              <Col span={24}>
-                <div className="amount-usdt-primary">
-                  <DollarOutlined style={{ color: "#722ed1", marginRight: 4 }} />
-                  <Text strong style={{ fontSize: "15px", color: "#722ed1" }}>
-                    {record.usdtAmount} USDT
-                  </Text>
-                </div>
-              </Col>
-            )}
-            
-            {/* INR Amount - Main or Secondary based on USDT */}
+            {/* Primary Amount Display */}
             <Col span={24}>
-              <div className={hasUsdt ? "amount-inr-secondary" : "amount-main"}>
-                <DollarOutlined style={{ color: hasUsdt ? "#8c8c8c" : "#1976d2", marginRight: 4 }} />
-                <Text 
-                  strong={!hasUsdt} 
-                  style={{ 
-                    fontSize: hasUsdt ? "12px" : "14px", 
-                    color: hasUsdt ? "#8c8c8c" : "#1976d2" 
-                  }}
-                >
-                  {formatCurrency(record.amount)}
+              <div className="amount-primary">
+                <DollarOutlined style={{ color: "#722ed1", marginRight: 4 }} />
+                <Text strong style={{ fontSize: "15px", color: "#722ed1" }}>
+                  {record.usdtAmount} {asset}
                 </Text>
               </div>
             </Col>
@@ -154,7 +133,7 @@ const DepositTable: React.FC<DepositTableProps> = ({
               <Col span={24}>
                 <div className="amount-bonus">
                   <Text style={{ fontSize: "12px", color: "#52c41a" }}>
-                    + {formatCurrency(record.bonusAmount)} bonus
+                    + {record.bonusAmount} {asset} bonus
                   </Text>
                 </div>
               </Col>
@@ -163,12 +142,7 @@ const DepositTable: React.FC<DepositTableProps> = ({
             <Col span={24}>
               <div className="amount-total">
                 <Text style={{ fontSize: "12px" }} type="secondary">
-                  Tổng: {formatCurrency(totalAmount)}
-                  {hasUsdt && (
-                    <span style={{ color: "#722ed1", marginLeft: 4 }}>
-                      ({record.usdtAmount} USDT)
-                    </span>
-                  )}
+                  Tổng: {totalAmount} {asset}
                 </Text>
               </div>
             </Col>
@@ -191,13 +165,13 @@ const DepositTable: React.FC<DepositTableProps> = ({
       <div className="payment-row">
         <CreditCardOutlined style={{ marginRight: 4 }} />
         <Text style={{ fontSize: "11px", color: "#666" }}>
-          {record.paymentChannelCode}
+          {record.chain}
         </Text>
       </div>
       <div className="payment-row">
         <BankOutlined style={{ marginRight: 4 }} />
         <Text style={{ fontSize: "11px", color: "#666" }}>
-          {record.providerPaymentCode}
+          {record.asset}
         </Text>
       </div>
     </div>
@@ -220,7 +194,7 @@ const DepositTable: React.FC<DepositTableProps> = ({
     );
 
     // Confirm and Cancel actions - only for PENDING status
-    if (record.status === PaymentStatus.PENDING) {
+    if (record.status === DepositTransactionStatus.PENDING) {
       actions.push(
         <Button
           key="confirm"
@@ -268,7 +242,7 @@ const DepositTable: React.FC<DepositTableProps> = ({
       title: "Khách hàng",
       key: "customer",
       width: 180,
-      render: (_, record) => renderCustomerInfo(record.customerInfo, "main"),
+      render: (_, record) => renderCustomerInfo(record.customer || record.customerInfo, "main"),
     },
     {
       title: "Người giới thiệu",
@@ -288,8 +262,8 @@ const DepositTable: React.FC<DepositTableProps> = ({
       render: (_, record) => renderFinancialInfo(record),
     },
     {
-      title: "Thanh toán",
-      key: "payment",
+      title: "Blockchain",
+      key: "blockchain",
       width: 140,
       render: (_, record) => renderPaymentInfo(record),
     },
@@ -311,20 +285,13 @@ const DepositTable: React.FC<DepositTableProps> = ({
         <div className="time-info">
           <div>
             <Text style={{ fontSize: "12px" }}>
-              Tạo: {formatDateTime(record.createdAt)}
+              Tạo: {record.createdAt ? formatDateTime(record.createdAt) : 'N/A'}
             </Text>
           </div>
-          {record.paymentAt && (
+          {record.updatedAt && record.updatedAt !== record.createdAt && (
             <div>
               <Text style={{ fontSize: "12px", color: "#52c41a" }}>
-                Thanh toán: {formatDateTime(record.paymentAt)}
-              </Text>
-            </div>
-          )}
-          {record.failMessage && (
-            <div>
-              <Text style={{ fontSize: "11px", color: "#ff4d4f" }}>
-                {record.failMessage}
+                Cập nhật: {formatDateTime(record.updatedAt)}
               </Text>
             </div>
           )}

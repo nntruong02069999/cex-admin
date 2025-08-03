@@ -35,7 +35,7 @@ import {
   DepositRecord,
   DepositStats,
   DepositListParams,
-  PaymentStatus,
+  DepositTransactionStatus,
 } from "./types";
 import "@src/styles/deposit/styles.less";
 
@@ -43,7 +43,7 @@ const { Text } = Typography;
 
 const Deposit: React.FC = () => {
   // State management
-  const [activeTab, setActiveTab] = useState<string>(PaymentStatus.PENDING);
+  const [activeTab, setActiveTab] = useState<string>(DepositTransactionStatus.SUCCESS);
   const [data, setData] = useState<DepositRecord[]>([]);
   const [stats, setStats] = useState<DepositStats>();
   const [loading, setLoading] = useState(false);
@@ -58,7 +58,7 @@ const Deposit: React.FC = () => {
 
   // Filters state
   const [filters, setFilters] = useState<DepositListParams>({
-    status: PaymentStatus.PENDING,
+    status: DepositTransactionStatus.SUCCESS,
     skip: 0,
     limit: 10,
     sort: "createdAt",
@@ -68,14 +68,6 @@ const Deposit: React.FC = () => {
   // Calculate skip from current page
   const getSkipFromPage = (page: number, pageSize: number) => {
     return (page - 1) * pageSize;
-  };
-
-  // Currency formatter for Indian Rupee
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "INR",
-    }).format(amount);
   };
 
   // Load data function
@@ -138,7 +130,7 @@ const Deposit: React.FC = () => {
     setActiveTab(tab);
     const newFilters = {
       ...filters,
-      status: tab as PaymentStatus,
+      status: tab as DepositTransactionStatus,
       skip: 0,
     };
     setFilters(newFilters);
@@ -153,9 +145,9 @@ const Deposit: React.FC = () => {
 
     // If it's a search, use debounced load
     if (
-      newFilters.phone !== undefined ||
+      newFilters.nickname !== undefined ||
       newFilters.orderId !== undefined ||
-      newFilters.gatewayOrderId !== undefined
+      newFilters.customerId !== undefined
     ) {
       debouncedLoadData(updatedFilters);
     }
@@ -172,7 +164,7 @@ const Deposit: React.FC = () => {
   // Handle reset filters
   const handleReset = () => {
     const defaultFilters: DepositListParams = {
-      status: activeTab as PaymentStatus,
+      status: activeTab as DepositTransactionStatus,
       skip: 0,
       limit: pagination.pageSize,
       sort: "createdAt",
@@ -202,21 +194,21 @@ const Deposit: React.FC = () => {
   };
 
   // Get status configuration
-  const getStatusConfig = (status: PaymentStatus) => {
+  const getStatusConfig = (status: DepositTransactionStatus) => {
     switch (status) {
-      case PaymentStatus.PENDING:
+      case DepositTransactionStatus.PENDING:
         return {
           color: "orange",
-          text: "Chờ thanh toán",
+          text: "Chờ xử lý",
           icon: <ClockCircleOutlined />,
         };
-      case PaymentStatus.SUCCESS:
+      case DepositTransactionStatus.SUCCESS:
         return {
           color: "green",
           text: "Thành công",
           icon: <CheckCircleOutlined />,
         };
-      case PaymentStatus.FAILED:
+      case DepositTransactionStatus.FAILED:
         return {
           color: "red",
           text: "Thất bại",
@@ -239,7 +231,7 @@ const Deposit: React.FC = () => {
     switch (action) {
       case "view":
         const statusConfig = getStatusConfig(record.status);
-        const totalAmount = record.amount + record.bonusAmount;
+        const totalAmount = (record.usdtAmount || 0) + (record.bonusAmount || 0);
 
         // Open detail modal
         Modal.info({
@@ -264,11 +256,14 @@ const Deposit: React.FC = () => {
                       <Descriptions.Item label="Order ID">
                         <Text code>{record.orderId}</Text>
                       </Descriptions.Item>
-                      <Descriptions.Item label="Gateway Order ID">
-                        <Text code>{record.gatewayOrderId}</Text>
+                      <Descriptions.Item label="Transaction Hash">
+                        <Text code>{record.txHash}</Text>
                       </Descriptions.Item>
-                      <Descriptions.Item label="Merchant Transaction ID">
-                        <Text code>{record.merchantTransactionId}</Text>
+                      <Descriptions.Item label="From Address">
+                        <Text code>{record.fromAddress}</Text>
+                      </Descriptions.Item>
+                      <Descriptions.Item label="To Address">
+                        <Text code>{record.toAddress}</Text>
                       </Descriptions.Item>
                       <Descriptions.Item label="Trạng thái">
                         <Tag
@@ -298,20 +293,14 @@ const Deposit: React.FC = () => {
                           )}
                         </Text>
                       </Descriptions.Item>
-                      {record.paymentAt && (
-                        <Descriptions.Item label="Thanh toán lúc">
-                          <Text style={{ color: "#52c41a" }}>
-                            {moment(record.paymentAt).format(
-                              "DD/MM/YYYY HH:mm:ss"
-                            )}
-                          </Text>
+                      {record.updatedAt && record.updatedAt !== record.createdAt && (
+                        <Descriptions.Item label="Asset">
+                          <Tag color="blue">{record.asset}</Tag>
                         </Descriptions.Item>
                       )}
-                      {record.failMessage && (
-                        <Descriptions.Item label="Lý do thất bại">
-                          <Text type="danger">{record.failMessage}</Text>
-                        </Descriptions.Item>
-                      )}
+                      <Descriptions.Item label="Chain">
+                        <Tag color="green">{record.chain}</Tag>
+                      </Descriptions.Item>
                     </Descriptions>
                   </Card>
                 </Col>
@@ -346,7 +335,7 @@ const Deposit: React.FC = () => {
                   >
                     <Descriptions column={1} size="small">
                       <Descriptions.Item label="Tên">
-                        <Text strong>{record.customerInfo.name}</Text>
+                        <Text strong>{(record.customer || record.customerInfo)?.name}</Text>
                       </Descriptions.Item>
                       <Descriptions.Item
                         label={
@@ -356,13 +345,13 @@ const Deposit: React.FC = () => {
                           </>
                         }
                       >
-                        <Text strong>{record.customerInfo.phone}</Text>
+                        <Text strong>{(record.customer || record.customerInfo)?.phone}</Text>
                       </Descriptions.Item>
                       <Descriptions.Item label="Mã mời">
-                        <Text code>{record.customerInfo.inviteCode}</Text>
+                        <Text code>{(record.customer || record.customerInfo)?.inviteCode}</Text>
                       </Descriptions.Item>
                       <Descriptions.Item label="ID">
-                        <Text type="secondary">{record.customerInfo.id}</Text>
+                        <Text type="secondary">{(record.customer || record.customerInfo)?.id}</Text>
                       </Descriptions.Item>
                     </Descriptions>
                   </Card>
@@ -423,68 +412,36 @@ const Deposit: React.FC = () => {
 
               {/* Financial Information */}
               <Row gutter={16} style={{ marginBottom: "20px" }}>
-                {/* USDT Amount - Priority Display */}
-                {record.usdtAmount && record.usdtAmount > 0 && (
-                  <Col span={record.bonusAmount > 0 ? 6 : 8}>
-                    <Card size="small">
-                      <div style={{ textAlign: "center" }}>
-                        <DollarOutlined
-                          style={{
-                            fontSize: "26px",
-                            color: "#722ed1",
-                            marginBottom: "8px",
-                          }}
-                        />
-                        <div>
-                          <Text type="secondary" style={{ fontSize: "12px" }}>
-                            USDT (Chính)
-                          </Text>
-                        </div>
-                        <div>
-                          <Text
-                            strong
-                            style={{ fontSize: "18px", color: "#722ed1" }}
-                          >
-                            {record.usdtAmount} USDT
-                          </Text>
-                        </div>
-                      </div>
-                    </Card>
-                  </Col>
-                )}
-                
-                <Col span={record.usdtAmount && record.usdtAmount > 0 ? (record.bonusAmount > 0 ? 6 : 8) : 8}>
+                {/* USDT Amount - Primary Display */}
+                <Col span={record.bonusAmount && record.bonusAmount > 0 ? 8 : 12}>
                   <Card size="small">
                     <div style={{ textAlign: "center" }}>
                       <DollarOutlined
                         style={{
-                          fontSize: record.usdtAmount && record.usdtAmount > 0 ? "22px" : "24px",
-                          color: record.usdtAmount && record.usdtAmount > 0 ? "#8c8c8c" : "#1976d2",
+                          fontSize: "26px",
+                          color: "#722ed1",
                           marginBottom: "8px",
                         }}
                       />
                       <div>
                         <Text type="secondary" style={{ fontSize: "12px" }}>
-                          {record.usdtAmount && record.usdtAmount > 0 ? "Số tiền INR" : "Số tiền gốc"}
+                          {record.asset || 'USDT'} Amount
                         </Text>
                       </div>
                       <div>
                         <Text
-                          strong={!(record.usdtAmount && record.usdtAmount > 0)}
-                          style={{ 
-                            fontSize: record.usdtAmount && record.usdtAmount > 0 ? "14px" : "16px", 
-                            color: record.usdtAmount && record.usdtAmount > 0 ? "#8c8c8c" : "#1976d2" 
-                          }}
+                          strong
+                          style={{ fontSize: "18px", color: "#722ed1" }}
                         >
-                          {formatCurrency(record.amount)}
+                          {record.usdtAmount} {record.asset || 'USDT'}
                         </Text>
                       </div>
                     </div>
                   </Card>
                 </Col>
                 
-                {record.bonusAmount > 0 && (
-                  <Col span={record.usdtAmount && record.usdtAmount > 0 ? 6 : 8}>
+                {record.bonusAmount && record.bonusAmount > 0 && (
+                  <Col span={8}>
                     <Card size="small">
                       <div style={{ textAlign: "center" }}>
                         <DollarOutlined
@@ -496,7 +453,7 @@ const Deposit: React.FC = () => {
                         />
                         <div>
                           <Text type="secondary" style={{ fontSize: "12px" }}>
-                            Tiền thưởng
+                            Bonus Amount
                           </Text>
                         </div>
                         <div>
@@ -504,7 +461,7 @@ const Deposit: React.FC = () => {
                             strong
                             style={{ fontSize: "16px", color: "#73d13d" }}
                           >
-                            {formatCurrency(record.bonusAmount)}
+                            {record.bonusAmount} {record.asset || 'USDT'}
                           </Text>
                         </div>
                       </div>
@@ -512,7 +469,7 @@ const Deposit: React.FC = () => {
                   </Col>
                 )}
                 
-                <Col span={record.usdtAmount && record.usdtAmount > 0 ? (record.bonusAmount > 0 ? 6 : 8) : 8}>
+                <Col span={record.bonusAmount && record.bonusAmount > 0 ? 8 : 12}>
                   <Card size="small">
                     <div style={{ textAlign: "center" }}>
                       <DollarOutlined
@@ -524,7 +481,7 @@ const Deposit: React.FC = () => {
                       />
                       <div>
                         <Text type="secondary" style={{ fontSize: "12px" }}>
-                          Tổng cộng
+                          Total Amount
                         </Text>
                       </div>
                       <div>
@@ -532,16 +489,9 @@ const Deposit: React.FC = () => {
                           strong
                           style={{ fontSize: "16px", color: "#ffa940" }}
                         >
-                          {formatCurrency(totalAmount)}
+                          {totalAmount} {record.asset || 'USDT'}
                         </Text>
                       </div>
-                      {record.usdtAmount && record.usdtAmount > 0 && (
-                        <div style={{ marginTop: "4px" }}>
-                          <Text style={{ fontSize: "12px", color: "#722ed1" }}>
-                            ({record.usdtAmount} USDT)
-                          </Text>
-                        </div>
-                      )}
                     </div>
                   </Card>
                 </Col>
@@ -549,32 +499,32 @@ const Deposit: React.FC = () => {
 
               <Divider orientation="left">
                 <CreditCardOutlined style={{ marginRight: "8px" }} />
-                Thông tin thanh toán
+                Blockchain Information
               </Divider>
 
-              {/* Payment Information */}
+              {/* Blockchain Information */}
               <Card size="small">
                 <Row gutter={16}>
                   <Col span={12}>
                     <Descriptions column={1} size="small">
-                      <Descriptions.Item label="Payment Gateway">
-                        <Text>{record.paymentGatewayCode}</Text>
+                      <Descriptions.Item label="Chain">
+                        <Tag color="blue">{record.chain}</Tag>
                       </Descriptions.Item>
-                      <Descriptions.Item label="Payment Channel">
-                        <Text>{record.paymentChannelCode}</Text>
+                      <Descriptions.Item label="Asset">
+                        <Tag color="green">{record.asset}</Tag>
                       </Descriptions.Item>
-                      <Descriptions.Item label="Provider">
-                        <Tag color="blue">{record.providerPaymentCode}</Tag>
+                      <Descriptions.Item label="Transaction Hash">
+                        <Text code copyable>{record.txHash}</Text>
                       </Descriptions.Item>
                     </Descriptions>
                   </Col>
                   <Col span={12}>
                     <Descriptions column={1} size="small">
-                      <Descriptions.Item label="Gateway ID">
-                        <Text>{record.paymentGatewayId}</Text>
+                      <Descriptions.Item label="From Address">
+                        <Text code copyable>{record.fromAddress}</Text>
                       </Descriptions.Item>
-                      <Descriptions.Item label="Channel ID">
-                        <Text>{record.paymentChannelId}</Text>
+                      <Descriptions.Item label="To Address">
+                        <Text code copyable>{record.toAddress}</Text>
                       </Descriptions.Item>
                     </Descriptions>
                   </Col>
@@ -588,9 +538,7 @@ const Deposit: React.FC = () => {
       case "confirm":
         Modal.confirm({
           title: "Xác nhận thanh toán",
-          content: `Bạn có chắc chắn muốn xác nhận thanh toán ${formatCurrency(
-            record.amount
-          )} cho đơn hàng ${record.orderId}?`,
+          content: `Bạn có chắc chắn muốn xác nhận giao dịch ${record.usdtAmount} ${record.asset || 'USDT'} cho đơn hàng ${record.orderId}?`,
           onOk: async () => {
             try {
               const result = await confirmDeposit(record.id);
@@ -598,16 +546,16 @@ const Deposit: React.FC = () => {
               if (typeof result === "object" && "errorCode" in result) {
                 message.error(
                   result.message ||
-                    "Không thể xác nhận thanh toán. Vui lòng thử lại!"
+                    "Không thể xác nhận giao dịch. Vui lòng thử lại!"
                 );
                 return;
               }
 
-              message.success("Đã xác nhận thanh toán thành công!");
+              message.success("Đã xác nhận giao dịch thành công!");
               loadData();
               loadStats();
             } catch (error) {
-              message.error("Không thể xác nhận thanh toán. Vui lòng thử lại!");
+              message.error("Không thể xác nhận giao dịch. Vui lòng thử lại!");
             }
           },
         });
@@ -616,23 +564,23 @@ const Deposit: React.FC = () => {
       case "cancel":
         Modal.confirm({
           title: "Hủy thanh toán",
-          content: `Bạn có chắc chắn muốn hủy đơn hàng ${record.orderId}?`,
+          content: `Bạn có chắc chắn muốn hủy giao dịch ${record.orderId}?`,
           onOk: async () => {
             try {
               const result = await cancelDeposit(record.id);
 
               if (typeof result === "object" && "errorCode" in result) {
                 message.error(
-                  result.message || "Không thể hủy thanh toán. Vui lòng thử lại!"
+                  result.message || "Không thể hủy giao dịch. Vui lòng thử lại!"
                 );
                 return;
               }
 
-              message.success("Đã hủy thanh toán thành công!");
+              message.success("Đã hủy giao dịch thành công!");
               loadData();
               loadStats();
             } catch (error) {
-              message.error("Không thể hủy thanh toán. Vui lòng thử lại!");
+              message.error("Không thể hủy giao dịch. Vui lòng thử lại!");
             }
           },
         });

@@ -26,7 +26,7 @@ export const getDepositList = async (
   const token = localStorage.getItem('token');
 
   try {
-    const url = `/admin/deposit/v2/get-list`;
+    const url = `/admin/deposit/get-list`;
 
     const res: any = await request({
       url,

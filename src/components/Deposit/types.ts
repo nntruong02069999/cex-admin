@@ -1,3 +1,10 @@
+export enum DepositTransactionStatus {
+  PENDING = "PENDING",
+  SUCCESS = "SUCCESS",
+  FAILED = "FAILED"
+}
+
+// Keep PaymentStatus for backward compatibility
 export enum PaymentStatus {
   PENDING = "PENDING",
   SUCCESS = "SUCCESS",
@@ -42,26 +49,24 @@ export interface CustomerInfo {
 }
 
 export interface DepositRecord {
-  createdAt: number;
-  updatedAt: number;
+  createdAt: number | null;
+  updatedAt: number | null;
   id: number;
   customerId: number;
-  paymentGatewayId: number;
-  paymentGatewayCode: string;
-  paymentChannelId: number;
-  paymentChannelCode: string;
-  providerPaymentCode: ProviderPaymentCode;
+  customer: CustomerInfo;
+  usdtAmount: number;
+  bonusAmount: number | null;
+  fromAddress: string;
+  toAddress: string;
+  txHash: string;
+  asset: string;
+  status: DepositTransactionStatus;
   orderId: string;
-  gatewayOrderId: string;
-  usdtAmount: number | null;
-  amount: number;
-  bonusAmount: number;
-  status: PaymentStatus;
-  paymentAt: number | null;
-  failMessage: string | null;
-  merchantTransactionId: string;
-  customerInfo: CustomerInfo;
-  inviteCustomer: CustomerInfo | null;
+  chain: string;
+  // Legacy fields for backward compatibility
+  amount?: number;
+  customerInfo?: CustomerInfo;
+  inviteCustomer?: CustomerInfo | null;
 }
 
 export interface DepositStats {
@@ -86,20 +91,22 @@ export interface DepositStatsResponse {
 export interface DepositListParams {
   skip?: number;
   limit?: number;
-  phone?: string;
+  nickname?: string;
   customerId?: number;
   orderId?: string;
-  gatewayOrderId?: string;
-  status?: PaymentStatus;
-  providerPaymentCode?: ProviderPaymentCode;
+  status?: DepositTransactionStatus;
   sort?: 'createdAt' | 'id' | 'amount' | 'bonusAmount';
   order?: 'asc' | 'desc';
   startDate?: string;
   endDate?: string;
+  // Legacy fields for backward compatibility
+  phone?: string;
+  gatewayOrderId?: string;
+  providerPaymentCode?: ProviderPaymentCode;
 }
 
 export interface TabConfig {
-  key: PaymentStatus | 'all';
+  key: DepositTransactionStatus | PaymentStatus | 'all';
   label: string;
   count?: number;
 } 
