@@ -1,0 +1,8 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="24" height="23" viewBox="0 0 24 23">
+  <g id="Group_13150" data-name="Group 13150" transform="translate(0.144)">
+    <rect id="Rectangle_3774" data-name="Rectangle 3774" width="24" height="23" rx="3" transform="translate(-0.144)" fill="#f81057"/>
+    <g id="triangle-head-arrow" transform="translate(9.183 4.464) rotate(30)">
+      <path id="Path_26245" data-name="Path 26245" d="M12.729,4.132,8.715.118A.4.4,0,0,0,8.029.4v2.81H.4a.4.4,0,0,0-.4.4V5.22a.4.4,0,0,0,.4.4H8.029v2.81a.4.4,0,0,0,.686.284L12.729,4.7a.4.4,0,0,0,0-.568Z" transform="translate(0 0)" fill="#fff"/>
+    </g>
+  </g>
+</svg>
