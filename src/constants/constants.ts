@@ -78,7 +78,7 @@ export const DEFAULT_PAGINATION = {
   page: 1,
 }
 
-export const SECONDS_TO_DISABLE_SET_RESULT_GAME = 5
+export const SECONDS_TO_DISABLE_SET_RESULT_GAME = 10
 
 export const ARRAY_GAME_RESULT_SIDE_WINNERS = [
   { id: 1, name: "Mua", value: GAME_RESULT_SIDE_WINNER.BUY },
