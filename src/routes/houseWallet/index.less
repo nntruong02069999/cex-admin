@@ -1,0 +1,41 @@
+.house-wallet-page {
+  padding: 24px;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+  }
+
+  .main-content {
+    .ant-tabs-card > .ant-tabs-content {
+      margin-top: 16px;
+    }
+    
+    .ant-tabs-tab {
+      border-radius: 6px 6px 0 0;
+      
+      .anticon {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+// Global responsive adjustments
+@media (max-width: 768px) {
+  .house-wallet-page {
+    padding: 16px;
+    
+    .ant-tabs-tab {
+      padding: 8px 12px;
+      
+      .anticon {
+        margin-right: 4px;
+      }
+    }
+  }
+}

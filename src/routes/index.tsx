@@ -19,6 +19,7 @@ import ManageRewardWheelSpin from "@src/components/WheelSpin/ManageRewardWheelSp
 import Deposit from "@src/components/Deposit";
 import Withdraw from "@src/components/Withdraw";
 import VipOverview from "@src/components/Vip";
+import HouseWalletPage from "./houseWallet";
 // import DashboardListing from './main/dashboard/Listing';
 /* PLOP_INJECT_IMPORT */
 
@@ -52,6 +53,7 @@ const App: React.FC<AppProps> = ({ match }) => {
         <Route path="/vip/dashboard" component={VipOverview} />
         <Route path={`${match.url}main`} component={Main} />
         <Route path={`${match.url}game`} component={Games} />
+        <Route path={`/house-wallet`} component={HouseWalletPage} />
         <Route
           path={`/wheel-spin/manage-reward`}
           component={ManageRewardWheelSpin}

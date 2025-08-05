@@ -15,6 +15,7 @@ import modelMenu from './models/menu';
 import modelAuth from './models/auth';
 import modelRole from './models/role';
 import modelUser from './models/user';
+import houseWalletModel from './models/houseWallet';
 /* PLOP_INJECT_IMPORT */
 import chatUser from './models/chat';
 require('@src/packages/pro-icon/iconify/components/bundle');
@@ -35,6 +36,7 @@ app.model(modelMenu);
 app.model(modelAuth);
 app.model(modelRole);
 app.model(modelUser);
+app.model(houseWalletModel);
 /* PLOP_INJECT_EXPORT */
 app.model(chatUser);
 

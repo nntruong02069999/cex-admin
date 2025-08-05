@@ -24,6 +24,11 @@ export const routes = [
     name: 'Trang',
     component: asyncComponent(() => import('./routes/default/list/ListViewer')),
   },
+  {
+    path: '/house-wallet',
+    name: 'House Wallet Management',
+    component: asyncComponent(() => import('./routes/houseWallet/index')),
+  },
   // K3 game route has been moved to routes/index.tsx and routes/games/index.tsx
 
   /* PLOP_INJECT_LIST */
