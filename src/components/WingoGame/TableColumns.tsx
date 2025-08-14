@@ -58,8 +58,9 @@ export const columnsCompletedRound: ColumnsType<GameCompletedRound> = [
       const findSideWinner = ARRAY_GAME_RESULT_SIDE_WINNERS.find(
         (item: UnitDigitOption) => item.value === value
       );
+      const isBuy = value === GAME_RESULT_SIDE_WINNER.BUY;
       return (
-        <Tag color="#ee2634" key={value}>
+        <Tag color={isBuy ? "#04c793" : "#fa4b62"} key={value}>
           {findSideWinner?.name}
         </Tag>
       );

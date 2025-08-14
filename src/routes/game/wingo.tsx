@@ -1,6 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { Button, message, Table, TablePaginationConfig, Typography } from "antd";
+import {
+  Button,
+  DatePicker,
+  message,
+  Space,
+  Table,
+  TablePaginationConfig,
+  Typography,
+} from "antd";
+import moment, { Moment } from "moment";
 import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import {
@@ -20,11 +29,12 @@ import { getSecondsLeftFromISTWithoutTimeZone } from "@src/util/timeUtils";
 import { BettingStatistics } from "@src/components/5DGame/BettingStatistics";
 import CurrentGameStatistics from "@src/components/WingoGame/CurrentGameStatistics";
 import { GAME_RESULT_SIDE_WINNER } from "@src/constants/enums";
+import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+
+type TimeRangeValue = [Moment | null, Moment | null] | null;
 
 const WingoGame: React.FC<any> = () => {
-  const [selectedWingoTimeConfig, ] = useState(
-    ARRAY_WINGO_TIME_CONFIGS[0]
-  );
+  const [selectedWingoTimeConfig] = useState(ARRAY_WINGO_TIME_CONFIGS[0]);
   const [secondsLeft, setSecondsLeft] = useState(30);
   const [loadingRecentGame, setLoadingRecentGame] = useState(false);
   const [listCompletedRound, setListCompletedRound] = useState<
@@ -33,9 +43,7 @@ const WingoGame: React.FC<any> = () => {
   const [pagination, setPagination] = useState<Pagination>(DEFAULT_PAGINATION);
 
   const [loadingNextRound, setLoadingNextRound] = useState(false);
-  const [listNextRound, setListNextRound] = useState<GameCompletedRound[]>(
-    []
-  );
+  const [listNextRound, setListNextRound] = useState<GameCompletedRound[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loadingStatisticCurrentRound, setLoadingStatisticCurrentRound] =
@@ -45,12 +53,86 @@ const WingoGame: React.FC<any> = () => {
 
   const [isSetResultSuccess, setIsSetResultSuccess] = useState(false);
 
+  const [paramFilters, setParamFilters] = useState<TimeRangeValue>(null);
+  const [localFilters, setLocalFilters] = useState<TimeRangeValue>(null);
+
+  const isEmptyParamFilters = () => {
+    return !(
+      paramFilters &&
+      paramFilters.length === 2 &&
+      paramFilters[0] &&
+      paramFilters[1]
+    );
+  };
+
+  const isEmptyLocalFilters = () => {
+    return !(
+      localFilters &&
+      localFilters.length === 2 &&
+      localFilters[0] &&
+      localFilters[1]
+    );
+  };
+
+  const isDisabledBtnSearch = () => {
+    return loadingRecentGame || isEmptyLocalFilters();
+  };
+
+  const isDisabledBtnReset = () => {
+    return loadingRecentGame || isEmptyLocalFilters() || isEmptyParamFilters();
+  };
+
+  const renderIsTimeNowInRangeTimeFilter = () => {
+    if (isEmptyParamFilters()) {
+      return true;
+    } else {
+      const paramStartTime = paramFilters?.[0];
+      const paramEndTime = paramFilters?.[1];
+      return paramStartTime?.isBefore() && paramEndTime?.isAfter();
+    }
+  };
+
+  const isTimeNowInRangeTimeFilter = renderIsTimeNowInRangeTimeFilter();
+
+  const handleDateRangeChange = (dates: any) => {
+    if (dates && dates.length === 2) {
+      setLocalFilters([dates[0].startOf("minute"), dates[1].endOf("minute")]);
+    } else {
+      setLocalFilters(null);
+    }
+  };
+
+  const handleReset = () => {
+    setLocalFilters(null);
+    setParamFilters(null);
+    setPagination(DEFAULT_PAGINATION);
+    const resetParams = { skip: 0, limit: pagination.limit };
+    getListCompletedRounds(resetParams);
+  };
+
   const renderGetCompletedRoundParams = () => {
-    return {
+    const params = {
       skip: pagination.skip,
       limit: pagination.limit,
-      // timeConfig: selectedWingoTimeConfig.value,
     };
+    if (!isEmptyParamFilters()) {
+      Object.assign(params, {
+        startTime: paramFilters?.[0]?.valueOf(),
+        endTime: paramFilters?.[1]?.valueOf(),
+      });
+    }
+    return params;
+  };
+
+  const onFilterChangeTime = () => {
+    const filterParams = { skip: 0, limit: pagination.limit };
+    if (!isEmptyParamFilters()) {
+      Object.assign(filterParams, {
+        startTime: paramFilters?.[0]?.valueOf(),
+        endTime: paramFilters?.[1]?.valueOf(),
+      });
+    }
+    getListCompletedRounds(filterParams);
   };
 
   const params = renderGetCompletedRoundParams();
@@ -78,17 +160,22 @@ const WingoGame: React.FC<any> = () => {
     showSizeChanger: false,
     showQuickJumper: false,
     current: pagination.page,
-    onChange: async (page: number) => {
-      const newPagination = Object.assign(pagination, {
+    onChange: (page: number) => {
+      const newPagination = Object.assign({}, pagination, {
         skip: (page - 1) * pagination.limit,
       });
       setPagination(newPagination);
       const newParams = {
         skip: (page - 1) * pagination.limit,
         limit: pagination.limit,
-        // timeConfig: selectedWingoTimeConfig.value,
       };
-      await getListCompletedRounds(newParams);
+      if (!isEmptyParamFilters()) {
+        Object.assign(newParams, {
+          startTime: paramFilters?.[0]?.valueOf(),
+          endTime: paramFilters?.[1]?.valueOf(),
+        });
+      }
+      getListCompletedRounds(newParams);
     },
   };
 
@@ -102,7 +189,7 @@ const WingoGame: React.FC<any> = () => {
       );
       if (response?.code === 0) {
         setListCompletedRound(response?.data);
-        const newPagination = Object.assign(pagination, {
+        const newPagination = Object.assign({}, pagination, {
           total: response?.total,
           page: params.skip / params.limit + 1,
           totalPage: Math.floor(
@@ -112,9 +199,12 @@ const WingoGame: React.FC<any> = () => {
         setPagination(newPagination);
       } else {
         setListCompletedRound([]);
+        setPagination(DEFAULT_PAGINATION);
       }
     } catch (error: any) {
       message.error(error?.message);
+      setListCompletedRound([]);
+      setPagination(DEFAULT_PAGINATION);
     } finally {
       setLoadingRecentGame(false);
     }
@@ -131,6 +221,7 @@ const WingoGame: React.FC<any> = () => {
       }
     } catch (error: any) {
       message.error(error?.message);
+      setListNextRound([]);
     } finally {
       setLoadingNextRound(false);
     }
@@ -143,7 +234,9 @@ const WingoGame: React.FC<any> = () => {
   ) => {
     setListNextRound((prevData) =>
       prevData.map((round) =>
-        issueNumber && round.issueNumber === issueNumber ? { ...round, sideWinner: newResult } : round
+        issueNumber && round.issueNumber === issueNumber
+          ? { ...round, sideWinner: newResult }
+          : round
       )
     );
   };
@@ -151,7 +244,8 @@ const WingoGame: React.FC<any> = () => {
   const getStatisticCurrentRound = async () => {
     setLoadingStatisticCurrentRound(true);
     try {
-      const response: any = await wingoGameServices.getStatisticCurrentRoundWingo();
+      const response: any =
+        await wingoGameServices.getStatisticCurrentRoundWingo();
       if (response?.code === 0) {
         setStatisticCurrentRoundAllInfos(response?.data);
       } else {
@@ -165,9 +259,11 @@ const WingoGame: React.FC<any> = () => {
   };
 
   const initData = () => {
-    setPagination(DEFAULT_PAGINATION);
     getStatisticCurrentRound();
-    getListCompletedRounds(params);
+    if (isTimeNowInRangeTimeFilter) {
+      setPagination(DEFAULT_PAGINATION);
+      getListCompletedRounds(params);
+    }
     getListNextRounds();
   };
 
@@ -189,11 +285,7 @@ const WingoGame: React.FC<any> = () => {
 
   useEffect(() => {
     if (statisticCurrentRoundAllInfos) {
-      const endTime = get(
-        statisticCurrentRoundAllInfos,
-        "endTime",
-        ""
-      );
+      const endTime = get(statisticCurrentRoundAllInfos, "endTime", "");
       const timeEnd = getSecondsLeftFromISTWithoutTimeZone(endTime);
       setSecondsLeft(timeEnd);
     }
@@ -227,29 +319,21 @@ const WingoGame: React.FC<any> = () => {
     return () => {
       clearInterval(timer);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [secondsLeft]);
+
+  useEffect(() => {
+    if (!isEmptyParamFilters()) {
+      setPagination(DEFAULT_PAGINATION);
+      onFilterChangeTime();
+    }
+  }, [paramFilters]);
 
   return (
     <div className="main-game-container">
       <Typography.Title level={4} className="main-game-title">
         Thông tin game
       </Typography.Title>
-
-      {/* <Button.Group className="main-game-time-config-groups">
-        {ARRAY_WINGO_TIME_CONFIGS.map((option) => {
-          const isActive = selectedWingoTimeConfig.value === option.value;
-          return (
-            <Button
-              key={option.value}
-              type={isActive ? "primary" : "default"}
-              onClick={() => onSelectWingoTimeConfig(option)}
-            >
-              {option.label}
-            </Button>
-          );
-        })}
-      </Button.Group> */}
       <section className="main-game-current-game">
         <div className="main-game-current-game-header">
           <Typography.Title level={4} className="">
@@ -293,6 +377,38 @@ const WingoGame: React.FC<any> = () => {
           index === 0 ? "current-running-round" : ""
         }
       />
+
+      <div style={{ display: "block", textAlign: "right" }}>
+        <Space align="center" size="large">
+          <span>Bộ lọc</span>
+          <DatePicker.RangePicker
+            showTime={{ format: "HH:mm" }}
+            placeholder={["Từ ngày", "Đến ngày"]}
+            value={localFilters}
+            onChange={handleDateRangeChange}
+            format="DD/MM/YYYY HH:mm"
+            style={{ width: 400 }}
+            clearIcon={false}
+          />
+          <Button
+            type="primary"
+            icon={<SearchOutlined />}
+            style={{ marginRight: 0 }}
+            onClick={() => setParamFilters(localFilters)}
+            disabled={isDisabledBtnSearch()}
+          >
+            Tìm kiếm
+          </Button>
+          <Button
+            icon={<ReloadOutlined />}
+            onClick={() => handleReset()}
+            disabled={isDisabledBtnReset()}
+          >
+            Đặt lại
+          </Button>
+        </Space>
+      </div>
+      <br />
       <Table
         rowKey={"id"}
         scroll={{ x: true, y: 500 }}

@@ -24,7 +24,7 @@ const CurrentGameStatistics: React.FC<CurrentGameStatisticsProps> = (
           <div className="color-label">Đã chọn</div>
           <div
             style={{
-              backgroundColor: "rgb(49, 204, 101)",
+              backgroundColor: "#04c793",
               color: "white",
               display: "flex",
               alignItems: "center",
@@ -37,7 +37,7 @@ const CurrentGameStatistics: React.FC<CurrentGameStatisticsProps> = (
           </div>
           <div
             style={{
-              backgroundColor: "rgb(209, 47, 36)",
+              backgroundColor: "#fa4b62",
               color: "white",
               display: "flex",
               alignItems: "center",

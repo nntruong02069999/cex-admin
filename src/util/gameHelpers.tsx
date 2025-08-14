@@ -18,17 +18,18 @@ export const renderArrayTextCountdown = (secondsLeft: number) => {
   }
 };
 
-export const renderShowAmount = (amount: number) => {
+export const renderShowAmount = (amount: number) => { 
+  const amountFormat= Number.isInteger(amount) ? amount : parseFloat(amount?.toFixed(2));
   if (amount > 0) {
     return (
       <span style={{ color: "#16a34a" }}>
-        {CURRENCY + amount}
+        {CURRENCY + amountFormat}
       </span>
     )
   } else if (amount < 0) {
     return (
       <span style={{ color: "#dc2626" }}>
-        {"-" + CURRENCY + Math.abs(amount)}
+        {"-" + CURRENCY + Math.abs(amountFormat)}
       </span>
     )
   } else {
