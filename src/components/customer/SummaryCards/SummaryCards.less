@@ -1,0 +1,337 @@
+// Summary Cards Styles
+
+@import '~antd/lib/style/themes/default.less';
+
+@ant-prefix: ant;
+@screen-lg: 1400px;
+@screen-md: 992px;
+@margin-lg: 24px;
+@margin-md: 16px;
+@margin-sm: 12px;
+@margin-xs: 8px;
+@padding-lg: 24px;
+@padding-md: 16px;
+@padding-sm: 12px;
+@padding-xs: 8px;
+@border-radius-base: 8px;
+@border-color-split: #f0f0f0;
+@background-color-light: #f8f8f8;
+@text-color-secondary: #666;
+@primary-color: #1890ff;
+@success-color: #52c41a;
+@warning-color: #faad14;
+@error-color: #ff4d4f;
+@font-family-code: "SFMono-Regular", "Consolas", "Liberation Mono", "Menlo", "Courier", monospace;
+@font-size-xs: 12px;
+@font-size-sm: 12px;
+@font-size-base: 16px;
+@font-size-lg: 18px;
+@font-size-xl: 24px;
+
+.summary-cards {
+  margin-bottom: @margin-lg;
+  width: 100%;
+  max-width: none; // Ensure full width
+
+  .@{ant-prefix}-row {
+    width: 100%;
+    
+    .@{ant-prefix}-col {
+      @media (max-width: @screen-md) {
+        margin-bottom: @margin-md;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+// Base summary card styles
+.summary-card {
+  height: 100%;
+  width: 100%;
+  border: 1px solid @border-color-split;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  .@{ant-prefix}-card-body {
+    padding: 0;
+    height: 100%;
+  }
+
+  // Header section
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    gap: @margin-md;
+    padding: @padding-lg;
+    border-bottom: 1px solid @border-color-split;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(245, 245, 245, 0.4));
+  }
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    flex: 1;
+    min-width: 0;
+    
+    h4 {
+      margin: 0 0 @margin-xs 0;
+      font-size: @font-size-base;
+      font-weight: 600;
+      color: @heading-color;
+    }
+  }
+
+  &__main-status,
+  &__main-value {
+    .status-main-tag {
+      font-size: @font-size-sm;
+      font-weight: 500;
+      padding: 4px 8px;
+      border-radius: @border-radius-base;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .@{ant-prefix}-statistic {
+      .@{ant-prefix}-statistic-content {
+        .@{ant-prefix}-statistic-content-value {
+          line-height: 1;
+        }
+      }
+    }
+    
+    .win-rate-label,
+    .members-label {
+      font-size: @font-size-xs;
+      color: @text-color-secondary;
+      display: block;
+      margin-top: 2px;
+    }
+  }
+
+  // Content section
+  &__content {
+    padding: @padding-md @padding-lg @padding-lg;
+    background: white;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    gap: @margin-sm;
+    
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: @margin-xs;
+      font-size: @font-size-sm;
+      
+      .detail-icon {
+        color: @text-color-secondary;
+        font-size: 12px;
+        width: 12px;
+      }
+      
+      span {
+        color: @text-color-secondary;
+      }
+      
+      strong {
+        color: @text-color;
+        font-weight: 600;
+      }
+      
+      .detail-sub {
+        font-size: @font-size-xs;
+        color: @text-color-secondary;
+        margin-left: @margin-xs;
+      }
+    }
+  }
+
+  // Card type specific styles
+  &--account {
+    .summary-card__icon {
+      background: linear-gradient(135deg, @blue-5, @blue-6);
+    }
+  }
+
+  &--financial {
+    .summary-card__icon {
+      background: linear-gradient(135deg, @green-5, @green-6);
+    }
+  }
+
+  &--trading {
+    .summary-card__icon {
+      background: linear-gradient(135deg, @orange-5, @orange-6);
+    }
+  }
+
+  &--network {
+    .summary-card__icon {
+      background: linear-gradient(135deg, @purple-5, @purple-6);
+    }
+  }
+}
+
+// Text color utilities
+.text-success {
+  color: @success-color !important;
+}
+
+.text-danger {
+  color: @error-color !important;
+}
+
+.text-warning {
+  color: @warning-color !important;
+}
+
+.text-info {
+  color: @primary-color !important;
+}
+
+.text-default {
+  color: @text-color-secondary !important;
+}
+
+.text-vip {
+  color: @purple-6 !important;
+}
+
+// Responsive adjustments
+@media (max-width: @screen-lg) {
+  .summary-card {
+    &__header {
+      padding: @padding-md;
+      gap: @margin-sm;
+    }
+    
+    &__content {
+      padding: @padding-sm @padding-md @padding-md;
+    }
+    
+    &__icon {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+    }
+  }
+}
+
+@media (max-width: @screen-md) {
+  .summary-card {
+    &__header {
+      flex-direction: row;
+      text-align: left;
+    }
+    
+    &__title {
+      h4 {
+        font-size: @font-size-sm;
+      }
+    }
+    
+    &__main-value {
+      .@{ant-prefix}-statistic {
+        .@{ant-prefix}-statistic-content-value {
+          font-size: 18px !important;
+        }
+      }
+    }
+    
+    &__details {
+      .detail-item {
+        font-size: @font-size-xs;
+      }
+    }
+  }
+}
+
+@media (max-width: @screen-sm) {
+  .summary-card {
+    &__header {
+      padding: @padding-sm;
+      gap: @margin-xs;
+    }
+    
+    &__content {
+      padding: @padding-xs @padding-sm @padding-sm;
+    }
+    
+    &__icon {
+      width: 36px;
+      height: 36px;
+      font-size: 16px;
+    }
+    
+    &__details {
+      gap: @margin-xs;
+      
+      .detail-item {
+        flex-wrap: wrap;
+        
+        .detail-sub {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}
+
+// Animation on hover
+.summary-card {
+  .detail-item {
+    transition: all 0.2s ease;
+    padding: 2px 0;
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba(24, 144, 255, 0.04);
+      padding-left: 8px;
+      margin-left: -8px;
+      margin-right: -8px;
+    }
+  }
+}
+
+// Loading skeleton styles for future use
+.summary-card-skeleton {
+  .@{ant-prefix}-skeleton {
+    .@{ant-prefix}-skeleton-content {
+      .@{ant-prefix}-skeleton-title {
+        margin: 0 0 @margin-sm 0;
+      }
+      
+      .@{ant-prefix}-skeleton-paragraph {
+        margin: 0;
+        
+        li {
+          height: 16px;
+          margin: @margin-xs 0;
+        }
+      }
+    }
+  }
+}

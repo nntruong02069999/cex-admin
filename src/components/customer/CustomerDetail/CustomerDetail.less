@@ -1,0 +1,349 @@
+// Customer Detail Main Styles
+
+@import "~antd/lib/style/themes/default.less";
+
+// Variables
+@customer-header-height: 64px;
+@customer-content-padding: 24px;
+@customer-card-radius: 8px;
+@customer-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+@customer-loading-min-height: 400px;
+@padding-xl: 24px;
+
+// Main container - Full width on all devices
+.customer-detail {
+  background-color: @layout-body-background;
+  min-height: calc(100vh - @customer-header-height);
+  width: 100%;
+
+  &__container {
+    width: 100%;
+    max-width: none; // Remove any max-width constraints
+    padding: @customer-content-padding;
+
+    // Reduce padding progressively but maintain full width
+    @media (max-width: @screen-lg) {
+      padding: @padding-md;
+    }
+
+    @media (max-width: @screen-sm) {
+      padding: @padding-sm;
+    }
+
+    @media (max-width: @screen-xs) {
+      padding: 8px;
+    }
+  }
+
+  // Loading state
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: @customer-loading-min-height;
+    background: white;
+    border-radius: @customer-card-radius;
+    margin: @customer-content-padding;
+    box-shadow: @customer-card-shadow;
+
+    .@{ant-prefix}-spin {
+      .@{ant-prefix}-spin-text {
+        color: @text-color-secondary;
+        margin-top: @margin-md;
+      }
+    }
+  }
+
+  // Error state
+  &__error {
+    margin: @customer-content-padding;
+    background: white;
+    border-radius: @customer-card-radius;
+    box-shadow: @customer-card-shadow;
+    padding: @padding-xl;
+  }
+
+  // No data state
+  &__no-data {
+    margin: @customer-content-padding;
+    background: white;
+    border-radius: @customer-card-radius;
+    box-shadow: @customer-card-shadow;
+    padding: @padding-xl;
+  }
+}
+
+// Global responsive utilities for customer components
+.customer-responsive-grid {
+  display: grid;
+  gap: @margin-md;
+
+  &--4-cols {
+    grid-template-columns: repeat(4, 1fr);
+
+    @media (max-width: @screen-xl) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: @screen-md) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &--2-cols {
+    grid-template-columns: 65% 35%;
+
+    @media (max-width: @screen-lg) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &--3-cols {
+    grid-template-columns: repeat(3, 1fr);
+
+    @media (max-width: @screen-lg) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: @screen-md) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// Customer status badges
+.customer-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: @margin-xs;
+
+  &__icon {
+    font-size: 14px;
+  }
+
+  &--success {
+    color: @success-color;
+  }
+
+  &--warning {
+    color: @warning-color;
+  }
+
+  &--error {
+    color: @error-color;
+  }
+
+  &--info {
+    color: @primary-color;
+  }
+}
+
+// Customer card utilities
+.customer-card {
+  background: white;
+  border-radius: @customer-card-radius;
+  box-shadow: @customer-card-shadow;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &__header {
+    padding: @padding-md @padding-lg;
+    border-bottom: 1px solid @border-color-split;
+
+    .@{ant-prefix}-card-meta-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: @heading-color;
+    }
+  }
+
+  &__content {
+    padding: @padding-lg;
+  }
+
+  &__footer {
+    padding: @padding-md @padding-lg;
+    border-top: 1px solid @border-color-split;
+    background: @background-color-light;
+  }
+}
+
+// Responsive table wrapper
+.customer-table-wrapper {
+  .@{ant-prefix}-table-wrapper {
+    .@{ant-prefix}-table {
+      .@{ant-prefix}-table-tbody {
+        .@{ant-prefix}-table-row {
+          &:hover {
+            .@{ant-prefix}-table-cell {
+              background: @table-row-hover-bg;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Mobile responsive table
+  @media (max-width: @screen-md) {
+    .@{ant-prefix}-table {
+      .@{ant-prefix}-table-content {
+        overflow-x: auto;
+      }
+
+      .@{ant-prefix}-table-thead {
+        th {
+          white-space: nowrap;
+        }
+      }
+
+      .@{ant-prefix}-table-tbody {
+        td {
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}
+
+// Mobile stack utility
+.customer-mobile-stack {
+  @media (max-width: @screen-md) {
+    .@{ant-prefix}-col {
+      margin-bottom: @margin-md !important;
+
+      &:last-child {
+        margin-bottom: 0 !important;
+      }
+    }
+  }
+}
+
+// VIP styling
+.customer-vip {
+  &__badge {
+    background: linear-gradient(135deg, @purple-6, @purple-4);
+    color: white;
+    border: none;
+
+    .@{ant-prefix}-tag-icon {
+      color: @gold-6;
+    }
+  }
+
+  &__level {
+    font-weight: 600;
+    color: @purple-6;
+  }
+
+  &__progress {
+    .@{ant-prefix}-progress-bg {
+      background: linear-gradient(90deg, @purple-4, @purple-6);
+    }
+  }
+}
+
+// Action buttons
+.customer-actions {
+  display: flex;
+  gap: @margin-sm;
+  flex-wrap: wrap;
+
+  @media (max-width: @screen-sm) {
+    flex-direction: column;
+
+    .@{ant-prefix}-btn {
+      width: 100%;
+    }
+  }
+}
+
+// Quick stats
+.customer-quick-stats {
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: @padding-xs 0;
+    border-bottom: 1px solid @border-color-split;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    span {
+      color: @text-color-secondary;
+      font-size: 12px;
+    }
+
+    strong {
+      color: @text-color;
+      font-weight: 600;
+    }
+  }
+}
+
+// Network tree styles
+.customer-network-tree {
+  &__container {
+    padding: @padding-md;
+    background: @background-color-light;
+    border-radius: @border-radius-base;
+    border: 1px solid @border-color-split;
+  }
+
+  &__summary {
+    margin-bottom: @margin-md;
+    padding-bottom: @padding-md;
+    border-bottom: 1px solid @border-color-split;
+  }
+}
+
+// Financial overview
+.customer-financial {
+  &__section {
+    margin-bottom: @margin-lg;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: 600;
+    color: @heading-color;
+    margin-bottom: @margin-md;
+    display: flex;
+    align-items: center;
+    gap: @margin-xs;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: @margin-md;
+  }
+
+  &__item {
+    padding: @padding-md;
+    background: @background-color-light;
+    border-radius: @border-radius-base;
+    text-align: center;
+
+    &-label {
+      color: @text-color-secondary;
+      font-size: 12px;
+      margin-bottom: @margin-xs;
+    }
+
+    &-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: @text-color;
+    }
+  }
+}

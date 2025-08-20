@@ -1,0 +1,534 @@
+.deposits-withdrawals-tab {
+  width: 100%;
+  max-width: none; // Ensure full width
+
+  // Summary Cards Section
+  .ant-row {
+    width: 100%;
+
+    &:first-child {
+      margin-bottom: 24px;
+      
+      .ant-col {
+        margin-bottom: 16px;
+        
+        @media (min-width: 768px) {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+  
+  // Statistic Cards
+  .ant-statistic {
+    .ant-statistic-title {
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    
+    .ant-statistic-content {
+      .ant-statistic-content-value {
+        font-size: 20px;
+        font-weight: 600;
+        
+        @media (max-width: 576px) {
+          font-size: 16px;
+        }
+      }
+      
+      .ant-statistic-content-suffix {
+        font-size: 16px;
+        
+        @media (max-width: 576px) {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  
+  // Split Tables Layout
+  .ant-row:last-child {
+    .ant-col {
+      margin-bottom: 24px;
+      
+      @media (min-width: 992px) {
+        margin-bottom: 0;
+      }
+      
+      &:first-child {
+        @media (max-width: 991px) {
+          margin-bottom: 24px;
+        }
+      }
+    }
+  }
+  
+  // Card Headers
+  .ant-card-head {
+    .ant-card-head-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1890ff;
+      
+      @media (max-width: 576px) {
+        font-size: 13px;
+      }
+    }
+    
+    .ant-card-extra {
+      @media (max-width: 576px) {
+        .ant-btn {
+          padding: 4px 8px;
+          font-size: 12px;
+          height: 28px;
+        }
+      }
+    }
+  }
+  
+  // Tables
+  .ant-table-wrapper {
+    .ant-table-thead > tr > th {
+      background-color: #fafafa;
+      font-weight: 600;
+      font-size: 12px;
+      padding: 8px;
+      
+      @media (max-width: 576px) {
+        font-size: 11px;
+        padding: 6px 4px;
+      }
+    }
+    
+    .ant-table-tbody > tr > td {
+      padding: 8px;
+      font-size: 12px;
+      
+      @media (max-width: 576px) {
+        font-size: 11px;
+        padding: 6px 4px;
+      }
+    }
+    
+    // Table Actions
+    .ant-btn-link {
+      padding: 0 4px;
+      font-size: 12px;
+      height: auto;
+      
+      @media (max-width: 576px) {
+        font-size: 11px;
+      }
+      
+      + .ant-btn-link {
+        margin-left: 4px;
+      }
+    }
+  }
+  
+  // Status Tags
+  .ant-tag {
+    margin: 0;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    
+    @media (max-width: 576px) {
+      font-size: 10px;
+      padding: 1px 4px;
+    }
+  }
+  
+  // Responsive Adjustments
+  @media (max-width: 576px) {
+    .ant-card {
+      .ant-card-body {
+        padding: 12px;
+      }
+    }
+    
+    // Stack cards vertically on mobile
+    .ant-row:first-child {
+      .ant-col {
+        flex: 0 0 50%;
+        max-width: 50%;
+        
+        &:nth-child(odd) {
+          padding-right: 8px;
+        }
+        
+        &:nth-child(even) {
+          padding-left: 8px;
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .ant-row:first-child {
+      .ant-col {
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding: 0 0 8px 0 !important;
+      }
+    }
+  }
+  
+  // Loading States
+  .ant-spin-nested-loading {
+    .ant-spin-container {
+      transition: opacity 0.3s;
+    }
+  }
+  
+  // Export Button Styling
+  .ant-btn-primary {
+    box-shadow: 0 2px 4px rgba(24, 144, 255, 0.2);
+    
+    &:hover {
+      box-shadow: 0 4px 8px rgba(24, 144, 255, 0.3);
+      transform: translateY(-1px);
+      transition: all 0.2s ease;
+    }
+  }
+  
+  // Amount Display
+  .deposits-withdrawals-tab {
+    .ant-table-tbody {
+      tr {
+        td:nth-child(3) { // Amount column
+          span {
+            font-weight: 600;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+          }
+        }
+      }
+    }
+  }
+
+  // Deposit Transaction Table Specific Styles
+  .deposits-table {
+    // Filter Section Styles
+    .ant-card {
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      
+      .ant-card-body {
+        padding: 12px 16px;
+      }
+      
+      .ant-row {
+        .ant-col {
+          @media (max-width: 768px) {
+            margin-bottom: 12px;
+            
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
+      }
+      
+      .ant-picker {
+        border-radius: 4px;
+        
+        &:hover {
+          border-color: #40a9ff;
+        }
+        
+        &:focus {
+          border-color: #1890ff;
+          box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+      }
+      
+      .ant-select {
+        .ant-select-selector {
+          border-radius: 4px;
+          
+          &:hover {
+            border-color: #40a9ff;
+          }
+        }
+        
+        &.ant-select-focused {
+          .ant-select-selector {
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+          }
+        }
+      }
+      
+      .ant-btn {
+        border-radius: 4px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+        
+        &.ant-btn-primary {
+          background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+          border-color: #1890ff;
+          
+          &:hover {
+            background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
+            border-color: #40a9ff;
+          }
+        }
+      }
+    }
+  }
+  
+  .deposit-transactions-table {
+    .tx-hash-container {
+      .ant-btn {
+        font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        font-size: 11px;
+        padding: 0 4px;
+        height: auto;
+        line-height: 1.2;
+        
+        &:hover {
+          background: rgba(24, 144, 255, 0.1);
+        }
+      }
+    }
+
+    .order-id {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      font-size: 11px;
+      background: #f5f5f5;
+      padding: 2px 4px;
+      border-radius: 3px;
+      color: #666;
+    }
+
+    // Center align most columns except first and last
+    .ant-table-thead {
+      th {
+        text-align: center;
+        
+        &:first-child,
+        &:last-child {
+          text-align: left;
+        }
+      }
+    }
+
+    .ant-table-tbody {
+      td {
+        text-align: center;
+        
+        &:first-child,
+        &:last-child {
+          text-align: left;
+        }
+      }
+    }
+  }
+  
+  // Mobile responsive for filter section
+  @media (max-width: 768px) {
+    .deposits-table {
+      .ant-card {
+        .ant-row {
+          .ant-col {
+            flex: 0 0 100%;
+            max-width: 100%;
+            
+            &:not(:last-child) {
+              margin-bottom: 12px;
+            }
+          }
+        }
+        
+        .ant-btn {
+          width: 100%;
+          margin-bottom: 8px;
+          
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+
+  // BSC Scan Link Styling
+  .bsc-link {
+    color: #1890ff;
+    text-decoration: none;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    
+    &:hover {
+      color: #40a9ff;
+      text-decoration: underline;
+    }
+  }
+
+  // Withdrawal Transaction Table Specific Styles
+  .withdrawals-table {
+    // Filter Section Styles (similar to deposits)
+    .ant-card {
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      
+      .ant-card-body {
+        padding: 12px 16px;
+      }
+      
+      .ant-row {
+        .ant-col {
+          @media (max-width: 768px) {
+            margin-bottom: 12px;
+            
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
+      }
+      
+      .ant-picker {
+        border-radius: 4px;
+        
+        &:hover {
+          border-color: #40a9ff;
+        }
+        
+        &:focus {
+          border-color: #1890ff;
+          box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+      }
+      
+      .ant-select {
+        .ant-select-selector {
+          border-radius: 4px;
+          
+          &:hover {
+            border-color: #40a9ff;
+          }
+        }
+        
+        &.ant-select-focused {
+          .ant-select-selector {
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+          }
+        }
+      }
+      
+      .ant-btn {
+        border-radius: 4px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+        
+        &.ant-btn-primary {
+          background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+          border-color: #1890ff;
+          
+          &:hover {
+            background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
+            border-color: #40a9ff;
+          }
+        }
+      }
+    }
+  }
+  
+  .withdrawal-transactions-table {
+    .tx-hash-container {
+      .ant-btn {
+        font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        font-size: 11px;
+        padding: 0 4px;
+        height: auto;
+        line-height: 1.2;
+        
+        &:hover {
+          background: rgba(24, 144, 255, 0.1);
+        }
+      }
+    }
+
+    .withdrawal-code {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      font-size: 11px;
+      background: #f5f5f5;
+      padding: 2px 4px;
+      border-radius: 3px;
+      color: #666;
+    }
+
+    .withdrawal-actions {
+      .ant-btn-link {
+        padding: 0 4px;
+        font-size: 11px;
+        
+        + .ant-btn-link {
+          margin-left: 4px;
+        }
+      }
+    }
+
+    // Center align most columns except first and last
+    .ant-table-thead {
+      th {
+        text-align: center;
+        
+        &:first-child,
+        &:last-child {
+          text-align: left;
+        }
+      }
+    }
+
+    .ant-table-tbody {
+      td {
+        text-align: center;
+        
+        &:first-child,
+        &:last-child {
+          text-align: left;
+        }
+      }
+    }
+  }
+  
+  // Mobile responsive for withdrawal filter section
+  @media (max-width: 768px) {
+    .withdrawals-table {
+      .ant-card {
+        .ant-row {
+          .ant-col {
+            flex: 0 0 100%;
+            max-width: 100%;
+            
+            &:not(:last-child) {
+              margin-bottom: 12px;
+            }
+          }
+        }
+        
+        .ant-btn {
+          width: 100%;
+          margin-bottom: 8px;
+          
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}

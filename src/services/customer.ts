@@ -2,6 +2,16 @@ import { DEFAULT_ERROR_MESSAGE } from '@src/constants/constants'
 import HttpStatusCode from '@src/constants/HttpStatusCode'
 import request from '@src/util/request'
 
+// Types for customer detail APIs
+export interface CustomerDetailParams {
+    page?: number;
+    limit?: number;
+    status?: string;
+    type?: string;
+    fromDate?: string;
+    toDate?: string;
+}
+
 /**
  * Get all customer information by ID
  */
@@ -360,6 +370,380 @@ export const addWheelSpin = async (customerId: number, amount: number) => {
                 customerId,
                 amount
             },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Get detailed customer information for customer detail page
+ */
+export const getCustomerDetail = async (customerId: number) => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: `/admin/customer/${customerId}/detail`,
+        options: {
+            method: 'get',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Add balance to customer account (admin action)
+ */
+export const addBalance = async (customerId: number, amount: number, note?: string) => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: `/admin/customer/${customerId}/balance/add`,
+        options: {
+            method: 'post',
+            data: {
+                amount,
+                note
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Subtract balance from customer account (admin action)
+ */
+export const subtractBalance = async (customerId: number, amount: number, note?: string) => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: `/admin/customer/${customerId}/balance/subtract`,
+        options: {
+            method: 'post',
+            data: {
+                amount,
+                note
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Update customer VIP level
+ */
+export const updateVipLevel = async (customerId: number, newLevel: number, note?: string) => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: `/admin/customer/${customerId}/vip-level`,
+        options: {
+            method: 'put',
+            data: {
+                newLevel,
+                note
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Update customer marketing status
+ */
+export const updateMarketingStatus = async (customerId: number, isAccountMarketing: boolean) => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: `/admin/customer/${customerId}/marketing-status`,
+        options: {
+            method: 'put',
+            data: {
+                isAccountMarketing
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Get customer deposits with pagination and filters
+ */
+export const getCustomerDeposits = async (customerId: number, params: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    fromDate?: string;
+    toDate?: string;
+}) => {
+    const token = localStorage.getItem('token')
+    const queryParams = new URLSearchParams()
+    
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            queryParams.append(key, value.toString())
+        }
+    })
+
+    const res: any = await request({
+        url: `/admin/customer/${customerId}/deposits?${queryParams.toString()}`,
+        options: {
+            method: 'get',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Get customer withdrawals with pagination and filters
+ */
+export const getCustomerWithdrawals = async (customerId: number, params: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    type?: string;
+    fromDate?: string;
+    toDate?: string;
+}) => {
+    const token = localStorage.getItem('token')
+    const queryParams = new URLSearchParams()
+    
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            queryParams.append(key, value.toString())
+        }
+    })
+
+    const res: any = await request({
+        url: `/admin/customer/${customerId}/withdrawals?${queryParams.toString()}`,
+        options: {
+            method: 'get',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Get customer USDT transactions
+ */
+export const getCustomerUSDTTransactions = async (customerId: number, params: {
+    page?: number;
+    limit?: number;
+    type?: string;
+    fromDate?: string;
+    toDate?: string;
+}) => {
+    const token = localStorage.getItem('token')
+    const queryParams = new URLSearchParams()
+    
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            queryParams.append(key, value.toString())
+        }
+    })
+
+    const res: any = await request({
+        url: `/admin/customer/${customerId}/usdt-transactions?${queryParams.toString()}`,
+        options: {
+            method: 'get',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Get customer wallet transactions
+ */
+export const getCustomerWalletTransactions = async (customerId: number, params: {
+    page?: number;
+    limit?: number;
+    type?: string;
+    fromDate?: string;
+    toDate?: string;
+}) => {
+    const token = localStorage.getItem('token')
+    const queryParams = new URLSearchParams()
+    
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            queryParams.append(key, value.toString())
+        }
+    })
+
+    const res: any = await request({
+        url: `/admin/customer/${customerId}/wallet-transactions?${queryParams.toString()}`,
+        options: {
+            method: 'get',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Get customer VIP commissions
+ */
+export const getCustomerVipCommissions = async (customerId: number, params: {
+    page?: number;
+    limit?: number;
+    type?: string;
+    status?: string;
+    fromDate?: string;
+    toDate?: string;
+}) => {
+    const token = localStorage.getItem('token')
+    const queryParams = new URLSearchParams()
+    
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            queryParams.append(key, value.toString())
+        }
+    })
+
+    const res: any = await request({
+        url: `/admin/customer/${customerId}/vip-commissions?${queryParams.toString()}`,
+        options: {
+            method: 'get',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Get customer daily statistics for charts
+ */
+export const getCustomerDailyStatistics = async (customerId: number, params: {
+    fromDate?: string;
+    toDate?: string;
+    limit?: number;
+}) => {
+    const token = localStorage.getItem('token')
+    const queryParams = new URLSearchParams()
+    
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            queryParams.append(key, value.toString())
+        }
+    })
+
+    const res: any = await request({
+        url: `/admin/customer/${customerId}/daily-statistics?${queryParams.toString()}`,
+        options: {
+            method: 'get',
             headers: {
                 Authorization: `Bearer ${token}`
             }

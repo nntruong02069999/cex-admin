@@ -1,0 +1,316 @@
+// Tab Container Styles
+
+@import '~antd/lib/style/themes/default.less';
+
+.tab-container {
+  background: white;
+  border-radius: @border-radius-base;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 100%;
+  max-width: none; // Ensure full width
+
+  .customer-tabs {
+    .@{ant-prefix}-tabs-nav {
+      margin: 0;
+      padding: 0 @padding-lg;
+      background: linear-gradient(135deg, #fafafa, #f0f0f0);
+      border-bottom: 1px solid @border-color-split;
+
+      &::before {
+        display: none; // Remove default border
+      }
+
+      .@{ant-prefix}-tabs-nav-wrap {
+        .@{ant-prefix}-tabs-nav-list {
+          .@{ant-prefix}-tabs-tab {
+            background: transparent;
+            border: none;
+            border-radius: @border-radius-base @border-radius-base 0 0;
+            margin: 0 2px 0 0;
+            padding: @padding-md @padding-lg;
+            position: relative;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background: rgba(24, 144, 255, 0.08);
+              
+              .tab-label {
+                color: @primary-color;
+              }
+            }
+
+            &.@{ant-prefix}-tabs-tab-active {
+              background: white;
+              color: @primary-color;
+              font-weight: 600;
+              
+              &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, @primary-color, @primary-6);
+                border-radius: 2px 2px 0 0;
+              }
+
+              .tab-label {
+                color: @primary-color;
+                
+                .@{ant-prefix}-typography {
+                  color: @primary-color;
+                }
+              }
+            }
+
+            .tab-label {
+              display: flex;
+              align-items: center;
+              gap: @margin-xs;
+              color: @text-color-secondary;
+              transition: all 0.3s ease;
+
+              .anticon {
+                font-size: 16px;
+              }
+
+              .tab-text {
+                font-size: @font-size-base;
+                font-weight: 500;
+                white-space: nowrap;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .@{ant-prefix}-tabs-content-holder {
+      background: white;
+      
+      .@{ant-prefix}-tabs-content {
+        .@{ant-prefix}-tabs-tabpane {
+          padding: @padding-lg;
+          min-height: 600px;
+          
+          &.@{ant-prefix}-tabs-tabpane-inactive {
+            display: none; // Hide inactive tabs to improve performance
+          }
+        }
+      }
+    }
+  }
+
+  // Responsive design
+  @media (max-width: @screen-lg) {
+    .customer-tabs {
+      .@{ant-prefix}-tabs-nav {
+        padding: 0 @padding-md;
+        
+        .@{ant-prefix}-tabs-nav-wrap {
+          .@{ant-prefix}-tabs-nav-list {
+            .@{ant-prefix}-tabs-tab {
+              padding: @padding-sm @padding-md;
+              
+              .tab-label {
+                gap: 6px;
+                
+                .anticon {
+                  font-size: 14px;
+                }
+                
+                .tab-text {
+                  font-size: @font-size-sm;
+                }
+              }
+            }
+          }
+        }
+      }
+      
+      .@{ant-prefix}-tabs-content-holder {
+        .@{ant-prefix}-tabs-content {
+          .@{ant-prefix}-tabs-tabpane {
+            padding: @padding-md;
+            min-height: 500px;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: @screen-md) {
+    .customer-tabs {
+      .@{ant-prefix}-tabs-nav {
+        padding: 0 @padding-sm;
+        
+        .@{ant-prefix}-tabs-nav-wrap {
+          .@{ant-prefix}-tabs-nav-list {
+            .@{ant-prefix}-tabs-tab {
+              padding: @padding-xs @padding-sm;
+              margin: 0 1px 0 0;
+              
+              .tab-label {
+                flex-direction: column;
+                gap: 2px;
+                text-align: center;
+                
+                .tab-text {
+                  font-size: 12px;
+                  line-height: 1.2;
+                }
+                
+                .anticon {
+                  font-size: 16px;
+                  margin-bottom: 2px;
+                }
+              }
+            }
+          }
+        }
+      }
+      
+      .@{ant-prefix}-tabs-content-holder {
+        .@{ant-prefix}-tabs-content {
+          .@{ant-prefix}-tabs-tabpane {
+            padding: @padding-sm;
+            min-height: 400px;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: @screen-sm) {
+    .customer-tabs {
+      .@{ant-prefix}-tabs-nav {
+        padding: 0;
+        
+        .@{ant-prefix}-tabs-nav-wrap {
+          .@{ant-prefix}-tabs-nav-list {
+            .@{ant-prefix}-tabs-tab {
+              padding: @padding-xs;
+              flex: 1;
+              justify-content: center;
+              
+              .tab-label {
+                .tab-text {
+                  display: none; // Hide text on very small screens
+                }
+                
+                .anticon {
+                  font-size: 18px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Tab specific styling
+  .@{ant-prefix}-tabs-tab {
+    &[data-node-key="overview"] {
+      .tab-label .anticon {
+        color: @blue-5;
+      }
+      
+      &.@{ant-prefix}-tabs-tab-active .tab-label .anticon {
+        color: @blue-6;
+      }
+    }
+
+    &[data-node-key="deposits-withdrawals"] {
+      .tab-label .anticon {
+        color: @green-5;
+      }
+      
+      &.@{ant-prefix}-tabs-tab-active .tab-label .anticon {
+        color: @green-6;
+      }
+    }
+
+    &[data-node-key="transactions"] {
+      .tab-label .anticon {
+        color: @orange-5;
+      }
+      
+      &.@{ant-prefix}-tabs-tab-active .tab-label .anticon {
+        color: @orange-6;
+      }
+    }
+
+    &[data-node-key="trading-history"] {
+      .tab-label .anticon {
+        color: @gold-5;
+      }
+      
+      &.@{ant-prefix}-tabs-tab-active .tab-label .anticon {
+        color: @gold-6;
+      }
+    }
+
+    &[data-node-key="vip-commission"] {
+      .tab-label .anticon {
+        color: @purple-5;
+      }
+      
+      &.@{ant-prefix}-tabs-tab-active .tab-label .anticon {
+        color: @purple-6;
+      }
+    }
+  }
+
+  // Smooth transitions
+  * {
+    transition: all 0.3s ease;
+  }
+
+  // Loading state
+  &.tab-container--loading {
+    .@{ant-prefix}-tabs-content {
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.8);
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+
+  // Scroll behavior for tab content
+  .@{ant-prefix}-tabs-tabpane {
+    overflow-y: auto;
+    max-height: calc(100vh - 300px);
+    
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: @primary-3;
+      border-radius: 3px;
+      
+      &:hover {
+        background: @primary-4;
+      }
+    }
+  }
+}

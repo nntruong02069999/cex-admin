@@ -1,0 +1,279 @@
+// Customer Header Styles
+
+@import '~antd/lib/style/themes/default.less';
+
+.customer-header {
+  background: white;
+  border-radius: @border-radius-base;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: @padding-lg;
+  margin-bottom: @margin-lg;
+  width: 100%;
+  max-width: none; // Ensure full width
+
+  // Breadcrumb section
+  &__breadcrumb {
+    margin-bottom: @margin-md;
+    
+    .@{ant-prefix}-breadcrumb {
+      font-size: @font-size-sm;
+      
+      a {
+        color: @text-color-secondary;
+        text-decoration: none;
+        
+        &:hover {
+          color: @primary-color;
+        }
+      }
+      
+      .@{ant-prefix}-breadcrumb-separator {
+        color: @text-color-secondary;
+      }
+    }
+  }
+
+  // Main content section
+  &__main {
+    margin-bottom: @margin-md;
+  }
+
+  &__info {
+    display: flex;
+    align-items: flex-start;
+    gap: @margin-lg;
+  }
+
+  &__avatar-section {
+    display: flex;
+    align-items: flex-start;
+    gap: @margin-md;
+  }
+
+  &__avatar {
+    border: 3px solid @border-color-split;
+    transition: all 0.3s ease;
+    
+    &--vip {
+      border-color: @purple-4;
+      box-shadow: 0 0 0 2px rgba(114, 46, 209, 0.2);
+    }
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  &__details {
+    flex: 1;
+    min-width: 0; // Prevent flex item from overflowing
+  }
+
+  &__name {
+    display: flex;
+    align-items: center;
+    gap: @margin-sm;
+    margin-bottom: @margin-xs;
+    
+    .name-text {
+      font-size: 24px;
+      font-weight: 600;
+      color: @heading-color;
+      line-height: 1.2;
+    }
+    
+    .@{ant-prefix}-tag {
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+  }
+
+  &__nickname {
+    font-size: 16px;
+    color: @text-color-secondary;
+    margin-bottom: @margin-xs;
+    font-weight: 500;
+  }
+
+  &__email {
+    display: flex;
+    align-items: center;
+    gap: @margin-xs;
+    margin-bottom: @margin-xs;
+    flex-wrap: wrap;
+    
+    span {
+      color: @text-color;
+      font-size: 12px;
+    }
+    
+    .@{ant-prefix}-tag {
+      margin: 0;
+      font-size: 12px;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: @margin-xs;
+    color: @text-color-secondary;
+    font-size: 12px;
+    flex-wrap: wrap;
+    
+    .separator {
+      color: @border-color-split;
+      margin: 0 4px;
+    }
+    
+    span {
+      white-space: nowrap;
+    }
+  }
+
+  // Actions section
+  &__actions {
+    display: flex;
+    gap: @margin-sm;
+  }
+
+  &__refresh-btn {
+    height: 40px;
+    padding: 0 @padding-lg;
+    border-radius: @border-radius-base;
+    font-weight: 500;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(24, 144, 255, 0.3);
+    }
+  }
+
+  // Status row
+  &__status {
+    padding-top: @padding-md;
+    border-top: 1px solid @border-color-split;
+    
+    .status-tag {
+      margin-bottom: @margin-xs;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 500;
+      padding: 4px 8px;
+      border-radius: @border-radius-base;
+    }
+  }
+
+  &__extra-info {
+    @media (max-width: @screen-lg) {
+      display: none;
+    }
+  }
+
+  // Responsive design
+  @media (max-width: @screen-lg) {
+    &__main {
+      .@{ant-prefix}-row {
+        flex-direction: column;
+        gap: @margin-md;
+      }
+    }
+    
+    &__avatar-section {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      
+      .customer-header__details {
+        text-align: center;
+      }
+    }
+    
+    &__actions {
+      width: 100%;
+      justify-content: center;
+      
+      .customer-header__refresh-btn {
+        width: 200px;
+      }
+    }
+  }
+
+  @media (max-width: @screen-md) {
+    padding: @padding-md;
+    
+    &__avatar {
+      width: 56px;
+      height: 56px;
+    }
+    
+    &__name .name-text {
+      font-size: 18px;
+    }
+    
+    &__avatar-section {
+      flex-direction: row;
+      align-items: flex-start;
+      text-align: left;
+    }
+    
+    &__actions {
+      justify-content: stretch;
+      
+      .customer-header__refresh-btn {
+        width: 100%;
+      }
+    }
+    
+    &__meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      
+      .separator {
+        display: none;
+      }
+    }
+  }
+
+  @media (max-width: @screen-sm) {
+    &__status {
+      .@{ant-prefix}-col {
+        width: 50%;
+        margin-bottom: @margin-xs;
+      }
+    }
+    
+    &__email {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+  }
+}
+
+// VIP specific styles
+.customer-vip__badge {
+  background: linear-gradient(135deg, @purple-6, @purple-4) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 2px 4px rgba(114, 46, 209, 0.3);
+  
+  &:hover {
+    background: linear-gradient(135deg, @purple-7, @purple-5) !important;
+    transform: translateY(-1px);
+  }
+}
+
+// Status tag animations
+.status-tag {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}

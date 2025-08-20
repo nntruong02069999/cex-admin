@@ -1,0 +1,745 @@
+// Overview Tab Styles
+
+@import '~antd/lib/style/themes/default.less';
+
+@ant-prefix: ant;
+@screen-lg: 1400px;
+@screen-md: 992px;
+@margin-lg: 24px;
+@margin-md: 16px;
+@margin-sm: 12px;
+@margin-xs: 8px;
+@padding-lg: 24px;
+@padding-md: 16px;
+@padding-sm: 12px;
+@padding-xs: 8px;
+@border-radius-base: 8px;
+@border-color-split: #f0f0f0;
+@background-color-light: #f8f8f8;
+@text-color-secondary: #666;
+@primary-color: #1890ff;
+@success-color: #52c41a;
+@warning-color: #faad14;
+@error-color: #ff4d4f;
+@font-family-code: "SFMono-Regular", "Consolas", "Liberation Mono", "Menlo", "Courier", monospace;
+@font-size-xs: 12px;
+@font-size-sm: 12px;
+@font-size-base: 16px;
+@font-size-lg: 18px;
+@font-size-xl: 24px;
+
+.overview-tab {
+  width: 100%;
+  max-width: none; // Ensure full width
+
+  &__left-panel {
+    width: 100%;
+
+    @media (max-width: @screen-lg) {
+      margin-bottom: @margin-lg;
+    }
+  }
+
+  &__sections {
+    display: flex;
+    flex-direction: column;
+    gap: @margin-lg;
+  }
+
+  &__right-panel {
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    width: 100%;
+
+    @media (max-width: @screen-lg) {
+      position: static;
+    }
+  }
+
+  &__actions-panel {
+    display: flex;
+    flex-direction: column;
+    gap: @margin-md;
+  }
+}
+
+// Customer Info Card
+.customer-info-card {
+  .edit-icon {
+    color: @text-color-secondary;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: @primary-color;
+      transform: scale(1.1);
+    }
+  }
+
+  .customer-avatar {
+    border: 3px solid @border-color-split;
+    transition: all 0.3s ease;
+
+    &--vip {
+      border-color: @purple-4;
+      box-shadow: 0 0 0 3px rgba(114, 46, 209, 0.1);
+    }
+  }
+
+  .customer-basic-info {
+    .customer-name {
+      display: flex;
+      align-items: center;
+      gap: @margin-sm;
+      margin-bottom: @margin-xs;
+      font-size: 24px;
+      font-weight: 600;
+      color: @heading-color;
+
+      .customer-vip-tag {
+        background: linear-gradient(135deg, @purple-6, @purple-4);
+        color: white;
+        border: none;
+      }
+    }
+
+    .customer-nickname {
+      margin-bottom: @margin-xs;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .customer-email {
+      display: flex;
+      align-items: center;
+      gap: @margin-xs;
+      margin-bottom: @margin-xs;
+      flex-wrap: wrap;
+
+      .verification-tag {
+        font-size: 12px;
+      }
+    }
+
+    .customer-dates {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: @margin-xs;
+
+      .date-separator {
+        color: @border-color-split;
+      }
+    }
+  }
+
+  .customer-additional-info {
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: @margin-xs;
+      margin-bottom: @margin-xs;
+
+      .invite-code {
+        font-family: @font-family-code;
+        background: @background-color-light;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .inviter-section {
+        display: flex;
+        align-items: center;
+        gap: @margin-sm;
+        flex-wrap: wrap;
+
+        .change-inviter-btn {
+          padding: 0 @padding-xs;
+          height: 24px;
+          font-size: @font-size-xs;
+          line-height: 1;
+          color: @primary-color;
+          transition: all 0.3s ease;
+
+          &:hover {
+            color: @primary-color;
+            background: rgba(24, 144, 255, 0.1);
+            border-radius: 4px;
+          }
+
+          .@{ant-prefix}-btn-icon {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+
+  .customer-network-stats {
+    .stat-item {
+      text-align: center;
+      padding: @padding-sm;
+      background: @background-color-light;
+      border-radius: @border-radius-base;
+
+      .stat-value {
+        font-size: 24px;
+        font-weight: 600;
+        color: @text-color;
+        
+        &.vip-value {
+          color: @purple-6;
+        }
+        
+        &.f1-value {
+          color: @blue-6;
+        }
+        
+        &.level-value {
+          color: @gold-6;
+        }
+      }
+
+      .stat-label {
+        font-size: 12px;
+        color: @text-color-secondary;
+        margin-top: 2px;
+      }
+    }
+  }
+}
+
+// Financial Overview Card
+.financial-overview-card {
+  .financial-section {
+    margin-bottom: @margin-lg;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: @margin-xs;
+      margin-bottom: @margin-md;
+      color: @heading-color;
+    }
+  }
+
+  .balance-grid {
+    .balance-item {
+      background: @background-color-light;
+      padding: @padding-md;
+      border-radius: @border-radius-base;
+      text-align: center;
+      border-left: 4px solid @border-color-split;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(24, 144, 255, 0.04);
+        border-left-color: @primary-color;
+      }
+
+      &--primary {
+        border-left-color: @green-5;
+      }
+
+      &--frozen {
+        border-left-color: @orange-5;
+      }
+
+      &--total {
+        border-left-color: @blue-5;
+      }
+
+      &--demo {
+        border-left-color: @purple-5;
+      }
+
+      .balance-label {
+        font-size: 12px;
+        color: @text-color-secondary;
+        margin-bottom: @margin-xs;
+      }
+
+      .balance-value {
+        font-size: 18px;
+        font-weight: 600;
+        color: @text-color;
+      }
+    }
+  }
+
+  .usdt-grid {
+    .usdt-item {
+      text-align: center;
+      padding: @padding-sm;
+
+      .usdt-label {
+        font-size: 12px;
+        color: @text-color-secondary;
+        margin-bottom: @margin-xs;
+      }
+
+      .usdt-value {
+        font-size: 18px;
+        font-weight: 600;
+        color: @text-color;
+      }
+    }
+  }
+
+  .usdt-address {
+    margin-top: @margin-md;
+    padding: @padding-sm;
+    background: @background-color-light;
+    border-radius: @border-radius-base;
+
+    .address-container {
+      display: flex;
+      align-items: center;
+      gap: @margin-xs;
+      margin-top: 4px;
+
+      .address-text {
+        flex: 1;
+        background: white;
+      }
+
+      .copy-button {
+        color: @primary-color;
+      }
+    }
+  }
+
+  .trading-grid {
+    .trading-item {
+      text-align: center;
+      padding: @padding-sm;
+
+      .trading-label {
+        font-size: 12px;
+        color: @text-color-secondary;
+        margin-bottom: @margin-xs;
+      }
+
+      .trading-value {
+        font-size: 18px;
+        font-weight: 600;
+        color: @text-color;
+        
+        &.win-rate-high {
+          color: @success-color;
+        }
+        
+        &.win-rate-medium {
+          color: @warning-color;
+        }
+        
+        &.win-rate-low {
+          color: @error-color;
+        }
+      }
+
+      .trading-sub {
+        font-size: 12px;
+        color: @text-color-secondary;
+        margin-top: 2px;
+      }
+    }
+  }
+
+  .pnl-breakdown {
+    margin-top: @margin-md;
+
+    .pnl-item {
+      text-align: center;
+      padding: @padding-sm;
+      border-radius: @border-radius-base;
+      
+      &.pnl-win {
+        background: rgba(82, 196, 26, 0.1);
+      }
+      
+      &.pnl-lose {
+        background: rgba(255, 77, 79, 0.1);
+      }
+      
+      &.pnl-net {
+        background: @background-color-light;
+      }
+
+      .pnl-label {
+        font-size: @font-size-sm;
+        color: @text-color-secondary;
+        margin-bottom: @margin-xs;
+      }
+
+      .pnl-value {
+        font-size: @font-size-lg;
+        font-weight: 600;
+        
+        &.pnl-positive {
+          color: @success-color;
+        }
+        
+        &.pnl-negative {
+          color: @error-color;
+        }
+      }
+    }
+  }
+
+  .rewards-list {
+    .reward-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: @padding-xs 0;
+      border-bottom: 1px solid @border-color-split;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .reward-value {
+        color: @success-color;
+      }
+    }
+  }
+}
+
+// Network Hierarchy Card
+.network-hierarchy-card {
+  .network-tree {
+    .network-root {
+      display: flex;
+      justify-content: center;
+      margin-bottom: @margin-lg;
+
+      .root-node {
+        display: flex;
+        align-items: center;
+        gap: @margin-sm;
+        padding: @padding-md;
+        background: linear-gradient(135deg, @primary-1, @primary-2);
+        border-radius: @border-radius-base;
+        border: 2px solid @primary-color;
+
+        .root-icon {
+          font-size: 24px;
+        }
+
+        .root-info {
+          .root-title {
+            font-size: @font-size-lg;
+            font-weight: 600;
+            color: @heading-color;
+          }
+
+          .root-subtitle {
+            font-size: @font-size-sm;
+            color: @text-color-secondary;
+          }
+        }
+      }
+    }
+
+    .network-levels {
+      .network-level {
+        margin-bottom: @margin-md;
+        position: relative;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: -10px;
+          top: 0;
+          bottom: 0;
+          width: 2px;
+          background: @border-color-split;
+        }
+
+        .network-level-header {
+          display: flex;
+          align-items: center;
+          gap: @margin-sm;
+          padding: @padding-sm;
+          background: white;
+          border-radius: @border-radius-base;
+          border: 1px solid @border-color-split;
+
+          .network-level-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+          }
+
+          .network-level-info {
+            flex: 1;
+
+            .network-level-title {
+              font-size: @font-size-base;
+              font-weight: 600;
+              color: @heading-color;
+            }
+
+            .network-level-stats {
+              display: flex;
+              gap: @margin-xs;
+              font-size: @font-size-sm;
+
+              .member-count {
+                color: @text-color;
+              }
+
+              .vip-count {
+                color: @purple-6;
+                font-weight: 500;
+              }
+            }
+          }
+        }
+
+        .network-level-children {
+          margin-top: @margin-xs;
+          margin-left: 44px;
+
+          .member-dots {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+
+            .member-dot {
+              width: 8px;
+              height: 8px;
+              border-radius: 50%;
+              background: @primary-3;
+
+              &--vip {
+                background: @purple-5;
+                box-shadow: 0 0 4px rgba(114, 46, 209, 0.5);
+              }
+            }
+
+            .member-count-more {
+              font-size: @font-size-xs;
+              color: @text-color-secondary;
+              margin-left: @margin-xs;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .network-summary {
+    margin-top: @margin-lg;
+    padding-top: @padding-lg;
+    border-top: 1px solid @border-color-split;
+
+    .summary-title {
+      margin-bottom: @margin-md;
+      color: @heading-color;
+    }
+
+    .summary-stats {
+      .summary-item {
+        text-align: center;
+        padding: @padding-sm;
+        background: @background-color-light;
+        border-radius: @border-radius-base;
+
+        .summary-value {
+          font-size: @font-size-xl;
+          font-weight: 600;
+          color: @text-color;
+          
+          &.vip-value {
+            color: @purple-6;
+          }
+          
+          &.active-value {
+            color: @success-color;
+          }
+          
+          &.growth-value {
+            color: @green-6;
+          }
+        }
+
+        .summary-label {
+          font-size: @font-size-xs;
+          color: @text-color-secondary;
+          margin-top: 2px;
+        }
+      }
+    }
+  }
+}
+
+// Quick Actions
+.quick-actions {
+  .actions-card,
+  .stats-card {
+    margin-bottom: @margin-md;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .action-section {
+    margin-bottom: @margin-lg;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .action-title {
+      font-size: @font-size-base;
+      font-weight: 600;
+      color: @heading-color;
+      margin-bottom: @margin-sm;
+      display: flex;
+      align-items: center;
+      gap: @margin-xs;
+    }
+
+    .current-vip {
+      margin-bottom: @margin-xs;
+      
+      .vip-level {
+        color: @purple-6;
+      }
+    }
+
+    .marketing-switch {
+      .switch-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: @margin-xs;
+      }
+    }
+
+    .marketing-note {
+      color: @text-color-secondary;
+      font-size: @font-size-xs;
+      line-height: 1.4;
+    }
+  }
+
+  .quick-stats {
+    .stat-section {
+      margin-bottom: @margin-md;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .stat-section-title {
+        font-size: @font-size-sm;
+        font-weight: 600;
+        color: @heading-color;
+        margin-bottom: @margin-xs;
+        display: flex;
+        align-items: center;
+        gap: @margin-xs;
+      }
+
+      .stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: @padding-xs 0;
+        border-bottom: 1px solid @border-color-split;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        span {
+          color: @text-color-secondary;
+          font-size: @font-size-sm;
+        }
+
+        strong {
+          color: @text-color;
+          font-weight: 600;
+          font-size: @font-size-sm;
+
+          &.text-warning {
+            color: @warning-color;
+          }
+
+          &.text-info {
+            color: @primary-color;
+          }
+
+          &.text-success {
+            color: @success-color;
+          }
+
+          &.text-vip {
+            color: @purple-6;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: @screen-lg) {
+  .overview-tab {
+    &__right-panel {
+      .quick-actions {
+        .actions-card,
+        .stats-card {
+          .@{ant-prefix}-card-body {
+            padding: @padding-md;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: @screen-md) {
+  .customer-info-card {
+    .customer-network-stats {
+      .@{ant-prefix}-col {
+        margin-bottom: @margin-sm;
+      }
+    }
+  }
+
+  .financial-overview-card {
+    .balance-grid,
+    .usdt-grid,
+    .trading-grid,
+    .pnl-breakdown {
+      .@{ant-prefix}-col {
+        margin-bottom: @margin-sm;
+      }
+    }
+  }
+
+  .network-hierarchy-card {
+    .network-summary {
+      .summary-stats {
+        .@{ant-prefix}-col {
+          margin-bottom: @margin-sm;
+        }
+      }
+    }
+  }
+}
