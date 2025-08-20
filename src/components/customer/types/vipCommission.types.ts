@@ -33,7 +33,7 @@ export interface VipCommission {
   metadata?: any;
   createdAt?: number;
   updatedAt?: number;
-  
+
   // Display fields
   fromNickname?: string; // Converted from fromCustomerId
 }
@@ -44,4 +44,17 @@ export interface VipCommissionFilter {
   levelReferral?: number;
   commissionType?: VipCommissionType;
   status?: VipCommissionStatus;
+}
+
+// Types for VIP Commission Summary API
+export interface VipCommissionSummaryParams {
+  customerId: number;
+}
+
+export interface VipCommissionSummaryResponse {
+  totalCommission: number;
+  monthlyCommission: number;
+  totalF1Vip: number;
+  currentVipLevel: number;
+  vipActivationDate: number
 }

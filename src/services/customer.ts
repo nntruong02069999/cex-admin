@@ -790,3 +790,32 @@ export const getCustomerVipDailyLog = async (customerId: number, params: {
         }
     }
 }
+
+
+/**
+ * Get VIP commission summary for dashboard cards
+ */
+export const getVipCommissionSummary = async (customerId: number) => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: `/admin/customer/vip-commission-summary`,
+        options: {
+            method: 'post',
+            data: {
+                customerId
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}

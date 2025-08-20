@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { Tabs } from 'antd';
-import { 
-  FolderViewOutlined, 
-  TransactionOutlined, 
-  SwapOutlined, 
-  TrophyOutlined, 
-  CrownOutlined 
-} from '@ant-design/icons';
-import OverviewTab from '../OverviewTab';
-import DepositsWithdrawalsTab from '../DepositsWithdrawalsTab';
-import TransactionsTab from '../TransactionsTab';
-import TradingHistoryTab from '../TradingHistoryTab';
-import VipCommissionTab from '../VipCommissionTab';
-import { CustomerDetailData } from '../types/customer.types';
-import './TabContainer.less';
+import React, { useState } from "react";
+import { Tabs } from "antd";
+import {
+  FolderViewOutlined,
+  TransactionOutlined,
+  SwapOutlined,
+  TrophyOutlined,
+  CrownOutlined,
+} from "@ant-design/icons";
+import OverviewTab from "../OverviewTab";
+import DepositsWithdrawalsTab from "../DepositsWithdrawalsTab";
+import TransactionsTab from "../TransactionsTab";
+import TradingHistoryTab from "../TradingHistoryTab";
+import VipCommissionTab from "../VipCommissionTab";
+import { CustomerDetailData } from "../types/customer.types";
+import "./TabContainer.less";
 
 const { TabPane } = Tabs;
 
@@ -26,9 +26,9 @@ interface TabContainerProps {
 const TabContainer: React.FC<TabContainerProps> = ({
   customerId,
   customerData,
-  onDataUpdate
+  onDataUpdate,
 }) => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
 
   const handleTabChange = (key: string) => {
     setActiveTab(key);
@@ -45,8 +45,8 @@ const TabContainer: React.FC<TabContainerProps> = ({
         tabPosition="top"
         destroyInactiveTabPane={false} // Keep tab content for better UX
       >
-        <TabPane 
-          key="overview" 
+        <TabPane
+          key="overview"
           tab={
             <span className="tab-label">
               <FolderViewOutlined />
@@ -54,15 +54,15 @@ const TabContainer: React.FC<TabContainerProps> = ({
             </span>
           }
         >
-          <OverviewTab 
+          <OverviewTab
             customerId={customerId}
             customerData={customerData}
             onDataUpdate={onDataUpdate}
           />
         </TabPane>
 
-        <TabPane 
-          key="deposits-withdrawals" 
+        <TabPane
+          key="deposits-withdrawals"
           tab={
             <span className="tab-label">
               <TransactionOutlined />
@@ -70,14 +70,14 @@ const TabContainer: React.FC<TabContainerProps> = ({
             </span>
           }
         >
-          <DepositsWithdrawalsTab 
+          <DepositsWithdrawalsTab
             customerId={customerId}
             customerData={customerData}
           />
         </TabPane>
 
-        <TabPane 
-          key="transactions" 
+        <TabPane
+          key="transactions"
           tab={
             <span className="tab-label">
               <SwapOutlined />
@@ -85,14 +85,14 @@ const TabContainer: React.FC<TabContainerProps> = ({
             </span>
           }
         >
-          <TransactionsTab 
+          <TransactionsTab
             customerId={customerId}
             customerData={customerData}
           />
         </TabPane>
 
-        <TabPane 
-          key="trading-history" 
+        <TabPane
+          key="trading-history"
           tab={
             <span className="tab-label">
               <TrophyOutlined />
@@ -100,14 +100,14 @@ const TabContainer: React.FC<TabContainerProps> = ({
             </span>
           }
         >
-          <TradingHistoryTab 
+          <TradingHistoryTab
             customerId={customerId}
             customerData={customerData}
           />
         </TabPane>
 
-        <TabPane 
-          key="vip-commission" 
+        <TabPane
+          key="vip-commission"
           tab={
             <span className="tab-label">
               <CrownOutlined />
@@ -115,10 +115,7 @@ const TabContainer: React.FC<TabContainerProps> = ({
             </span>
           }
         >
-          <VipCommissionTab 
-            customerId={customerId}
-            customerData={customerData}
-          />
+          <VipCommissionTab customerId={customerId} />
         </TabPane>
       </Tabs>
     </div>
