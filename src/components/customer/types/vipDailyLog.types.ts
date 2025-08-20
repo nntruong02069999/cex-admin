@@ -39,5 +39,6 @@ export interface VipDailyChartData {
   tradingCommission: number;
   f1VipCount: number;
   tradingVolume: number;
+  totalF1TradingVolume: number; // dailyF1TradingVolume
   rank?: number;
 }

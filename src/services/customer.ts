@@ -697,14 +697,6 @@ export const getCustomerVipCommissions = async (customerId: number, params: {
     toDate?: number;   // timestamp in seconds
 }) => {
     const token = localStorage.getItem('token')
-    const queryParams = new URLSearchParams()
-
-    Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-            queryParams.append(key, value.toString())
-        }
-    })
-
     const res: any = await request({
         url: `/admin/customer/vip-commissions`,
         options: {
@@ -750,6 +742,39 @@ export const getCustomerDailyStatistics = async (customerId: number, params: {
         url: `/admin/customer/${customerId}/daily-statistics?${queryParams.toString()}`,
         options: {
             method: 'get',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Get customer VIP daily log for commission charts
+ */
+export const getCustomerVipDailyLog = async (customerId: number, params: {
+    startDate: number; // timestamp in milliseconds
+    endDate: number;   // timestamp in milliseconds
+}) => {
+    const token = localStorage.getItem('token')
+
+    const res: any = await request({
+        url: `/admin/customer/vip-daily-log`,
+        options: {
+            method: 'post',
+            data: {
+                customerId,
+                ...params
+            },
             headers: {
                 Authorization: `Bearer ${token}`
             }
