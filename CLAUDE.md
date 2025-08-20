@@ -1,3 +1,14 @@
+# Rules
+
+- **Use Sequential Thinking**: Leverage the `sequential_thinking` tool to break down complex tasks into smaller, manageable steps, enhancing clarity and execution .
+- **Use Brave Search**: Integrate `brave-search` for robust internet searching capabilities directly within your workflow .
+- **Use Context7**: Engage with `context7` for working with libraries, ensuring that context is maintained throughout your coding process .
+
+- Always suggest approachs first, then ask if user want to implement
+- Do not create or run test if you are asked to implement new feature
+- Always try to keep code implementation simple, clean
+
+
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
