@@ -102,7 +102,6 @@ const TabContainer: React.FC<TabContainerProps> = ({
         >
           <TradingHistoryTab
             customerId={customerId}
-            customerData={customerData}
           />
         </TabPane>
 

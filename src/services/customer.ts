@@ -1,3 +1,4 @@
+import { TradingHistoryParams, TradingPnLSummaryParams } from '@src/components/customer/types/trading.types';
 import { DEFAULT_ERROR_MESSAGE } from '@src/constants/constants'
 import HttpStatusCode from '@src/constants/HttpStatusCode'
 import request from '@src/util/request'
@@ -799,6 +800,93 @@ export const getVipCommissionSummary = async (customerId: number) => {
     const token = localStorage.getItem('token')
     const res: any = await request({
         url: `/admin/customer/vip-commission-summary`,
+        options: {
+            method: 'post',
+            data: {
+                customerId
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+
+
+/**
+ * Get customer trading history with filters and pagination
+ */
+export const getCustomerTradingHistory = async (customerId: number, params: TradingHistoryParams = {}) => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: `/admin/customer/trading-history`,
+        options: {
+            method: 'post',
+            data: {
+                customerId,
+                ...params
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Get customer trading PnL summary for charts
+ */
+export const getCustomerTradingPnLSummary = async (customerId: number) => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: `/admin/customer/trading-pnl-summary`,
+        options: {
+            method: 'post',
+            data: {
+                customerId
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Get customer trading dashboard summary
+ */
+export const getCustomerTradingSummary = async (customerId: number) => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: `/admin/customer/trading-summary`,
         options: {
             method: 'post',
             data: {

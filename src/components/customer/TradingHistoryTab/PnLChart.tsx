@@ -40,7 +40,6 @@ const PnLChart: React.FC<PnLChartProps> = ({ data }) => {
   // Transform data for chart
   const chartData: ChartDataPoint[] = data.map((item) => {
     const pnl = item.totalWinAmount - item.totalTrading;
-    const winRate = (item.totalWinAmount / item.totalTrading) * 100;
 
     return {
       date: item.date,
@@ -48,7 +47,7 @@ const PnLChart: React.FC<PnLChartProps> = ({ data }) => {
       totalTrading: item.totalTrading,
       totalWinAmount: item.totalWinAmount,
       pnl: pnl,
-      winRate: winRate,
+      winRate: item.winRate,
     };
   });
 
@@ -301,7 +300,9 @@ const PnLChart: React.FC<PnLChartProps> = ({ data }) => {
             }}
           >
             <Space wrap style={{ gap: "16px" }}>
-              {(chartType === 'line' || chartType === 'bar' || chartType === 'composed') && (
+              {(chartType === "line" ||
+                chartType === "bar" ||
+                chartType === "composed") && (
                 <span
                   style={{
                     display: "inline-flex",
@@ -325,11 +326,15 @@ const PnLChart: React.FC<PnLChartProps> = ({ data }) => {
                       boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
                     }}
                   ></span>
-                  <span style={{ fontWeight: 600, color: "#1890ff" }}>Tổng giao dịch</span>
+                  <span style={{ fontWeight: 600, color: "#1890ff" }}>
+                    Tổng giao dịch
+                  </span>
                 </span>
               )}
 
-              {(chartType === 'line' || chartType === 'bar' || chartType === 'composed') && (
+              {(chartType === "line" ||
+                chartType === "bar" ||
+                chartType === "composed") && (
                 <span
                   style={{
                     display: "inline-flex",
@@ -353,7 +358,9 @@ const PnLChart: React.FC<PnLChartProps> = ({ data }) => {
                       boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
                     }}
                   ></span>
-                  <span style={{ fontWeight: 600, color: "#52c41a" }}>Tổng thắng</span>
+                  <span style={{ fontWeight: 600, color: "#52c41a" }}>
+                    Tổng thắng
+                  </span>
                 </span>
               )}
 
@@ -380,7 +387,9 @@ const PnLChart: React.FC<PnLChartProps> = ({ data }) => {
                     boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
                   }}
                 ></span>
-                <span style={{ fontWeight: 600, color: "#ff7300" }}>P&L (Lợi nhuận/Lỗ)</span>
+                <span style={{ fontWeight: 600, color: "#ff7300" }}>
+                  P&L (Lợi nhuận/Lỗ)
+                </span>
               </span>
 
               {chartType === "composed" && (
@@ -407,7 +416,9 @@ const PnLChart: React.FC<PnLChartProps> = ({ data }) => {
                       boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
                     }}
                   ></span>
-                  <span style={{ fontWeight: 600, color: "#722ed1" }}>Tỷ lệ thắng (%)</span>
+                  <span style={{ fontWeight: 600, color: "#722ed1" }}>
+                    Tỷ lệ thắng (%)
+                  </span>
                 </span>
               )}
             </Space>

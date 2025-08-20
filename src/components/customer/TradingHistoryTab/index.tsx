@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Row,
   Col,
@@ -11,27 +11,36 @@ import {
   Select,
   DatePicker,
   Space,
+  message,
+  Spin,
 } from "antd";
 import {
   FilterOutlined,
   ReloadOutlined,
-  DownloadOutlined,
   EyeOutlined,
 } from "@ant-design/icons";
-import moment, { Moment } from "moment";
+import { Moment } from "moment";
 import {
-  CustomerDetailData,
   Order,
   OrderSide,
   OrderStatus,
   OrderType,
   TradingPnLSummary,
 } from "../types/customer.types";
+import {
+  getCustomerTradingHistory,
+  getCustomerTradingPnLSummary,
+  getCustomerTradingSummary,
+} from "../../../services/customer";
 import { formatCurrency, formatDate } from "../utils/formatters";
-import { calculateWinRate } from "../utils/helpers";
 import OrderDetailModal from "./OrderDetailModal";
 import PnLChart from "./PnLChart";
 import "./styles.less";
+import {
+  TradingHistoryParams,
+  TradingPnLSummaryParams,
+  TradingSummaryResponse,
+} from "../types/trading.types";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -39,14 +48,30 @@ type RangeValue = [Moment | null, Moment | null] | null;
 
 interface TradingHistoryTabProps {
   customerId: number;
-  customerData: CustomerDetailData;
 }
 
 const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
   customerId,
-  customerData,
 }) => {
-  const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
+  // API State
+  const [tradingHistory, setTradingHistory] = useState<Order[]>([]);
+  const [tradingSummary, setTradingSummary] =
+    useState<TradingSummaryResponse | null>(null);
+  const [pnlSummaryData, setPnlSummaryData] = useState<TradingPnLSummary[]>([]);
+
+  // Loading States
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [pnlLoading, setPnlLoading] = useState(false);
+
+  // Pagination State
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+
+  // Filter State
   const [dateRange, setDateRange] = useState<RangeValue>(null);
   const [sideFilter, setSideFilter] = useState<string | undefined>(undefined);
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
@@ -56,185 +81,102 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
   const [resultFilter, setResultFilter] = useState<string | undefined>(
     undefined
   );
+
+  // Modal State
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const winRate = calculateWinRate(
-    customerData.customerMoney.totalTradeWinCount,
-    customerData.customerMoney.totalTradeCount
-  );
+  // Load all data on component mount
+  useEffect(() => {
+    loadTradingSummary();
+    loadPnLSummary();
+    loadTradingHistory();
+  }, [customerId]);
 
-  // Mock trading orders with complete Order model
-  const tradingOrders: Order[] = [
-    {
-      id: 1,
-      customerId: customerId,
-      customer: customerData.customer,
-      side: OrderSide.BUY,
-      amount: 100.0,
-      fee: 2.0,
-      realAmount: 98.0,
-      symbol: "BTCUSDT",
-      configProfit: 0.95,
-      status: OrderStatus.SUCCESS,
-      type: OrderType.LIVE,
-      issueNumber: "BTC20240820001",
-      idChart: 12345,
-      chartResult: "BUY",
-      entryPrice: 65000.0,
-      openingPrice: 65000.0,
-      closingPrice: 65850.0,
-      resultProfit: 85.0,
-      winAmount: 183.0,
-      duration: 300,
-      orderNumber: "ORD001",
-      notes: "Lệnh BUY thành công",
-      fromMktAccount: false,
-      createdAt: Date.now() / 1000,
-      updatedAt: Date.now() / 1000,
-    },
-    {
-      id: 2,
-      customerId: customerId,
-      customer: customerData.customer,
-      side: OrderSide.SELL,
-      amount: 50.0,
-      fee: 1.0,
-      realAmount: 49.0,
-      symbol: "ETHUSDT",
-      configProfit: 0.95,
-      status: OrderStatus.FAILED,
-      type: OrderType.LIVE,
-      issueNumber: "ETH20240820002",
-      idChart: 12346,
-      chartResult: "BUY",
-      entryPrice: 3200.0,
-      openingPrice: 3200.0,
-      closingPrice: 3180.0,
-      resultProfit: -50.0,
-      winAmount: 0.0,
-      duration: 300,
-      orderNumber: "ORD002",
-      notes: "Lệnh SELL thất bại",
-      fromMktAccount: false,
-      createdAt: (Date.now() - 300000) / 1000,
-      updatedAt: (Date.now() - 300000) / 1000,
-    },
-    {
-      id: 3,
-      customerId: customerId,
-      customer: customerData.customer,
-      side: OrderSide.BUY,
-      amount: 200.0,
-      fee: 4.0,
-      realAmount: 196.0,
-      symbol: "BTCUSDT",
-      configProfit: 0.95,
-      status: OrderStatus.SUCCESS,
-      type: OrderType.DEMO,
-      issueNumber: "BTC20240820003",
-      idChart: 12347,
-      chartResult: "BUY",
-      entryPrice: 65100.0,
-      openingPrice: 65100.0,
-      closingPrice: 65100.0,
-      resultProfit: 0.0,
-      winAmount: 196.0,
-      duration: 300,
-      orderNumber: "ORD003",
-      notes: "Lệnh BUY hòa (Demo)",
-      fromMktAccount: true,
-      createdAt: (Date.now() - 600000) / 1000,
-      updatedAt: (Date.now() - 600000) / 1000,
-    },
-    {
-      id: 4,
-      customerId: customerId,
-      customer: customerData.customer,
-      side: OrderSide.SELL,
-      amount: 150.0,
-      fee: 3.0,
-      realAmount: 147.0,
-      symbol: "BNBUSDT",
-      configProfit: 0.95,
-      status: OrderStatus.SUCCESS,
-      type: OrderType.LIVE,
-      issueNumber: "BNB20240820004",
-      idChart: 12348,
-      chartResult: "SELL",
-      entryPrice: 580.0,
-      openingPrice: 580.0,
-      closingPrice: 575.0,
-      resultProfit: 139.65,
-      winAmount: 286.65,
-      duration: 300,
-      orderNumber: "ORD004",
-      notes: "Lệnh SELL thành công",
-      fromMktAccount: false,
-      createdAt: (Date.now() - 900000) / 1000,
-      updatedAt: (Date.now() - 900000) / 1000,
-    },
-    {
-      id: 5,
-      customerId: customerId,
-      customer: customerData.customer,
-      side: OrderSide.BUY,
-      amount: 75.0,
-      fee: 1.5,
-      realAmount: 73.5,
-      symbol: "ADAUSDT",
-      configProfit: 0.95,
-      status: OrderStatus.PENDING,
-      type: OrderType.LIVE,
-      issueNumber: "ADA20240820005",
-      idChart: 12349,
-      entryPrice: 0.45,
-      openingPrice: 0.45,
-      closingPrice: 0.0,
-      resultProfit: 0.0,
-      winAmount: 0.0,
-      duration: 300,
-      orderNumber: "ORD005",
-      notes: "Lệnh BUY đang chờ",
-      fromMktAccount: false,
-      createdAt: (Date.now() - 1200000) / 1000,
-      updatedAt: (Date.now() - 1200000) / 1000,
-    },
-  ];
+  // Load trading history when filters or pagination changes
+  useEffect(() => {
+    loadTradingHistory();
+  }, [pagination.current, pagination.pageSize]);
 
-  // Mock P&L Summary Data
-  const pnlSummaryData: TradingPnLSummary[] = [
-    {
-      date: moment().format("YYYY-MM-DD"),
-      totalTrading: 525.0,
-      totalWinAmount: 469.65,
-    },
-    {
-      date: moment().subtract(1, "day").format("YYYY-MM-DD"),
-      totalTrading: 300.0,
-      totalWinAmount: 285.0,
-    },
-    {
-      date: moment().subtract(2, "days").format("YYYY-MM-DD"),
-      totalTrading: 450.0,
-      totalWinAmount: 200.0,
-    },
-    {
-      date: moment().subtract(3, "days").format("YYYY-MM-DD"),
-      totalTrading: 525.0,
-      totalWinAmount: 469.65,
-    },
-    {
-      date: moment().subtract(4, "days").format("YYYY-MM-DD"),
-      totalTrading: 300.0,
-      totalWinAmount: 285.0,
-    },
-    {
-      date: moment().subtract(5, "days").format("YYYY-MM-DD"),
-      totalTrading: 450.0,
-      totalWinAmount: 200.0,
-    },
-  ];
+  // API Loading Functions
+  const loadTradingSummary = async () => {
+    setSummaryLoading(true);
+    try {
+      const response = await getCustomerTradingSummary(customerId);
+
+      if (response.errorCode) {
+        message.error(
+          response.message || "Có lỗi xảy ra khi tải dữ liệu tổng quan"
+        );
+        return;
+      }
+
+      setTradingSummary(response.data);
+    } catch (error) {
+      message.error("Có lỗi xảy ra khi tải dữ liệu tổng quan");
+      console.error("Error loading trading summary:", error);
+    } finally {
+      setSummaryLoading(false);
+    }
+  };
+
+  const loadPnLSummary = async () => {
+    setPnlLoading(true);
+    try {
+
+      const response = await getCustomerTradingPnLSummary(customerId);
+
+      if (response.errorCode) {
+        message.error(
+          response.message || "Có lỗi xảy ra khi tải dữ liệu biểu đồ"
+        );
+        return;
+      }
+
+      setPnlSummaryData(response.data || []);
+    } catch (error) {
+      message.error("Có lỗi xảy ra khi tải dữ liệu biểu đồ");
+      console.error("Error loading PnL summary:", error);
+    } finally {
+      setPnlLoading(false);
+    }
+  };
+
+  const loadTradingHistory = async () => {
+    setHistoryLoading(true);
+    try {
+      const params: TradingHistoryParams = {
+        page: pagination.current,
+        limit: pagination.pageSize,
+        side: sideFilter,
+        status: statusFilter,
+        issueNumber: issueNumberFilter || undefined,
+        result: resultFilter,
+        fromDate: dateRange?.[0]?.valueOf(),
+        toDate: dateRange?.[1]?.valueOf(),
+      };
+
+      const response = await getCustomerTradingHistory(customerId, params);
+
+      if (response.errorCode) {
+        message.error(
+          response.message || "Có lỗi xảy ra khi tải lịch sử giao dịch"
+        );
+        return;
+      }
+
+      setTradingHistory(response.data || []);
+      setPagination((prev) => ({
+        ...prev,
+        total: response.total || 0,
+      }));
+    } catch (error) {
+      message.error("Có lỗi xảy ra khi tải lịch sử giao dịch");
+      console.error("Error loading trading history:", error);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
 
   // Helper functions
   const getOrderResult = (order: Order): "WIN" | "LOSS" | "DRAW" => {
@@ -283,61 +225,11 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
     }
   };
 
-  // Apply filters
-  const applyFilters = () => {
-    let filtered = [...tradingOrders];
-
-    // Date range filter
-    if (dateRange) {
-      const [startDate, endDate] = dateRange;
-      filtered = filtered.filter((order) => {
-        const orderDate = moment.unix(order.createdAt || 0);
-        return (
-          orderDate.isAfter(startDate?.startOf("day")) &&
-          orderDate.isBefore(endDate?.endOf("day"))
-        );
-      });
-    }
-
-    // Side filter
-    if (sideFilter) {
-      filtered = filtered.filter((order) => order.side === sideFilter);
-    }
-
-    // Status filter
-    if (statusFilter) {
-      filtered = filtered.filter((order) => order.status === statusFilter);
-    }
-
-    // Issue number filter
-    if (issueNumberFilter) {
-      filtered = filtered.filter((order) =>
-        order.issueNumber
-          .toLowerCase()
-          .includes(issueNumberFilter.toLowerCase())
-      );
-    }
-
-    // Result filter (WIN/LOSS/DRAW)
-    if (resultFilter) {
-      filtered = filtered.filter((order) => {
-        const result = getOrderResult(order);
-        return result === resultFilter;
-      });
-    }
-
-    setFilteredOrders(filtered);
+  // Handle filter changes - reload data from API
+  const handleFilterChange = () => {
+    setPagination((prev) => ({ ...prev, current: 1 })); // Reset to first page
+    loadTradingHistory();
   };
-
-  // Apply filters whenever filter values change
-  React.useEffect(() => {
-    applyFilters();
-  }, [dateRange, sideFilter, statusFilter, issueNumberFilter, resultFilter]);
-
-  // Initialize filtered orders
-  React.useEffect(() => {
-    setFilteredOrders(tradingOrders);
-  }, []);
 
   const clearFilters = () => {
     setDateRange(null);
@@ -345,6 +237,25 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
     setStatusFilter(undefined);
     setIssueNumberFilter("");
     setResultFilter(undefined);
+    setPagination((prev) => ({ ...prev, current: 1 })); // Reset to first page
+    // Data will reload via useEffect dependency
+  };
+
+  // Trigger reload when filters change
+  useEffect(() => {
+    if (pagination.current !== 1) {
+      setPagination((prev) => ({ ...prev, current: 1 }));
+    } else {
+      loadTradingHistory();
+    }
+  }, [dateRange, sideFilter, statusFilter, issueNumberFilter, resultFilter]);
+
+  const handleTableChange = (paginationInfo: any) => {
+    setPagination((prev) => ({
+      ...prev,
+      current: paginationInfo.current,
+      pageSize: paginationInfo.pageSize,
+    }));
   };
 
   const handleOrderClick = (order: Order) => {
@@ -543,83 +454,109 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
       <Row gutter={16} style={{ marginBottom: 24 }}>
         <Col xs={12} sm={6}>
           <Card>
-            <Statistic
-              title="📊 Tổng lệnh"
-              value={customerData.customerMoney.totalTradeCount}
-              valueStyle={{ color: "#1890ff" }}
-            />
+            {summaryLoading ? (
+              <div style={{ textAlign: "center", padding: "20px" }}>
+                <Spin />
+              </div>
+            ) : (
+              <Statistic
+                title="📊 Tổng lệnh"
+                value={tradingSummary?.totalTradeCount || 0}
+                valueStyle={{ color: "#1890ff" }}
+              />
+            )}
           </Card>
         </Col>
 
         <Col xs={12} sm={6}>
           <Card>
-            <Statistic
-              title="🏆 Tỷ lệ thắng"
-              value={winRate}
-              precision={1}
-              suffix="%"
-              valueStyle={{
-                color:
-                  winRate >= 70
-                    ? "#3f8600"
-                    : winRate >= 50
-                    ? "#faad14"
-                    : "#cf1322",
-              }}
-            />
+            {summaryLoading ? (
+              <div style={{ textAlign: "center", padding: "20px" }}>
+                <Spin />
+              </div>
+            ) : (
+              <Statistic
+                title="🏆 Tỷ lệ thắng"
+                value={tradingSummary?.winRate || 0}
+                precision={1}
+                suffix="%"
+                valueStyle={{
+                  color:
+                    (tradingSummary?.winRate || 0) >= 70
+                      ? "#3f8600"
+                      : (tradingSummary?.winRate || 0) >= 50
+                      ? "#faad14"
+                      : "#cf1322",
+                }}
+              />
+            )}
           </Card>
         </Col>
 
         <Col xs={12} sm={6}>
           <Card>
-            <Statistic
-              title="💰 Volume"
-              value={customerData.customerMoney.totalTradeAmount}
-              precision={2}
-              suffix="$"
-              valueStyle={{ color: "#52c41a" }}
-            />
+            {summaryLoading ? (
+              <div style={{ textAlign: "center", padding: "20px" }}>
+                <Spin />
+              </div>
+            ) : (
+              <Statistic
+                title="💰 Volume"
+                value={tradingSummary?.totalTradeAmount || 0}
+                precision={2}
+                suffix="$"
+                valueStyle={{ color: "#52c41a" }}
+              />
+            )}
           </Card>
         </Col>
 
         <Col xs={12} sm={6}>
           <Card>
-            <Statistic
-              title="💎 Lời/Lỗ"
-              value={
-                customerData.customerMoney.totalTradeAmountWin -
-                customerData.customerMoney.totalTradeAmountLose
-              }
-              precision={2}
-              suffix="$"
-              valueStyle={{
-                color:
-                  customerData.customerMoney.totalTradeAmountWin -
-                    customerData.customerMoney.totalTradeAmountLose >=
-                  0
-                    ? "#3f8600"
-                    : "#cf1322",
-              }}
-            />
+            {summaryLoading ? (
+              <div style={{ textAlign: "center", padding: "20px" }}>
+                <Spin />
+              </div>
+            ) : (
+              <Statistic
+                title="💎 Lời/Lỗ"
+                value={tradingSummary?.netPnL || 0}
+                precision={2}
+                suffix="$"
+                valueStyle={{
+                  color:
+                    (tradingSummary?.netPnL || 0) >= 0 ? "#3f8600" : "#cf1322",
+                }}
+              />
+            )}
           </Card>
         </Col>
       </Row>
 
       {/* P&L Chart Section */}
-      <PnLChart data={pnlSummaryData} />
+      {pnlLoading ? (
+        <Card title="📈 Biểu đồ P&L" style={{ marginBottom: 24 }}>
+          <div style={{ textAlign: "center", padding: "40px" }}>
+            <Spin size="large" />
+            <div style={{ marginTop: 16 }}>Đang tải dữ liệu biểu đồ...</div>
+          </div>
+        </Card>
+      ) : (
+        <PnLChart data={pnlSummaryData} />
+      )}
 
       {/* Filter Section */}
-      <Card 
-        style={{ 
+      <Card
+        style={{
           marginBottom: 24,
-          background: 'linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%)',
-          border: '1px solid #e8e8e8',
+          background: "linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%)",
+          border: "1px solid #e8e8e8",
           borderRadius: 8,
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
         }}
         bodyStyle={{
-          background: 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
-          borderRadius: '0 0 8px 8px'
+          background: "linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)",
+          borderRadius: "0 0 8px 8px",
         }}
       >
         <div style={{ marginBottom: 16 }}>
@@ -675,51 +612,61 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
               <Option value="DRAW">🤝 HÒA</Option>
             </Select>
 
-            <Button icon={<ReloadOutlined />} onClick={clearFilters}>
+            <Button
+              icon={<ReloadOutlined />}
+              onClick={clearFilters}
+              loading={historyLoading}
+            >
               Xóa bộ lọc
             </Button>
 
-            <Button 
-              type="primary" 
+            <Button
+              type="primary"
               icon={<FilterOutlined />}
+              onClick={handleFilterChange}
+              loading={historyLoading}
               style={{
-                background: 'linear-gradient(135deg, #1890ff 0%, #40a9ff 100%)',
-                border: 'none',
-                boxShadow: '0 2px 4px rgba(24, 144, 255, 0.3)'
+                background: "linear-gradient(135deg, #1890ff 0%, #40a9ff 100%)",
+                border: "none",
+                boxShadow: "0 2px 4px rgba(24, 144, 255, 0.3)",
               }}
             >
-              Lọc ({filteredOrders.length})
+              Lọc ({pagination.total})
             </Button>
           </Space>
         </div>
       </Card>
 
       {/* Orders History Table */}
-      <Card 
-        title={`📋 Lịch sử Lệnh (${filteredOrders.length})`}
+      <Card
+        title={`📋 Lịch sử Lệnh (${pagination.total})`}
         style={{
-          background: 'linear-gradient(135deg, #fdfdfd 0%, #ffffff 100%)',
-          border: '1px solid #f0f0f0',
+          background: "linear-gradient(135deg, #fdfdfd 0%, #ffffff 100%)",
+          border: "1px solid #f0f0f0",
           borderRadius: 8,
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)'
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.02)",
         }}
         bodyStyle={{
-          background: '#ffffff',
-          borderRadius: '0 0 8px 8px'
+          background: "#ffffff",
+          borderRadius: "0 0 8px 8px",
         }}
       >
         <Table
-          dataSource={filteredOrders}
+          dataSource={tradingHistory}
           columns={columns}
           rowKey="id"
+          loading={historyLoading}
           pagination={{
-            pageSize: 20,
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            total: pagination.total,
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} của ${total} lệnh`,
             pageSizeOptions: ["10", "20", "50", "100"],
           }}
+          onChange={handleTableChange}
           scroll={{ x: 1200 }}
           size="small"
         />

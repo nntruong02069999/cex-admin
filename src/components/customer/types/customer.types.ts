@@ -283,4 +283,5 @@ export interface TradingPnLSummary {
   date: string;
   totalTrading: number;
   totalWinAmount: number;
+  winRate: number;
 }
