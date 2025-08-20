@@ -1,4 +1,4 @@
-import { TradingHistoryParams, TradingPnLSummaryParams } from '@src/components/customer/types/trading.types';
+import { TradingHistoryParams } from '@src/components/customer/types/trading.types';
 import { DEFAULT_ERROR_MESSAGE } from '@src/constants/constants'
 import HttpStatusCode from '@src/constants/HttpStatusCode'
 import request from '@src/util/request'
@@ -613,22 +613,19 @@ export const getCustomerUSDTTransactions = async (customerId: number, params: {
     page?: number;
     limit?: number;
     type?: string;
-    fromDate?: string;
-    toDate?: string;
+    fromDate?: number;
+    toDate?: number;
 }) => {
     const token = localStorage.getItem('token')
-    const queryParams = new URLSearchParams()
-
-    Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-            queryParams.append(key, value.toString())
-        }
-    })
 
     const res: any = await request({
-        url: `/admin/customer/${customerId}/usdt-transactions?${queryParams.toString()}`,
+        url: `/admin/customer/usdt-transactions`,
         options: {
-            method: 'get',
+            method: 'post',
+            data: {
+                customerId,
+                ...params
+            },
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -652,22 +649,19 @@ export const getCustomerWalletTransactions = async (customerId: number, params: 
     page?: number;
     limit?: number;
     type?: string;
-    fromDate?: string;
-    toDate?: string;
+    fromDate?: number;
+    toDate?: number;
 }) => {
     const token = localStorage.getItem('token')
-    const queryParams = new URLSearchParams()
-
-    Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-            queryParams.append(key, value.toString())
-        }
-    })
 
     const res: any = await request({
-        url: `/admin/customer/${customerId}/wallet-transactions?${queryParams.toString()}`,
+        url: `/admin/customer/wallet-transactions`,
         options: {
-            method: 'get',
+            method: 'post',
+            data: {
+                customerId,
+                ...params
+            },
             headers: {
                 Authorization: `Bearer ${token}`
             }

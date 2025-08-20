@@ -34,11 +34,13 @@ type RangeValue = [Moment, Moment] | null;
 interface USDTTransactionsProps {
   transactions: USDTTransaction[];
   loading?: boolean;
+  onFilter?: (params: any) => Promise<void>;
 }
 
 const USDTTransactions: React.FC<USDTTransactionsProps> = ({
   transactions,
   loading = false,
+  onFilter,
 }) => {
   const [filteredTransactions, setFilteredTransactions] =
     useState<USDTTransaction[]>(transactions);
@@ -67,51 +69,90 @@ const USDTTransactions: React.FC<USDTTransactionsProps> = ({
     return `${txHash.slice(0, 6)}...${txHash.slice(-6)}`;
   };
 
-  // Filter function
-  const applyFilters = () => {
-    let filtered = [...transactions];
+  // Server-side filter function
+  const applyFilters = async () => {
+    if (!onFilter) {
+      // Fallback to client-side filtering if no onFilter provided
+      let filtered = [...transactions];
 
-    // Date range filter
+      // Date range filter
+      if (dateRange) {
+        const [startDate, endDate] = dateRange;
+        filtered = filtered.filter((transaction) => {
+          const transactionDate = moment.unix(transaction.createdAt || 0);
+          return (
+            transactionDate.isAfter(startDate.startOf("day")) &&
+            transactionDate.isBefore(endDate.endOf("day"))
+          );
+        });
+      }
+
+      // Status filter
+      if (statusFilter && statusFilter !== "ALL") {
+        filtered = filtered.filter(
+          (transaction) => transaction.status === statusFilter
+        );
+      }
+
+      // Type filter
+      if (typeFilter && typeFilter !== "ALL") {
+        filtered = filtered.filter(
+          (transaction) => transaction.type === typeFilter
+        );
+      }
+
+      setFilteredTransactions(filtered);
+      return;
+    }
+
+    // Server-side filtering
+    const params: any = {};
+
+    // Date range filter - convert to milliseconds
     if (dateRange) {
       const [startDate, endDate] = dateRange;
-      filtered = filtered.filter((transaction) => {
-        const transactionDate = moment.unix(transaction.createdAt || 0);
-        return (
-          transactionDate.isAfter(startDate.startOf("day")) &&
-          transactionDate.isBefore(endDate.endOf("day"))
-        );
-      });
+      params.fromDate = startDate.valueOf(); // milliseconds
+      params.toDate = endDate.valueOf(); // milliseconds
     }
 
     // Status filter
     if (statusFilter && statusFilter !== "ALL") {
-      filtered = filtered.filter(
-        (transaction) => transaction.status === statusFilter
-      );
+      params.status = statusFilter;
     }
 
     // Type filter
     if (typeFilter && typeFilter !== "ALL") {
-      filtered = filtered.filter(
-        (transaction) => transaction.type === typeFilter
-      );
+      params.type = typeFilter;
     }
 
-    setFilteredTransactions(filtered);
+    // Call parent component's filter function
+    await onFilter(params);
   };
 
   // Clear filters
-  const clearFilters = () => {
+  const clearFilters = async () => {
     setDateRange(null);
     setStatusFilter(undefined);
     setTypeFilter(undefined);
-    setFilteredTransactions(transactions);
+
+    if (onFilter) {
+      // Clear server-side filters
+      await onFilter({});
+    } else {
+      // Fallback to client-side clear
+      setFilteredTransactions(transactions);
+    }
   };
 
-  // Apply filters whenever filters change
+  // Update filtered transactions when transactions change (for client-side only)
   React.useEffect(() => {
-    applyFilters();
-  }, [dateRange, statusFilter, typeFilter, transactions]);
+    if (!onFilter) {
+      setFilteredTransactions(transactions);
+    } else {
+      // For server-side filtering, use the transactions directly
+      setFilteredTransactions(transactions);
+    }
+  }, [transactions, onFilter]);
 
   const getTypeText = (type: USDTTransactionType) => {
     switch (type) {
@@ -294,8 +335,15 @@ const USDTTransactions: React.FC<USDTTransactionsProps> = ({
                 size="small"
                 value={dateRange}
                 onChange={(dates) => setDateRange(dates as RangeValue)}
-                format="DD/MM/YYYY"
-                placeholder={["Từ ngày", "Đến ngày"]}
+                format="DD/MM/YYYY HH:mm"
+                showTime={{
+                  format: "HH:mm",
+                  defaultValue: [
+                    moment("00:00", "HH:mm"),
+                    moment("23:59", "HH:mm"),
+                  ],
+                }}
+                placeholder={["Từ ngày giờ", "Đến ngày giờ"]}
                 style={{ width: "100%" }}
               />
             </Space>
