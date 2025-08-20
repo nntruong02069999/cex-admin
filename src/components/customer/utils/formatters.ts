@@ -68,7 +68,7 @@ export const formatDate = (
         month: '2-digit',
         year: 'numeric',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
       });
     case 'DISPLAY_DATE':
       return date.toLocaleDateString('en-US', {

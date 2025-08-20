@@ -538,7 +538,7 @@ export const getCustomerDeposits = async (customerId: number, params: {
 }) => {
     const token = localStorage.getItem('token')
     const queryParams = new URLSearchParams()
-    
+
     Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
             queryParams.append(key, value.toString())
@@ -578,7 +578,7 @@ export const getCustomerWithdrawals = async (customerId: number, params: {
 }) => {
     const token = localStorage.getItem('token')
     const queryParams = new URLSearchParams()
-    
+
     Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
             queryParams.append(key, value.toString())
@@ -617,7 +617,7 @@ export const getCustomerUSDTTransactions = async (customerId: number, params: {
 }) => {
     const token = localStorage.getItem('token')
     const queryParams = new URLSearchParams()
-    
+
     Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
             queryParams.append(key, value.toString())
@@ -656,7 +656,7 @@ export const getCustomerWalletTransactions = async (customerId: number, params: 
 }) => {
     const token = localStorage.getItem('token')
     const queryParams = new URLSearchParams()
-    
+
     Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
             queryParams.append(key, value.toString())
@@ -684,19 +684,21 @@ export const getCustomerWalletTransactions = async (customerId: number, params: 
 }
 
 /**
- * Get customer VIP commissions
+ * Get customer VIP commissions with enhanced filtering
  */
 export const getCustomerVipCommissions = async (customerId: number, params: {
     page?: number;
     limit?: number;
-    type?: string;
+    commissionType?: string;
     status?: string;
-    fromDate?: string;
-    toDate?: string;
+    fromNickname?: string;
+    levelReferral?: number;
+    fromDate?: number; // timestamp in seconds
+    toDate?: number;   // timestamp in seconds
 }) => {
     const token = localStorage.getItem('token')
     const queryParams = new URLSearchParams()
-    
+
     Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
             queryParams.append(key, value.toString())
@@ -704,9 +706,13 @@ export const getCustomerVipCommissions = async (customerId: number, params: {
     })
 
     const res: any = await request({
-        url: `/admin/customer/${customerId}/vip-commissions?${queryParams.toString()}`,
+        url: `/admin/customer/vip-commissions`,
         options: {
-            method: 'get',
+            method: 'post',
+            data: {
+                customerId,
+                ...params
+            },
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -733,7 +739,7 @@ export const getCustomerDailyStatistics = async (customerId: number, params: {
 }) => {
     const token = localStorage.getItem('token')
     const queryParams = new URLSearchParams()
-    
+
     Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
             queryParams.append(key, value.toString())

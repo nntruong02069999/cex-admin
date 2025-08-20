@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   Tag,
@@ -10,6 +10,7 @@ import {
   Select,
   Button,
   Space,
+  message,
 } from "antd";
 import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
@@ -21,9 +22,13 @@ import {
 } from "../types/vipCommission.types";
 import { formatCurrency, formatDate } from "../utils/formatters";
 import { getStatusColor } from "../utils/helpers";
+import { getCustomerVipCommissions } from "../../../services/customer";
+import moment, { Moment } from "moment";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
+
+type RangeValue = [Moment, Moment] | null;
 
 interface VipCommissionTableProps {
   customerId: number;
@@ -34,76 +39,19 @@ const VipCommissionTable: React.FC<VipCommissionTableProps> = ({
 }) => {
   const [filters, setFilters] = useState<VipCommissionFilter>({});
   const [loading, setLoading] = useState(false);
-
-  // Mock data with updated structure
-  const mockCommissions: VipCommission[] = [
-    {
-      id: 1,
-      customerId,
-      fromCustomerId: 12345,
-      fromNickname: "trader_001",
-      levelReferral: 1,
-      commissionType: VipCommissionType.TRADING,
-      amount: 25.5,
-      type: "percentage",
-      value: 2.5,
-      vipLevel: 3,
-      sourceAmount: 1020.0,
-      sourceOrderId: 789123,
-      status: VipCommissionStatus.PAID,
-      paidAt: "2024-01-15T10:30:00Z",
-      description: "Trading commission from F1 referral",
-      createdAt: Date.now() / 1000,
-      updatedAt: Date.now() / 1000,
-    },
-    {
-      id: 2,
-      customerId,
-      fromCustomerId: 12346,
-      fromNickname: "vip_user_002",
-      levelReferral: 2,
-      commissionType: VipCommissionType.UPGRADE,
-      amount: 50.0,
-      type: "fixed",
-      value: 50,
-      vipLevel: 4,
-      sourceAmount: 500.0,
-      sourceTransactionId: 456789,
-      status: VipCommissionStatus.PENDING,
-      description: "VIP upgrade commission from F2 referral",
-      createdAt: (Date.now() - 86400000) / 1000,
-      updatedAt: (Date.now() - 86400000) / 1000,
-    },
-    {
-      id: 3,
-      customerId,
-      fromCustomerId: 12347,
-      fromNickname: "active_trader_003",
-      levelReferral: 1,
-      commissionType: VipCommissionType.TRADING,
-      amount: 15.75,
-      type: "percentage",
-      value: 1.5,
-      vipLevel: 2,
-      sourceAmount: 1050.0,
-      sourceOrderId: 789124,
-      status: VipCommissionStatus.PAID,
-      paidAt: "2024-01-14T16:45:00Z",
-      description: "Trading commission from F1 referral",
-      createdAt: (Date.now() - 172800000) / 1000,
-      updatedAt: (Date.now() - 172800000) / 1000,
-    },
-  ];
-
-  const [commissions, setCommissions] =
-    useState<VipCommission[]>(mockCommissions);
+  const [commissions, setCommissions] = useState<VipCommission[]>([]);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
 
   const columns: ColumnsType<VipCommission> = [
     {
       title: "Ngày tạo",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (timestamp: number) => formatDate(timestamp, "DISPLAY"),
+      render: (timestamp: number) => formatDate(timestamp, "TIMESTAMP"),
       sorter: (a, b) => (a.createdAt || 0) - (b.createdAt || 0),
     },
     {
@@ -207,6 +155,49 @@ const VipCommissionTable: React.FC<VipCommissionTableProps> = ({
     },
   ];
 
+  // Load data on component mount
+  useEffect(() => {
+    loadCommissions();
+  }, [customerId, pagination.current, pagination.pageSize]);
+
+  const loadCommissions = async () => {
+    setLoading(true);
+    try {
+      const params = {
+        page: pagination.current,
+        limit: pagination.pageSize,
+        commissionType: filters.commissionType,
+        status: filters.status,
+        fromNickname: filters.fromNickname,
+        levelReferral: filters.levelReferral,
+        fromDate: filters.dateRange?.[0]
+          ? moment(filters.dateRange[0]).valueOf()
+          : undefined,
+        toDate: filters.dateRange?.[1]
+          ? moment(filters.dateRange[1]).valueOf()
+          : undefined,
+      };
+
+      const response = await getCustomerVipCommissions(customerId, params);
+
+      if (response.errorCode) {
+        message.error(response.message || "Có lỗi xảy ra khi tải dữ liệu");
+        return;
+      }
+
+      setCommissions(response.data || []);
+      setPagination((prev) => ({
+        ...prev,
+        total: response.total || 0,
+      }));
+    } catch (error) {
+      message.error("Có lỗi xảy ra khi tải dữ liệu");
+      console.error("Error loading VIP commissions:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleFilterChange = (key: keyof VipCommissionFilter, value: any) => {
     setFilters((prev) => ({
       ...prev,
@@ -215,50 +206,22 @@ const VipCommissionTable: React.FC<VipCommissionTableProps> = ({
   };
 
   const handleSearch = () => {
-    setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      let filteredData = [...mockCommissions];
-
-      // Apply filters
-      if (filters.fromNickname) {
-        filteredData = filteredData.filter((item) =>
-          item.fromNickname
-            ?.toLowerCase()
-            .includes(filters.fromNickname!.toLowerCase())
-        );
-      }
-
-      if (filters.levelReferral) {
-        filteredData = filteredData.filter(
-          (item) => item.levelReferral === filters.levelReferral
-        );
-      }
-
-      if (filters.commissionType) {
-        filteredData = filteredData.filter(
-          (item) => item.commissionType === filters.commissionType
-        );
-      }
-
-      if (filters.dateRange && filters.dateRange[0] && filters.dateRange[1]) {
-        const [startDate, endDate] = filters.dateRange;
-        const start = new Date(startDate).getTime() / 1000;
-        const end = new Date(endDate).getTime() / 1000;
-        filteredData = filteredData.filter(
-          (item) =>
-            (item.createdAt || 0) >= start && (item.createdAt || 0) <= end
-        );
-      }
-
-      setCommissions(filteredData);
-      setLoading(false);
-    }, 500);
+    setPagination((prev) => ({ ...prev, current: 1 }));
+    loadCommissions();
   };
 
   const handleReset = () => {
     setFilters({});
-    setCommissions(mockCommissions);
+    setPagination((prev) => ({ ...prev, current: 1 }));
+    loadCommissions();
+  };
+
+  const handleTableChange = (pag: any) => {
+    setPagination((prev) => ({
+      ...prev,
+      current: pag.current,
+      pageSize: pag.pageSize,
+    }));
   };
 
   return (
@@ -275,23 +238,30 @@ const VipCommissionTable: React.FC<VipCommissionTableProps> = ({
             <RangePicker
               style={{ width: "100%" }}
               placeholder={["Từ ngày", "Đến ngày"]}
-              format="DD/MM/YYYY"
-              onChange={(_dates, dateStrings) =>
+              format="DD/MM/YYYY HH:mm"
+              showTime={{
+                format: "HH:mm",
+                defaultValue: [
+                  moment().startOf("day"),
+                  moment().endOf("day"),
+                ] as [Moment, Moment],
+              }}
+              onChange={(dates) =>
                 handleFilterChange(
                   "dateRange",
-                  dateStrings[0] && dateStrings[1] ? dateStrings : undefined
+                  dates && dates[0] && dates[1]
+                    ? [dates[0].toISOString(), dates[1].toISOString()]
+                    : undefined
                 )
               }
               value={
-                filters.dateRange
-                  ? [
-                      filters.dateRange[0]
-                        ? (new Date(filters.dateRange[0]) as any)
-                        : null,
-                      filters.dateRange[1]
-                        ? (new Date(filters.dateRange[1]) as any)
-                        : null,
-                    ]
+                filters.dateRange &&
+                filters.dateRange[0] &&
+                filters.dateRange[1]
+                  ? ([
+                      moment(filters.dateRange[0]),
+                      moment(filters.dateRange[1]),
+                    ] as RangeValue)
                   : null
               }
             />
@@ -382,12 +352,16 @@ const VipCommissionTable: React.FC<VipCommissionTableProps> = ({
         rowKey="id"
         loading={loading}
         pagination={{
-          pageSize: 20,
+          current: pagination.current,
+          pageSize: pagination.pageSize,
+          total: pagination.total,
           showSizeChanger: true,
           showQuickJumper: true,
           showTotal: (total, range) =>
             `${range[0]}-${range[1]} của ${total} bản ghi`,
+          pageSizeOptions: ["10", "20", "50", "100"],
         }}
+        onChange={handleTableChange}
         scroll={{ x: "max-content" }}
         size="small"
       />
