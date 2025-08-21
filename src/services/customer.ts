@@ -1,10 +1,10 @@
 import { TradingHistoryParams } from '@src/components/customer/types/trading.types';
-import { 
-    DepositsWithdrawalsSummaryResponse, 
-    DepositListParams, 
-    WithdrawListParams, 
-    DepositsResponse, 
-    WithdrawalsResponse 
+import {
+    DepositsWithdrawalsSummaryResponse,
+    DepositListParams,
+    WithdrawListParams,
+    DepositsResponse,
+    WithdrawalsResponse
 } from '@src/types/deposits-withdrawals.types';
 import { DEFAULT_ERROR_MESSAGE } from '@src/constants/constants'
 import HttpStatusCode from '@src/constants/HttpStatusCode'
@@ -23,7 +23,7 @@ export interface CustomerDetailParams {
 /**
  * Get all customer information by ID
  */
-export const getCustomerInfo = async (customerId: number, tokenCapcha: string) => {
+export const getCustomerInfo = async (customerId: number) => {
     const token = localStorage.getItem('token')
     const res: any = await request({
         url: '/admin/customer/get-all-customer-info',
@@ -31,7 +31,6 @@ export const getCustomerInfo = async (customerId: number, tokenCapcha: string) =
             method: 'post',
             data: {
                 customerId,
-                tokenCapcha
             },
             headers: {
                 Authorization: `Bearer ${token}`

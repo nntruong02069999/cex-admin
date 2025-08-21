@@ -123,10 +123,11 @@ const CustomerHeader: React.FC<CustomerHeaderProps> = ({
 
         <Col>
           <Tag
-            color={getStatusColor(customer.statusDocument)}
+            color={getStatusColor(customer.statusDocument || "not_submit")}
             className="status-tag"
           >
-            {STATUS_ICONS.DOCUMENT} KYC: {customer.statusDocument.toUpperCase()}
+            {STATUS_ICONS.DOCUMENT} KYC:{" "}
+            {customer.statusDocument?.toUpperCase()}
           </Tag>
         </Col>
 

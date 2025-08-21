@@ -335,7 +335,7 @@ const Deposit: React.FC = () => {
                   >
                     <Descriptions column={1} size="small">
                       <Descriptions.Item label="Tên">
-                        <Text strong>{(record.customer || record.customerInfo)?.name}</Text>
+                        <Text strong>{(record.customer || record.customerInfo)?.name || record.customer.email}</Text>
                       </Descriptions.Item>
                       <Descriptions.Item
                         label={
@@ -345,7 +345,7 @@ const Deposit: React.FC = () => {
                           </>
                         }
                       >
-                        <Text strong>{(record.customer || record.customerInfo)?.phone}</Text>
+                        <Text strong>{(record.customer || record.customerInfo)?.phone || record.customer.email}</Text>
                       </Descriptions.Item>
                       <Descriptions.Item label="Mã mời">
                         <Text code>{(record.customer || record.customerInfo)?.inviteCode}</Text>

@@ -70,7 +70,7 @@ export const calculateTotalVipMembers = (hierarchy: NetworkHierarchy): number =>
  * Generate customer display name
  */
 export const getCustomerDisplayName = (customer: Customer): string => {
-  return `${customer.firstName} ${customer.lastName}`.trim() || customer.nickname;
+  return `${customer.email}`.trim() || customer.nickname;
 };
 
 /**

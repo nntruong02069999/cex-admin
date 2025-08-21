@@ -79,7 +79,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
                   <SafetyCertificateOutlined className="detail-icon" />
                   <span>KYC: </span>
                   <strong className={customer.statusDocument === 'approved' ? 'text-success' : 'text-warning'}>
-                    {customer.statusDocument.toUpperCase()}
+                    {customer.statusDocument?.toUpperCase()}
                   </strong>
                 </div>
                 

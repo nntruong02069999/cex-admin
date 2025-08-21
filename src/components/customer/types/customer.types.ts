@@ -11,7 +11,7 @@ export interface Customer {
   isBlocked: boolean;
   isVip: boolean;
   twoFAEnabled: boolean;
-  statusDocument: 'not_submit' | 'pending' | 'approved' | 'rejected';
+  statusDocument?: 'not_submit' | 'pending' | 'approved' | 'rejected';
   isAccountMarketing: boolean;
   inviteCode: string;
   inviterCustomerId?: number;
