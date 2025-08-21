@@ -1,4 +1,11 @@
 import { TradingHistoryParams } from '@src/components/customer/types/trading.types';
+import { 
+    DepositsWithdrawalsSummaryResponse, 
+    DepositListParams, 
+    WithdrawListParams, 
+    DepositsResponse, 
+    WithdrawalsResponse 
+} from '@src/types/deposits-withdrawals.types';
 import { DEFAULT_ERROR_MESSAGE } from '@src/constants/constants'
 import HttpStatusCode from '@src/constants/HttpStatusCode'
 import request from '@src/util/request'
@@ -885,6 +892,94 @@ export const getCustomerTradingSummary = async (customerId: number) => {
             method: 'post',
             data: {
                 customerId
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+// Deposits & Withdrawals API Functions
+
+/**
+ * Get deposits and withdrawals summary statistics
+ */
+export const getCustomerDepositsWithdrawalsSummary = async (customerId: number): Promise<DepositsWithdrawalsSummaryResponse | { errorCode: number; message: string }> => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: `/admin/customer/deposits-withdrawals-summary`,
+        options: {
+            method: 'post',
+            data: {
+                customerId
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Get customer deposits list with pagination and filters
+ */
+export const getCustomerDepositsList = async (customerId: number, params: DepositListParams = {}): Promise<DepositsResponse | { errorCode: number; message: string }> => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: `/admin/customer/deposits-list`,
+        options: {
+            method: 'post',
+            data: {
+                customerId,
+                ...params
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+/**
+ * Get customer withdrawals list with pagination and filters
+ */
+export const getCustomerWithdrawalsList = async (customerId: number, params: WithdrawListParams = {}): Promise<WithdrawalsResponse | { errorCode: number; message: string }> => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: `/admin/customer/withdrawals-list`,
+        options: {
+            method: 'post',
+            data: {
+                customerId,
+                ...params
             },
             headers: {
                 Authorization: `Bearer ${token}`

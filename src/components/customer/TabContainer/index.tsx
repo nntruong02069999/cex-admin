@@ -72,7 +72,6 @@ const TabContainer: React.FC<TabContainerProps> = ({
         >
           <DepositsWithdrawalsTab
             customerId={customerId}
-            customerData={customerData}
           />
         </TabPane>
 

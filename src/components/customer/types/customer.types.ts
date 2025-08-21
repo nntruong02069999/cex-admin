@@ -128,7 +128,7 @@ export interface WithdrawTransaction {
   id: number;
   withdrawCode: string;
   customerId: number;
-  customer: Customer;
+  Customer: Customer;
   amount: number;
   feeWithdraw: number;
   status: WithdrawStatus;

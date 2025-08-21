@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Table, Tag, Button, Tooltip, Card, Row, Col, DatePicker, Select, Space } from "antd";
-import { EyeOutlined, ExportOutlined, FilterOutlined, ClearOutlined } from "@ant-design/icons";
+import { EyeOutlined, ExportOutlined, ClearOutlined } from "@ant-design/icons";
 import { formatCurrency, formatDate } from "../utils/formatters";
 import { getStatusColor } from "../utils/helpers";
 import { DepositTransaction } from "../types/customer.types";
@@ -10,21 +10,43 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 type RangeValue = [Moment, Moment] | null;
+type DatePickerRangeValue = [Moment | null, Moment | null] | null;
+
+export interface DepositsFilterState {
+  dateRange?: [number, number] | null; // timestamps in milliseconds
+  status?: string;
+}
 
 interface DepositsTableProps {
   deposits: DepositTransaction[];
   loading?: boolean;
+  filterLoading?: boolean;
+  filters?: DepositsFilterState;
   onViewDetails?: (record: DepositTransaction) => void;
+  onFiltersChange?: (filters: DepositsFilterState) => void;
 }
 
 const DepositsTable: React.FC<DepositsTableProps> = ({
   deposits,
   loading = false,
+  filterLoading = false,
+  filters,
   onViewDetails,
+  onFiltersChange,
 }) => {
-  const [filteredDeposits, setFilteredDeposits] = useState<DepositTransaction[]>(deposits);
   const [dateRange, setDateRange] = useState<RangeValue>(null);
   const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
+
+  // Initialize local filter state from props
+  React.useEffect(() => {
+    if (filters?.dateRange) {
+      const [start, end] = filters.dateRange;
+      setDateRange([moment(start), moment(end)]);
+    } else {
+      setDateRange(null);
+    }
+    setStatusFilter(filters?.status);
+  }, [filters]);
 
   const getBSCScanUrl = (txHash: string): string => {
     return `https://bscscan.com/tx/${txHash}`;
@@ -39,38 +61,32 @@ const DepositsTable: React.FC<DepositsTableProps> = ({
     return `${txHash.slice(0, 6)}...${txHash.slice(-6)}`;
   };
 
-  // Filter function
-  const applyFilters = () => {
-    let filtered = [...deposits];
+  // Handle filter changes and notify parent
+  const handleDateRangeChange = (dates: DatePickerRangeValue) => {
+    const dateRange: RangeValue = dates && dates[0] && dates[1] ? [dates[0], dates[1]] : null;
+    setDateRange(dateRange);
+    const newFilters: DepositsFilterState = {
+      dateRange: dateRange ? [dateRange[0].valueOf(), dateRange[1].valueOf()] : null,
+      status: statusFilter,
+    };
+    onFiltersChange?.(newFilters);
+  };
 
-    // Date range filter
-    if (dateRange) {
-      const [startDate, endDate] = dateRange;
-      filtered = filtered.filter(deposit => {
-        const depositDate = moment.unix(deposit.createdAt || 0);
-        return depositDate.isAfter(startDate.startOf('day')) && depositDate.isBefore(endDate.endOf('day'));
-      });
-    }
-
-    // Status filter
-    if (statusFilter && statusFilter !== 'ALL') {
-      filtered = filtered.filter(deposit => deposit.status === statusFilter);
-    }
-
-    setFilteredDeposits(filtered);
+  const handleStatusChange = (value: string | undefined) => {
+    setStatusFilter(value);
+    const newFilters: DepositsFilterState = {
+      dateRange: dateRange ? [dateRange[0]!.valueOf(), dateRange[1]!.valueOf()] : null,
+      status: value,
+    };
+    onFiltersChange?.(newFilters);
   };
 
   // Clear filters
   const clearFilters = () => {
     setDateRange(null);
     setStatusFilter(undefined);
-    setFilteredDeposits(deposits);
+    onFiltersChange?.({ dateRange: null, status: undefined });
   };
-
-  // Apply filters whenever filters change
-  React.useEffect(() => {
-    applyFilters();
-  }, [dateRange, statusFilter, deposits]);
 
   const columns = [
     {
@@ -176,10 +192,11 @@ const DepositsTable: React.FC<DepositsTableProps> = ({
               <RangePicker
                 size="small"
                 value={dateRange}
-                onChange={(dates) => setDateRange(dates as RangeValue)}
+                onChange={handleDateRangeChange}
                 format="DD/MM/YYYY"
                 placeholder={['Từ ngày', 'Đến ngày']}
                 style={{ width: '100%' }}
+                disabled={filterLoading}
               />
             </Space>
           </Col>
@@ -190,10 +207,11 @@ const DepositsTable: React.FC<DepositsTableProps> = ({
               <Select
                 size="small"
                 value={statusFilter}
-                onChange={setStatusFilter}
+                onChange={handleStatusChange}
                 placeholder="Chọn trạng thái"
                 style={{ width: '100%' }}
                 allowClear
+                disabled={filterLoading}
               >
                 <Option value="ALL">Tất cả</Option>
                 <Option value="SUCCESS">Thành công</Option>
@@ -207,27 +225,25 @@ const DepositsTable: React.FC<DepositsTableProps> = ({
           <Col span={6}>
             <Space style={{ marginTop: 18 }}>
               <Button
-                type="primary"
-                icon={<FilterOutlined />}
-                size="small"
-                onClick={applyFilters}
-              >
-                Lọc
-              </Button>
-              <Button
                 icon={<ClearOutlined />}
                 size="small"
                 onClick={clearFilters}
+                disabled={filterLoading}
               >
                 Xóa bộ lọc
               </Button>
+              {filterLoading && (
+                <span style={{ color: '#666', fontSize: '12px' }}>
+                  Đang lọc...
+                </span>
+              )}
             </Space>
           </Col>
           
           <Col span={4}>
             <div style={{ textAlign: 'right', marginTop: 18 }}>
               <span style={{ fontSize: '12px', color: '#666' }}>
-                Hiển thị: {filteredDeposits.length}/{deposits.length}
+                {filterLoading ? 'Đang tải...' : `Hiển thị: ${deposits.length} giao dịch`}
               </span>
             </div>
           </Col>
@@ -236,9 +252,9 @@ const DepositsTable: React.FC<DepositsTableProps> = ({
 
       {/* Table */}
       <Table
-        dataSource={filteredDeposits}
+        dataSource={deposits}
         columns={columns}
-        loading={loading}
+        loading={loading || filterLoading}
         rowKey="id"
         pagination={{
           pageSize: 10,

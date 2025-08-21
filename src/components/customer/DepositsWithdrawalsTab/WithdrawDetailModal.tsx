@@ -339,18 +339,13 @@ const WithdrawDetailModal: React.FC<WithdrawDetailModalProps> = ({
         <Card title="Thông tin khách hàng" size="small">
           <Descriptions column={2} size="small">
             <Descriptions.Item label="Email">
-              {withdrawal.customer.email}
+              {withdrawal.Customer.email}
             </Descriptions.Item>
             <Descriptions.Item label="Nickname">
-              {withdrawal.customer.nickname}
+              {withdrawal.Customer.nickname}
             </Descriptions.Item>
             <Descriptions.Item label="Tên">
-              {withdrawal.customer.firstName} {withdrawal.customer.lastName}
-            </Descriptions.Item>
-            <Descriptions.Item label="VIP Level">
-              <Tag color="purple">
-                Level {withdrawal.customer.currentVipLevel}
-              </Tag>
+              {withdrawal.Customer.firstName} {withdrawal.Customer.lastName}
             </Descriptions.Item>
           </Descriptions>
         </Card>

@@ -219,9 +219,6 @@ const DepositDetailModal: React.FC<DepositDetailModalProps> = ({
             <Descriptions.Item label="Tên">
               {deposit.customer.firstName} {deposit.customer.lastName}
             </Descriptions.Item>
-            <Descriptions.Item label="VIP Level">
-              <Tag color="purple">Level {deposit.customer.currentVipLevel}</Tag>
-            </Descriptions.Item>
           </Descriptions>
         </Card>
       </div>

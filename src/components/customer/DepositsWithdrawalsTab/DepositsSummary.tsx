@@ -2,24 +2,24 @@ import React from "react";
 import { Row, Col, Card, Statistic } from "antd";
 
 interface DepositsSummaryProps {
-  successfulDeposits: {
+  successful: {
     amount: number;
     count: number;
   };
-  pendingDeposits: {
+  pending: {
     amount: number;
     count: number;
   };
-  failedDeposits: {
+  failed: {
     amount: number;
     count: number;
   };
 }
 
 const DepositsSummary: React.FC<DepositsSummaryProps> = ({
-  successfulDeposits,
-  pendingDeposits,
-  failedDeposits,
+  successful,
+  pending,
+  failed,
 }) => {
   return (
     <Row gutter={16} className="deposits-summary">
@@ -27,13 +27,13 @@ const DepositsSummary: React.FC<DepositsSummaryProps> = ({
         <Card>
           <Statistic
             title="✅ Nạp thành công"
-            value={successfulDeposits.amount}
-            precision={0}
+            value={successful.amount.toFixed(2)}
+            precision={2}
             suffix="$"
             valueStyle={{ color: "#3f8600" }}
           />
           <div style={{ fontSize: "12px", color: "#666", marginTop: "4px" }}>
-            {successfulDeposits.count} giao dịch
+            {successful.count} giao dịch
           </div>
         </Card>
       </Col>
@@ -42,13 +42,13 @@ const DepositsSummary: React.FC<DepositsSummaryProps> = ({
         <Card>
           <Statistic
             title="⏳ Nạp chờ"
-            value={pendingDeposits.amount}
-            precision={0}
+            value={pending.amount.toFixed(2)}
+            precision={2}
             suffix="$"
             valueStyle={{ color: "#faad14" }}
           />
           <div style={{ fontSize: "12px", color: "#666", marginTop: "4px" }}>
-            {pendingDeposits.count} giao dịch
+            {pending.count} giao dịch
           </div>
         </Card>
       </Col>
@@ -57,13 +57,13 @@ const DepositsSummary: React.FC<DepositsSummaryProps> = ({
         <Card>
           <Statistic
             title="❌ Nạp lỗi"
-            value={failedDeposits.amount}
-            precision={0}
+            value={failed.amount.toFixed(2)}
+            precision={2}
             suffix="$"
             valueStyle={{ color: "#cf1322" }}
           />
           <div style={{ fontSize: "12px", color: "#666", marginTop: "4px" }}>
-            {failedDeposits.count} giao dịch
+            {failed.count} giao dịch
           </div>
         </Card>
       </Col>

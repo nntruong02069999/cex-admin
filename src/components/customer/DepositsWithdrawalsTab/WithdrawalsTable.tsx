@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Tag, Button, Card, Row, Col, DatePicker, Select, Space, Tooltip } from 'antd';
-import { EyeOutlined, CheckOutlined, CloseOutlined, FilterOutlined, ClearOutlined, ExportOutlined } from '@ant-design/icons';
+import { EyeOutlined, CheckOutlined, CloseOutlined, ClearOutlined, ExportOutlined } from '@ant-design/icons';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import { getStatusColor } from '../utils/helpers';
 import { WithdrawTransaction, WithdrawStatus, WithdrawType } from '../types/customer.types';
@@ -10,26 +10,50 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 type RangeValue = [Moment, Moment] | null;
+type DatePickerRangeValue = [Moment | null, Moment | null] | null;
+
+export interface WithdrawalsFilterState {
+  dateRange?: [number, number] | null; // timestamps in milliseconds
+  status?: string;
+  type?: string;
+}
 
 interface WithdrawalsTableProps {
   withdrawals: WithdrawTransaction[];
   loading?: boolean;
+  filterLoading?: boolean;
+  filters?: WithdrawalsFilterState;
   onApprove?: (record: WithdrawTransaction) => void;
   onReject?: (record: WithdrawTransaction) => void;
   onViewDetails?: (record: WithdrawTransaction) => void;
+  onFiltersChange?: (filters: WithdrawalsFilterState) => void;
 }
 
 const WithdrawalsTable: React.FC<WithdrawalsTableProps> = ({
   withdrawals,
   loading = false,
+  filterLoading = false,
+  filters,
   onApprove,
   onReject,
-  onViewDetails
+  onViewDetails,
+  onFiltersChange
 }) => {
-  const [filteredWithdrawals, setFilteredWithdrawals] = useState<WithdrawTransaction[]>(withdrawals);
   const [dateRange, setDateRange] = useState<RangeValue>(null);
   const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
   const [typeFilter, setTypeFilter] = useState<string | undefined>(undefined);
+
+  // Initialize local filter state from props
+  React.useEffect(() => {
+    if (filters?.dateRange) {
+      const [start, end] = filters.dateRange;
+      setDateRange([moment(start), moment(end)]);
+    } else {
+      setDateRange(null);
+    }
+    setStatusFilter(filters?.status);
+    setTypeFilter(filters?.type);
+  }, [filters]);
 
   const getBSCScanUrl = (txHash: string): string => {
     return `https://bscscan.com/tx/${txHash}`;
@@ -44,30 +68,30 @@ const WithdrawalsTable: React.FC<WithdrawalsTableProps> = ({
     return `${txHash.slice(0, 6)}...${txHash.slice(-6)}`;
   };
 
-  // Filter function
-  const applyFilters = () => {
-    let filtered = [...withdrawals];
+  // Handle filter changes and notify parent
+  const createFilters = (): WithdrawalsFilterState => ({
+    dateRange: dateRange ? [dateRange[0]!.valueOf(), dateRange[1]!.valueOf()] as [number, number] : null,
+    status: statusFilter,
+    type: typeFilter,
+  });
 
-    // Date range filter
-    if (dateRange) {
-      const [startDate, endDate] = dateRange;
-      filtered = filtered.filter(withdrawal => {
-        const withdrawalDate = moment.unix(withdrawal.createdAt || 0);
-        return withdrawalDate.isAfter(startDate.startOf('day')) && withdrawalDate.isBefore(endDate.endOf('day'));
-      });
-    }
+  const handleDateRangeChange = (dates: DatePickerRangeValue) => {
+    const dateRange: RangeValue = dates && dates[0] && dates[1] ? [dates[0], dates[1]] : null;
+    setDateRange(dateRange);
+    const newFilters = { ...createFilters(), dateRange: dateRange ? [dateRange[0].valueOf(), dateRange[1].valueOf()] as [number, number] : null };
+    onFiltersChange?.(newFilters);
+  };
 
-    // Status filter
-    if (statusFilter && statusFilter !== 'ALL') {
-      filtered = filtered.filter(withdrawal => withdrawal.status === statusFilter);
-    }
+  const handleStatusChange = (value: string | undefined) => {
+    setStatusFilter(value);
+    const newFilters = { ...createFilters(), status: value };
+    onFiltersChange?.(newFilters);
+  };
 
-    // Type filter
-    if (typeFilter && typeFilter !== 'ALL') {
-      filtered = filtered.filter(withdrawal => withdrawal.type === typeFilter);
-    }
-
-    setFilteredWithdrawals(filtered);
+  const handleTypeChange = (value: string | undefined) => {
+    setTypeFilter(value);
+    const newFilters = { ...createFilters(), type: value };
+    onFiltersChange?.(newFilters);
   };
 
   // Clear filters
@@ -75,13 +99,8 @@ const WithdrawalsTable: React.FC<WithdrawalsTableProps> = ({
     setDateRange(null);
     setStatusFilter(undefined);
     setTypeFilter(undefined);
-    setFilteredWithdrawals(withdrawals);
+    onFiltersChange?.({ dateRange: null, status: undefined, type: undefined });
   };
-
-  // Apply filters whenever filters change
-  React.useEffect(() => {
-    applyFilters();
-  }, [dateRange, statusFilter, typeFilter, withdrawals]);
 
   const getStatusText = (status: WithdrawStatus) => {
     switch (status) {
@@ -239,10 +258,11 @@ const WithdrawalsTable: React.FC<WithdrawalsTableProps> = ({
               <RangePicker
                 size="small"
                 value={dateRange}
-                onChange={(dates) => setDateRange(dates as RangeValue)}
+                onChange={handleDateRangeChange}
                 format="DD/MM/YYYY"
                 placeholder={['Từ ngày', 'Đến ngày']}
                 style={{ width: '100%' }}
+                disabled={filterLoading}
               />
             </Space>
           </Col>
@@ -253,10 +273,11 @@ const WithdrawalsTable: React.FC<WithdrawalsTableProps> = ({
               <Select
                 size="small"
                 value={statusFilter}
-                onChange={setStatusFilter}
+                onChange={handleStatusChange}
                 placeholder="Chọn trạng thái"
                 style={{ width: '100%' }}
                 allowClear
+                disabled={filterLoading}
               >
                 <Option value="ALL">Tất cả</Option>
                 <Option value={WithdrawStatus.SUCCESS}>Thành công</Option>
@@ -272,10 +293,11 @@ const WithdrawalsTable: React.FC<WithdrawalsTableProps> = ({
               <Select
                 size="small"
                 value={typeFilter}
-                onChange={setTypeFilter}
+                onChange={handleTypeChange}
                 placeholder="Chọn loại"
                 style={{ width: '100%' }}
                 allowClear
+                disabled={filterLoading}
               >
                 <Option value="ALL">Tất cả</Option>
                 <Option value={WithdrawType.INTERNAL}>Nội bộ</Option>
@@ -287,27 +309,25 @@ const WithdrawalsTable: React.FC<WithdrawalsTableProps> = ({
           <Col span={6}>
             <Space style={{ marginTop: 18 }}>
               <Button
-                type="primary"
-                icon={<FilterOutlined />}
-                size="small"
-                onClick={applyFilters}
-              >
-                Lọc
-              </Button>
-              <Button
                 icon={<ClearOutlined />}
                 size="small"
                 onClick={clearFilters}
+                disabled={filterLoading}
               >
                 Xóa bộ lọc
               </Button>
+              {filterLoading && (
+                <span style={{ color: '#666', fontSize: '12px' }}>
+                  Đang lọc...
+                </span>
+              )}
             </Space>
           </Col>
           
           <Col span={4}>
             <div style={{ textAlign: 'right', marginTop: 18 }}>
               <span style={{ fontSize: '12px', color: '#666' }}>
-                Hiển thị: {filteredWithdrawals.length}/{withdrawals.length}
+                {filterLoading ? 'Đang tải...' : `Hiển thị: ${withdrawals.length} giao dịch`}
               </span>
             </div>
           </Col>
@@ -316,9 +336,9 @@ const WithdrawalsTable: React.FC<WithdrawalsTableProps> = ({
 
       {/* Table */}
       <Table
-        dataSource={filteredWithdrawals}
+        dataSource={withdrawals}
         columns={columns}
-        loading={loading}
+        loading={loading || filterLoading}
         rowKey="id"
         pagination={{
           pageSize: 10,
