@@ -23,10 +23,12 @@ interface WithdrawalsTableProps {
   loading?: boolean;
   filterLoading?: boolean;
   filters?: WithdrawalsFilterState;
+  pageSize?: number;
   onApprove?: (record: WithdrawTransaction) => void;
   onReject?: (record: WithdrawTransaction) => void;
   onViewDetails?: (record: WithdrawTransaction) => void;
   onFiltersChange?: (filters: WithdrawalsFilterState) => void;
+  onPaginationChange?: (page: number, pageSize?: number) => void;
 }
 
 const WithdrawalsTable: React.FC<WithdrawalsTableProps> = ({
@@ -34,10 +36,12 @@ const WithdrawalsTable: React.FC<WithdrawalsTableProps> = ({
   loading = false,
   filterLoading = false,
   filters,
+  pageSize = 10,
   onApprove,
   onReject,
   onViewDetails,
-  onFiltersChange
+  onFiltersChange,
+  onPaginationChange
 }) => {
   const [dateRange, setDateRange] = useState<RangeValue>(null);
   const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
@@ -341,12 +345,14 @@ const WithdrawalsTable: React.FC<WithdrawalsTableProps> = ({
         loading={loading || filterLoading}
         rowKey="id"
         pagination={{
-          pageSize: 10,
+          pageSize: pageSize,
           showSizeChanger: true,
           showQuickJumper: true,
           showTotal: (total, range) =>
             `${range[0]}-${range[1]} của ${total} giao dịch`,
           pageSizeOptions: ['10', '20', '50', '100'],
+          onChange: onPaginationChange,
+          onShowSizeChange: onPaginationChange,
         }}
         scroll={{ x: 1200 }}
         size="small"

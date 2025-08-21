@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { message } from 'antd';
-import { 
+import {
   AddBalanceRequest,
   AddBalanceResponse,
   SubtractBalanceRequest,
@@ -15,7 +15,7 @@ import {
 const customerActionApi = {
   async addBalance(customerId: number, request: AddBalanceRequest): Promise<AddBalanceResponse> {
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     return {
       success: true,
       data: {
@@ -28,7 +28,7 @@ const customerActionApi = {
 
   async subtractBalance(customerId: number, request: SubtractBalanceRequest): Promise<SubtractBalanceResponse> {
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     return {
       success: true,
       data: {
@@ -41,7 +41,7 @@ const customerActionApi = {
 
   async updateVipLevel(customerId: number, request: UpdateVipLevelRequest): Promise<UpdateVipLevelResponse> {
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     return {
       success: true,
       data: {
@@ -55,7 +55,7 @@ const customerActionApi = {
 
   async updateMarketingStatus(customerId: number, request: UpdateMarketingStatusRequest): Promise<UpdateMarketingStatusResponse> {
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     return {
       success: true,
       data: {
@@ -76,10 +76,10 @@ export const useCustomerActions = () => {
 
   const addBalance = useCallback(async (customerId: number, amount: number, note?: string) => {
     setLoading(prev => ({ ...prev, addBalance: true }));
-    
+
     try {
       const response = await customerActionApi.addBalance(customerId, { amount, note });
-      
+
       if (response.success) {
         message.success(response.message || 'Cộng tiền thành công');
         return response.data;
@@ -96,10 +96,10 @@ export const useCustomerActions = () => {
 
   const subtractBalance = useCallback(async (customerId: number, amount: number, note?: string) => {
     setLoading(prev => ({ ...prev, subtractBalance: true }));
-    
+
     try {
       const response = await customerActionApi.subtractBalance(customerId, { amount, note });
-      
+
       if (response.success) {
         message.success(response.message || 'Trừ tiền thành công');
         return response.data;
@@ -116,10 +116,10 @@ export const useCustomerActions = () => {
 
   const updateVipLevel = useCallback(async (customerId: number, newLevel: number, note?: string) => {
     setLoading(prev => ({ ...prev, updateVip: true }));
-    
+
     try {
       const response = await customerActionApi.updateVipLevel(customerId, { newLevel, note });
-      
+
       if (response.success) {
         message.success(response.message || 'Cập nhật cấp VIP thành công');
         return response.data;
@@ -136,10 +136,10 @@ export const useCustomerActions = () => {
 
   const updateMarketingStatus = useCallback(async (customerId: number, isAccountMarketing: boolean) => {
     setLoading(prev => ({ ...prev, updateMarketing: true }));
-    
+
     try {
       const response = await customerActionApi.updateMarketingStatus(customerId, { isAccountMarketing });
-      
+
       if (response.success) {
         message.success(response.message || 'Cập nhật trạng thái marketing thành công');
         return response.data;
@@ -163,11 +163,11 @@ export const useCustomerActions = () => {
     }>
   ) => {
     const results = [];
-    
+
     for (const action of actions) {
       try {
         let result;
-        
+
         switch (action.type) {
           case 'ADD_BALANCE':
             result = await addBalance(customerId, action.payload.amount, action.payload.note);
@@ -184,13 +184,13 @@ export const useCustomerActions = () => {
           default:
             throw new Error('Loại thao tác không được hỗ trợ');
         }
-        
+
         results.push({ success: true, result, action });
       } catch (error) {
         results.push({ success: false, error, action });
       }
     }
-    
+
     return results;
   }, [addBalance, subtractBalance, updateVipLevel, updateMarketingStatus]);
 

@@ -9,6 +9,8 @@ import {
   getCustomerDepositsWithdrawalsSummary,
   getCustomerDepositsList,
   getCustomerWithdrawalsList,
+  confirmWithdraw,
+  cancelWithdraw,
 } from "@src/services/customer";
 import {
   DepositListParams,
@@ -57,6 +59,10 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
   );
   const [withdrawalsFilters, setWithdrawalsFilters] =
     useState<WithdrawalsFilterState>({});
+
+  // Pagination states
+  const [depositsPageSize, setDepositsPageSize] = useState<number>(10);
+  const [withdrawalsPageSize, setWithdrawalsPageSize] = useState<number>(10);
 
   // Load summary data
   const loadSummary = useCallback(async () => {
@@ -177,7 +183,7 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
 
       try {
         const params: DepositListParams = {
-          limit: 50,
+          limit: depositsPageSize,
           ...getDepositsAPIParams(filters || depositsFilters),
         };
 
@@ -197,7 +203,7 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
         }
       }
     },
-    [customerId, depositsFilters]
+    [customerId, depositsFilters, depositsPageSize]
   );
 
   // Load withdrawals data with filters
@@ -212,7 +218,7 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
 
       try {
         const params: WithdrawListParams = {
-          limit: 50,
+          limit: withdrawalsPageSize,
           ...getWithdrawalsAPIParams(filters || withdrawalsFilters),
         };
 
@@ -232,7 +238,7 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
         }
       }
     },
-    [customerId, withdrawalsFilters]
+    [customerId, withdrawalsFilters, withdrawalsPageSize]
   );
 
   // Get deposits summary data from API
@@ -268,6 +274,62 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
   const handleCloseWithdrawDetailModal = () => {
     setIsWithdrawDetailModalVisible(false);
     setSelectedWithdrawal(null);
+  };
+
+  // Handle withdrawal approve
+  const handleApproveWithdrawal = async (withdrawal: WithdrawTransaction) => {
+    try {
+      const result = await confirmWithdraw(withdrawal.id);
+      if ("errorCode" in result) {
+        message.error(`Failed to approve withdrawal: ${result.message}`);
+      } else {
+        message.success("Withdrawal approved successfully");
+        // Reload withdrawals data to reflect the status change
+        loadWithdrawals();
+        // Reload summary data as well
+        loadSummary();
+      }
+    } catch (error) {
+      message.error("Error approving withdrawal");
+    }
+  };
+
+  // Handle withdrawal reject
+  const handleRejectWithdrawal = async (withdrawal: WithdrawTransaction) => {
+    try {
+      const result = await cancelWithdraw(withdrawal.id);
+      if ("errorCode" in result) {
+        message.error(`Failed to reject withdrawal: ${result.message}`);
+      } else {
+        message.success("Withdrawal rejected successfully");
+        // Reload withdrawals data to reflect the status change
+        loadWithdrawals();
+        // Reload summary data as well
+        loadSummary();
+      }
+    } catch (error) {
+      message.error("Error rejecting withdrawal");
+    }
+  };
+
+  // Handle pagination changes
+  const handleDepositsPaginationChange = (page: number, pageSize?: number) => {
+    if (pageSize && pageSize !== depositsPageSize) {
+      setDepositsPageSize(pageSize);
+      // Reload data with new page size
+      loadDeposits();
+    }
+  };
+
+  const handleWithdrawalsPaginationChange = (
+    page: number,
+    pageSize?: number
+  ) => {
+    if (pageSize && pageSize !== withdrawalsPageSize) {
+      setWithdrawalsPageSize(pageSize);
+      // Reload data with new page size
+      loadWithdrawals();
+    }
   };
 
   // Get withdrawals summary data from API
@@ -405,8 +467,10 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
               loading={depositsLoading}
               filterLoading={depositsFilterLoading}
               filters={depositsFilters}
+              pageSize={depositsPageSize}
               onViewDetails={handleViewDepositDetails}
               onFiltersChange={handleDepositsFiltersChange}
+              onPaginationChange={handleDepositsPaginationChange}
             />
           </Card>
         </Col>
@@ -418,10 +482,12 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
               loading={withdrawalsLoading}
               filterLoading={withdrawalsFilterLoading}
               filters={withdrawalsFilters}
-              onApprove={(record) => console.log("Approve withdrawal:", record)}
-              onReject={(record) => console.log("Reject withdrawal:", record)}
+              pageSize={withdrawalsPageSize}
+              onApprove={handleApproveWithdrawal}
+              onReject={handleRejectWithdrawal}
               onViewDetails={handleViewWithdrawalDetails}
               onFiltersChange={handleWithdrawalsFiltersChange}
+              onPaginationChange={handleWithdrawalsPaginationChange}
             />
           </Card>
         </Col>

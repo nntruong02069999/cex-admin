@@ -22,8 +22,10 @@ interface DepositsTableProps {
   loading?: boolean;
   filterLoading?: boolean;
   filters?: DepositsFilterState;
+  pageSize?: number;
   onViewDetails?: (record: DepositTransaction) => void;
   onFiltersChange?: (filters: DepositsFilterState) => void;
+  onPaginationChange?: (page: number, pageSize?: number) => void;
 }
 
 const DepositsTable: React.FC<DepositsTableProps> = ({
@@ -31,8 +33,10 @@ const DepositsTable: React.FC<DepositsTableProps> = ({
   loading = false,
   filterLoading = false,
   filters,
+  pageSize = 10,
   onViewDetails,
   onFiltersChange,
+  onPaginationChange,
 }) => {
   const [dateRange, setDateRange] = useState<RangeValue>(null);
   const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
@@ -257,12 +261,14 @@ const DepositsTable: React.FC<DepositsTableProps> = ({
         loading={loading || filterLoading}
         rowKey="id"
         pagination={{
-          pageSize: 10,
+          pageSize: pageSize,
           showSizeChanger: true,
           showQuickJumper: true,
           showTotal: (total, range) =>
             `${range[0]}-${range[1]} của ${total} giao dịch`,
           pageSizeOptions: ['10', '20', '50', '100'],
+          onChange: onPaginationChange,
+          onShowSizeChange: onPaginationChange,
         }}
         scroll={{ x: 1200 }}
         size="small"
