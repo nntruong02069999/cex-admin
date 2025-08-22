@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Row, Col, Avatar, Tag, Divider, Typography, Button } from "antd";
 import { UserOutlined, EditOutlined, SwapOutlined } from "@ant-design/icons";
-import { Customer, Inviter } from "../types/customer.types";
+import { Customer, CustomerVip, Inviter } from "../types/customer.types";
 import { getCustomerDisplayName, isVipCustomer } from "../utils/helpers";
 import { formatDate } from "../utils/formatters";
 import { STATUS_ICONS } from "../utils/constants";
@@ -12,15 +12,19 @@ interface CustomerInfoProps {
   customer: Customer;
   inviter?: Inviter;
   onChangeInviter?: () => void;
+  customerVip?: CustomerVip;
 }
 
 const CustomerInfo: React.FC<CustomerInfoProps> = ({
   customer,
   inviter,
   onChangeInviter,
+  customerVip,
 }) => {
   const displayName = getCustomerDisplayName(customer);
-  const isVip = isVipCustomer(customer);
+  const isVip = isVipCustomer(
+    customerVip || ({ currentVipLevel: 0 } as CustomerVip)
+  );
 
   return (
     <Card
@@ -44,7 +48,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
               {displayName}
               {isVip && (
                 <Tag color="purple" className="customer-vip-tag">
-                  {STATUS_ICONS.VIP} VIP Level {customer.currentVipLevel}
+                  {STATUS_ICONS.VIP} VIP Level {customerVip?.currentVipLevel}
                 </Tag>
               )}
             </h3>
@@ -104,17 +108,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
           <div className="info-item">
             <Text type="secondary">👤 Người mời:</Text>
             <div className="inviter-section">
-              <Text strong>{inviter ? inviter.email : "Chưa có"}</Text>
-              <Button
-                type="link"
-                size="small"
-                icon={<SwapOutlined />}
-                onClick={onChangeInviter}
-                className="change-inviter-btn"
-                title="Thay đổi người mời"
-              >
-                Thay đổi
-              </Button>
+              <Text strong>{inviter ? inviter.nickname : "Chưa có"}</Text>
             </div>
           </div>
         </Col>
@@ -152,7 +146,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
         <Col xs={12} sm={6}>
           <div className="stat-item">
             <div className="stat-value level-value">
-              Level {customer.currentVipLevel}
+              Level {customerVip?.currentVipLevel}
             </div>
             <div className="stat-label">Cấp hiện tại</div>
           </div>

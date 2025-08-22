@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col, Avatar, Tag, Button, Breadcrumb } from "antd";
 import { UserOutlined, ReloadOutlined, HomeOutlined } from "@ant-design/icons";
-import { Customer } from "../types/customer.types";
+import { Customer, CustomerVip } from "../types/customer.types";
 import {
   getStatusColor,
   getCustomerDisplayName,
@@ -13,17 +13,21 @@ import "./CustomerHeader.less";
 
 interface CustomerHeaderProps {
   customer?: Customer;
+  customerVip?: CustomerVip;
   onRefresh: () => void;
 }
 
 const CustomerHeader: React.FC<CustomerHeaderProps> = ({
   customer,
+  customerVip,
   onRefresh,
 }) => {
   if (!customer) return null;
 
   const displayName = getCustomerDisplayName(customer);
-  const isVip = isVipCustomer(customer);
+  const isVip = isVipCustomer(
+    customerVip || ({ currentVipLevel: 0 } as CustomerVip)
+  );
   const lastLoginText = customer.userLoginDate
     ? formatTimeAgo(customer.userLoginDate)
     : "Chưa đăng nhập";

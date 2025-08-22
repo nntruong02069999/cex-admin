@@ -1,8 +1,11 @@
-import React from 'react';
-import { Card, Row, Col, Typography } from 'antd';
-import { NetworkHierarchy as NetworkHierarchyType, NetworkSummary } from '../types/customer.types';
-import { NETWORK_LEVELS } from '../utils/constants';
-import { formatNumber } from '../utils/formatters';
+import React from "react";
+import { Card, Row, Col, Typography } from "antd";
+import {
+  NetworkHierarchy as NetworkHierarchyType,
+  NetworkSummary,
+} from "../types/customer.types";
+import { NETWORK_LEVELS } from "../utils/constants";
+import { formatNumber } from "../utils/formatters";
 
 const { Text, Title } = Typography;
 
@@ -11,24 +14,27 @@ interface NetworkHierarchyProps {
   networkSummary: NetworkSummary;
 }
 
-const NetworkHierarchy: React.FC<NetworkHierarchyProps> = ({ 
-  hierarchy, 
-  networkSummary 
+const NetworkHierarchy: React.FC<NetworkHierarchyProps> = ({
+  hierarchy,
+  networkSummary,
 }) => {
-  const renderNetworkLevel = (levelKey: keyof NetworkHierarchyType, levelIndex: number) => {
+  const renderNetworkLevel = (
+    levelKey: keyof NetworkHierarchyType,
+    levelIndex: number
+  ) => {
     const level = hierarchy[levelKey];
     const levelConfig = NETWORK_LEVELS[levelIndex];
-    
+
     if (level.count === 0) return null;
-    
+
     return (
-      <div 
+      <div
         key={levelKey}
         className="network-level"
         style={{ marginLeft: levelConfig.marginLeft }}
       >
         <div className="network-level-header">
-          <div 
+          <div
             className="network-level-icon"
             style={{ backgroundColor: levelConfig.color }}
           >
@@ -44,15 +50,17 @@ const NetworkHierarchy: React.FC<NetworkHierarchyProps> = ({
             </div>
           </div>
         </div>
-        
+
         {level.count > 0 && (
           <div className="network-level-children">
             {/* Visual representation of members */}
             <div className="member-dots">
               {Array.from({ length: Math.min(level.count, 10) }).map((_, i) => (
-                <div 
+                <div
                   key={i}
-                  className={`member-dot ${i < level.vipCount ? 'member-dot--vip' : ''}`}
+                  className={`member-dot ${
+                    i < level.vipCount ? "member-dot--vip" : ""
+                  }`}
                 />
               ))}
               {level.count > 10 && (
@@ -66,7 +74,10 @@ const NetworkHierarchy: React.FC<NetworkHierarchyProps> = ({
   };
 
   return (
-    <Card title="Sơ đồ Phả hệ (Network Hierarchy)" className="overview-section network-hierarchy-card">
+    <Card
+      title="Sơ đồ Phả hệ (Network Hierarchy)"
+      className="overview-section network-hierarchy-card"
+    >
       {/* Network Tree Visualization */}
       <div className="network-tree">
         <div className="network-root">
@@ -78,33 +89,39 @@ const NetworkHierarchy: React.FC<NetworkHierarchyProps> = ({
             </div>
           </div>
         </div>
-        
+
         <div className="network-levels">
-          {(Object.keys(hierarchy) as Array<keyof NetworkHierarchyType>).map((levelKey, index) => 
-            renderNetworkLevel(levelKey, index)
+          {(Object.keys(hierarchy) as Array<keyof NetworkHierarchyType>).map(
+            (levelKey, index) => renderNetworkLevel(levelKey, index)
           )}
         </div>
       </div>
-      
+
       {/* Network Summary */}
       <div className="network-summary">
-        <Title level={5} className="summary-title">📊 Tóm tắt Network</Title>
-        
+        <Title level={5} className="summary-title">
+          📊 Tóm tắt Network
+        </Title>
+
         <Row gutter={16} className="summary-stats">
           <Col xs={12} sm={6}>
             <div className="summary-item">
-              <div className="summary-value">{formatNumber(networkSummary.totalMembers)}</div>
+              <div className="summary-value">
+                {formatNumber(networkSummary.totalMembers)}
+              </div>
               <div className="summary-label">👥 Tổng thành viên</div>
             </div>
           </Col>
-          
+
           <Col xs={12} sm={6}>
             <div className="summary-item">
-              <div className="summary-value vip-value">{formatNumber(networkSummary.totalVip)}</div>
+              <div className="summary-value vip-value">
+                {formatNumber(networkSummary.totalVip)}
+              </div>
               <div className="summary-label">👑 VIP</div>
             </div>
           </Col>
-          
+
           <Col xs={12} sm={6}>
             <div className="summary-item">
               <div className="summary-value active-value">
@@ -113,10 +130,15 @@ const NetworkHierarchy: React.FC<NetworkHierarchyProps> = ({
               <div className="summary-label">💰 Đang hoạt động</div>
             </div>
           </Col>
-          
+
           <Col xs={12} sm={6}>
             <div className="summary-item">
-              <div className="summary-value growth-value">+{formatNumber(networkSummary.monthlyGrowth)}</div>
+              <div className="summary-value growth-value">
+                +
+                {networkSummary.monthlyGrowth > 0
+                  ? formatNumber(networkSummary.monthlyGrowth)
+                  : 0}
+              </div>
               <div className="summary-label">📈 Tăng trưởng tháng</div>
             </div>
           </Col>

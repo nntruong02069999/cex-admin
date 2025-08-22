@@ -51,17 +51,16 @@ export const getCustomerInfo = async (customerId: number) => {
 /**
  * Admin deposit money to customer account
  */
-export const adminDeposit = async (customerId: number, amount: number, tokenCapcha: string, inRevenue: boolean = false) => {
+export const adminDeposit = async (customerId: number, amount: number, tokenCapcha: string) => {
     const token = localStorage.getItem('token')
     const res: any = await request({
         url: '/admin/customer/admin-deposit',
         options: {
             method: 'post',
             data: {
-                customerId,
+                id: customerId,
                 amount,
-                tokenCapcha,
-                inRevenue
+                captcha: tokenCapcha,
             },
             headers: {
                 Authorization: `Bearer ${token}`
@@ -82,17 +81,16 @@ export const adminDeposit = async (customerId: number, amount: number, tokenCapc
 /**
  * Admin withdraw money from customer account
  */
-export const adminWithdraw = async (customerId: number, amount: number, tokenCapcha: string, inRevenue: boolean = false) => {
+export const adminWithdraw = async (customerId: number, amount: number, tokenCapcha: string) => {
     const token = localStorage.getItem('token')
     const res: any = await request({
         url: '/admin/customer/admin-withdraw',
         options: {
             method: 'post',
             data: {
-                customerId,
+                id: customerId,
                 amount,
-                tokenCapcha,
-                inRevenue
+                captcha: tokenCapcha,
             },
             headers: {
                 Authorization: `Bearer ${token}`
@@ -113,15 +111,70 @@ export const adminWithdraw = async (customerId: number, amount: number, tokenCap
 /**
  * Update customer information
  */
-export const updateCustomerInfo = async (customerId: number, name: string) => {
+export const toggleMarketingStatus = async (customerId: number, action: 'active' | 'deactive') => {
     const token = localStorage.getItem('token')
     const res: any = await request({
-        url: '/admin/customer/update-customer-info',
+        url: '/admin/customer/toggle-mkt',
         options: {
             method: 'post',
             data: {
                 customerId,
-                name
+                action
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+
+export const changeVipLevel = async (customerId: number, newLevel: number, tokenCapcha: string) => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: '/admin/customer/upgrate-vip',
+        options: {
+            method: 'post',
+            data: {
+                id: customerId,
+                level: newLevel,
+                captcha: tokenCapcha
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}
+
+
+export const changeHierarchy = async (customerId: number, nickname: string) => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: '/admin/customer/change-hierarchy',
+        options: {
+            method: 'post',
+            data: {
+                customerId,
+                nickname,
             },
             headers: {
                 Authorization: `Bearer ${token}`

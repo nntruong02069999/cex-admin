@@ -1,90 +1,34 @@
 import { useState, useCallback } from 'react';
 import { message } from 'antd';
 import {
-  AddBalanceRequest,
-  AddBalanceResponse,
-  SubtractBalanceRequest,
-  SubtractBalanceResponse,
-  UpdateVipLevelRequest,
-  UpdateVipLevelResponse,
-  UpdateMarketingStatusRequest,
-  UpdateMarketingStatusResponse
-} from '../types/api.types';
+  adminDeposit,
+  adminWithdraw,
+  changeVipLevel,
+  toggleMarketingStatus,
+  changeHierarchy
+} from '@src/services/customer';
 
-// Mock API service - replace with actual API calls
-const customerActionApi = {
-  async addBalance(customerId: number, request: AddBalanceRequest): Promise<AddBalanceResponse> {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    return {
-      success: true,
-      data: {
-        newBalance: 1500.50 + request.amount,
-        transactionId: 'TXN_' + Date.now()
-      },
-      message: 'Cộng tiền thành công'
-    };
-  },
-
-  async subtractBalance(customerId: number, request: SubtractBalanceRequest): Promise<SubtractBalanceResponse> {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    return {
-      success: true,
-      data: {
-        newBalance: 1500.50 - request.amount,
-        transactionId: 'TXN_' + Date.now()
-      },
-      message: 'Trừ tiền thành công'
-    };
-  },
-
-  async updateVipLevel(customerId: number, request: UpdateVipLevelRequest): Promise<UpdateVipLevelResponse> {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    return {
-      success: true,
-      data: {
-        oldLevel: 3,
-        newLevel: request.newLevel,
-        upgradeFee: request.newLevel > 3 ? (request.newLevel - 3) * 100 : 0
-      },
-      message: 'Cập nhật cấp VIP thành công'
-    };
-  },
-
-  async updateMarketingStatus(customerId: number, request: UpdateMarketingStatusRequest): Promise<UpdateMarketingStatusResponse> {
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    return {
-      success: true,
-      data: {
-        isAccountMarketing: request.isAccountMarketing
-      },
-      message: 'Cập nhật trạng thái marketing thành công'
-    };
-  }
-};
 
 export const useCustomerActions = () => {
   const [loading, setLoading] = useState({
     addBalance: false,
     subtractBalance: false,
     updateVip: false,
-    updateMarketing: false
+    updateMarketing: false,
+    changeInviter: false
   });
 
-  const addBalance = useCallback(async (customerId: number, amount: number, note?: string) => {
+  const addBalance = useCallback(async (customerId: number, amount: number, tokenCapcha: string, note?: string) => {
     setLoading(prev => ({ ...prev, addBalance: true }));
 
     try {
-      const response = await customerActionApi.addBalance(customerId, { amount, note });
+      const response = await adminDeposit(customerId, amount, tokenCapcha);
 
-      if (response.success) {
-        message.success(response.message || 'Cộng tiền thành công');
-        return response.data;
-      } else {
+      if ('errorCode' in response) {
         throw new Error(response.message || 'Cộng tiền thất bại');
+      } else {
+        message.success('Cộng tiền thành công');
+        return response;
       }
     } catch (error: any) {
       message.error(error.message || 'Có lỗi xảy ra khi cộng tiền');
@@ -94,17 +38,17 @@ export const useCustomerActions = () => {
     }
   }, []);
 
-  const subtractBalance = useCallback(async (customerId: number, amount: number, note?: string) => {
+  const subtractBalance = useCallback(async (customerId: number, amount: number, tokenCapcha: string, note?: string) => {
     setLoading(prev => ({ ...prev, subtractBalance: true }));
 
     try {
-      const response = await customerActionApi.subtractBalance(customerId, { amount, note });
+      const response = await adminWithdraw(customerId, amount, tokenCapcha);
 
-      if (response.success) {
-        message.success(response.message || 'Trừ tiền thành công');
-        return response.data;
-      } else {
+      if ('errorCode' in response) {
         throw new Error(response.message || 'Trừ tiền thất bại');
+      } else {
+        message.success('Trừ tiền thành công');
+        return response;
       }
     } catch (error: any) {
       message.error(error.message || 'Có lỗi xảy ra khi trừ tiền');
@@ -114,17 +58,17 @@ export const useCustomerActions = () => {
     }
   }, []);
 
-  const updateVipLevel = useCallback(async (customerId: number, newLevel: number, note?: string) => {
+  const updateVipLevel = useCallback(async (customerId: number, newLevel: number, tokenCapcha: string, note?: string) => {
     setLoading(prev => ({ ...prev, updateVip: true }));
 
     try {
-      const response = await customerActionApi.updateVipLevel(customerId, { newLevel, note });
+      const response = await changeVipLevel(customerId, newLevel, tokenCapcha);
 
-      if (response.success) {
-        message.success(response.message || 'Cập nhật cấp VIP thành công');
-        return response.data;
-      } else {
+      if ('errorCode' in response) {
         throw new Error(response.message || 'Cập nhật cấp VIP thất bại');
+      } else {
+        message.success('Cập nhật cấp VIP thành công');
+        return response;
       }
     } catch (error: any) {
       message.error(error.message || 'Có lỗi xảy ra khi cập nhật VIP');
@@ -138,13 +82,14 @@ export const useCustomerActions = () => {
     setLoading(prev => ({ ...prev, updateMarketing: true }));
 
     try {
-      const response = await customerActionApi.updateMarketingStatus(customerId, { isAccountMarketing });
+      const action = isAccountMarketing ? 'active' : 'deactive';
+      const response = await toggleMarketingStatus(customerId, action);
 
-      if (response.success) {
-        message.success(response.message || 'Cập nhật trạng thái marketing thành công');
-        return response.data;
-      } else {
+      if ('errorCode' in response) {
         throw new Error(response.message || 'Cập nhật trạng thái marketing thất bại');
+      } else {
+        message.success('Cập nhật trạng thái marketing thành công');
+        return response;
       }
     } catch (error: any) {
       message.error(error.message || 'Có lỗi xảy ra khi cập nhật marketing');
@@ -154,11 +99,31 @@ export const useCustomerActions = () => {
     }
   }, []);
 
+  const changeInviter = useCallback(async (customerId: number, nickname: string) => {
+    setLoading(prev => ({ ...prev, changeInviter: true }));
+
+    try {
+      const response = await changeHierarchy(customerId, nickname);
+
+      if ('errorCode' in response) {
+        throw new Error(response.message || 'Thay đổi người giới thiệu thất bại');
+      } else {
+        message.success('Thay đổi người giới thiệu thành công');
+        return response;
+      }
+    } catch (error: any) {
+      message.error(error.message || 'Có lỗi xảy ra khi thay đổi người giới thiệu');
+      throw error;
+    } finally {
+      setLoading(prev => ({ ...prev, changeInviter: false }));
+    }
+  }, []);
+
   // Bulk operations
   const performBulkAction = useCallback(async (
     customerId: number,
     actions: Array<{
-      type: 'ADD_BALANCE' | 'SUBTRACT_BALANCE' | 'UPDATE_VIP' | 'UPDATE_MARKETING';
+      type: 'ADD_BALANCE' | 'SUBTRACT_BALANCE' | 'UPDATE_VIP' | 'UPDATE_MARKETING' | 'CHANGE_INVITER';
       payload: any;
     }>
   ) => {
@@ -170,16 +135,19 @@ export const useCustomerActions = () => {
 
         switch (action.type) {
           case 'ADD_BALANCE':
-            result = await addBalance(customerId, action.payload.amount, action.payload.note);
+            result = await addBalance(customerId, action.payload.amount, action.payload.tokenCapcha, action.payload.note);
             break;
           case 'SUBTRACT_BALANCE':
-            result = await subtractBalance(customerId, action.payload.amount, action.payload.note);
+            result = await subtractBalance(customerId, action.payload.amount, action.payload.tokenCapcha, action.payload.note);
             break;
           case 'UPDATE_VIP':
-            result = await updateVipLevel(customerId, action.payload.newLevel, action.payload.note);
+            result = await updateVipLevel(customerId, action.payload.newLevel, action.payload.tokenCapcha, action.payload.note);
             break;
           case 'UPDATE_MARKETING':
             result = await updateMarketingStatus(customerId, action.payload.isAccountMarketing);
+            break;
+          case 'CHANGE_INVITER':
+            result = await changeInviter(customerId, action.payload.nickname);
             break;
           default:
             throw new Error('Loại thao tác không được hỗ trợ');
@@ -192,13 +160,14 @@ export const useCustomerActions = () => {
     }
 
     return results;
-  }, [addBalance, subtractBalance, updateVipLevel, updateMarketingStatus]);
+  }, [addBalance, subtractBalance, updateVipLevel, updateMarketingStatus, changeInviter]);
 
   return {
     addBalance,
     subtractBalance,
     updateVipLevel,
     updateMarketingStatus,
+    changeInviter,
     performBulkAction,
     loading
   };

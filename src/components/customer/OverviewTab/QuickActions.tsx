@@ -9,17 +9,19 @@ import {
   message,
   Row,
   Col,
+  Modal,
 } from "antd";
 import {
   PlusOutlined,
   MinusOutlined,
   CrownOutlined,
-  SettingOutlined,
+  UserSwitchOutlined,
 } from "@ant-design/icons";
 import { CustomerDetailData } from "../types/customer.types";
 import { useCustomerActions } from "../hooks/useCustomerActions";
 import { formatCurrency } from "../utils/formatters";
 import { VIP_LEVELS } from "../utils/constants";
+import Captcha from "@src/packages/pro-component/schema/Captcha";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -43,12 +45,22 @@ const QuickActions: React.FC<QuickActionsProps> = ({
   const [isMarketing, setIsMarketing] = useState<boolean>(
     customerData.customer.isAccountMarketing
   );
+  const [newInviterNickname, setNewInviterNickname] = useState<string>("");
+  
+  // Captcha states
+  const [captchaModalVisible, setCaptchaModalVisible] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string>("");
+  const [pendingAction, setPendingAction] = useState<{
+    type: 'ADD_BALANCE' | 'SUBTRACT_BALANCE' | 'UPDATE_VIP';
+    data: any;
+  } | null>(null);
 
   const {
     addBalance,
     subtractBalance,
     updateVipLevel,
     updateMarketingStatus,
+    changeInviter,
     loading,
   } = useCustomerActions();
 
@@ -58,14 +70,11 @@ const QuickActions: React.FC<QuickActionsProps> = ({
       return;
     }
 
-    try {
-      await addBalance(customerId, parseFloat(balanceAmount), balanceNote);
-      setBalanceAmount("");
-      setBalanceNote("");
-      onDataUpdate();
-    } catch (error) {
-      // Error handled in hook
-    }
+    setPendingAction({
+      type: 'ADD_BALANCE',
+      data: { amount: parseFloat(balanceAmount), note: balanceNote }
+    });
+    setCaptchaModalVisible(true);
   };
 
   const handleSubtractBalance = async () => {
@@ -74,14 +83,11 @@ const QuickActions: React.FC<QuickActionsProps> = ({
       return;
     }
 
-    try {
-      await subtractBalance(customerId, parseFloat(balanceAmount), balanceNote);
-      setBalanceAmount("");
-      setBalanceNote("");
-      onDataUpdate();
-    } catch (error) {
-      // Error handled in hook
-    }
+    setPendingAction({
+      type: 'SUBTRACT_BALANCE',
+      data: { amount: parseFloat(balanceAmount), note: balanceNote }
+    });
+    setCaptchaModalVisible(true);
   };
 
   const handleUpdateVipLevel = async () => {
@@ -90,12 +96,11 @@ const QuickActions: React.FC<QuickActionsProps> = ({
       return;
     }
 
-    try {
-      await updateVipLevel(customerId, newVipLevel);
-      onDataUpdate();
-    } catch (error) {
-      // Error handled in hook
-    }
+    setPendingAction({
+      type: 'UPDATE_VIP',
+      data: { newLevel: newVipLevel }
+    });
+    setCaptchaModalVisible(true);
   };
 
   const handleUpdateMarketing = async (checked: boolean) => {
@@ -106,6 +111,63 @@ const QuickActions: React.FC<QuickActionsProps> = ({
     } catch (error) {
       setIsMarketing(!checked); // Revert on error
     }
+  };
+
+  const handleChangeInviter = async () => {
+    if (!newInviterNickname.trim()) {
+      message.error("Vui lòng nhập nickname người giới thiệu");
+      return;
+    }
+
+    try {
+      await changeInviter(customerId, newInviterNickname.trim());
+      setNewInviterNickname("");
+      onDataUpdate();
+    } catch (error) {
+      // Error handled in hook
+    }
+  };
+
+  const handleCaptchaConfirm = async () => {
+    if (!captchaToken) {
+      message.error("Vui lòng nhập mã captcha");
+      return;
+    }
+
+    if (!pendingAction) {
+      return;
+    }
+
+    try {
+      switch (pendingAction.type) {
+        case 'ADD_BALANCE':
+          await addBalance(customerId, pendingAction.data.amount, captchaToken, pendingAction.data.note);
+          setBalanceAmount("");
+          setBalanceNote("");
+          break;
+        case 'SUBTRACT_BALANCE':
+          await subtractBalance(customerId, pendingAction.data.amount, captchaToken, pendingAction.data.note);
+          setBalanceAmount("");
+          setBalanceNote("");
+          break;
+        case 'UPDATE_VIP':
+          await updateVipLevel(customerId, pendingAction.data.newLevel, captchaToken);
+          break;
+      }
+      
+      setCaptchaModalVisible(false);
+      setCaptchaToken("");
+      setPendingAction(null);
+      onDataUpdate();
+    } catch (error) {
+      // Error handled in hook
+    }
+  };
+
+  const handleCaptchaCancel = () => {
+    setCaptchaModalVisible(false);
+    setCaptchaToken("");
+    setPendingAction(null);
   };
 
   return (
@@ -173,7 +235,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
           <div className="current-vip">
             <span>Cấp hiện tại: </span>
             <strong className="vip-level">
-              Level {customerData.customer.currentVipLevel}
+              Level {customerData.customerVip?.currentVipLevel}
             </strong>
           </div>
 
@@ -196,9 +258,35 @@ const QuickActions: React.FC<QuickActionsProps> = ({
             block
             onClick={handleUpdateVipLevel}
             loading={loading.updateVip}
-            disabled={newVipLevel === customerData.customer.currentVipLevel}
+            disabled={newVipLevel === customerData.customerVip?.currentVipLevel}
           >
             Cập nhật Cấp VIP
+          </Button>
+        </div>
+
+        <Divider />
+
+        {/* Inviter Management */}
+        <div className="action-section">
+          <h4 className="action-title">🔗 Quản lý Người giới thiệu</h4>
+
+          <Input
+            placeholder="Nhập nickname người giới thiệu mới"
+            value={newInviterNickname}
+            onChange={(e) => setNewInviterNickname(e.target.value)}
+            style={{ marginBottom: 8 }}
+            maxLength={50}
+          />
+
+          <Button
+            type="primary"
+            icon={<UserSwitchOutlined />}
+            block
+            onClick={handleChangeInviter}
+            loading={loading.changeInviter}
+            disabled={!newInviterNickname.trim()}
+          >
+            Thay đổi Người giới thiệu
           </Button>
         </div>
 
@@ -314,6 +402,22 @@ const QuickActions: React.FC<QuickActionsProps> = ({
           </div>
         </div>
       </Card>
+
+      {/* Captcha Modal */}
+      <Modal
+        title="Xác thực Captcha"
+        visible={captchaModalVisible}
+        onOk={handleCaptchaConfirm}
+        onCancel={handleCaptchaCancel}
+        okText="Xác nhận"
+        cancelText="Hủy"
+        confirmLoading={loading.addBalance || loading.subtractBalance || loading.updateVip}
+      >
+        <div style={{ marginBottom: 16 }}>
+          <p>Vui lòng nhập mã captcha để xác thực thao tác:</p>
+          <Captcha onChange={setCaptchaToken} />
+        </div>
+      </Modal>
     </div>
   );
 };

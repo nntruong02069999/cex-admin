@@ -81,7 +81,11 @@ const CustomerDetail: React.FC<CustomerDetailProps> = () => {
   return (
     <div className="customer-detail">
       <div className="customer-detail__container">
-        <CustomerHeader customer={data.customer} onRefresh={handleRefresh} />
+        <CustomerHeader
+          customer={data.customer}
+          customerVip={data.customerVip}
+          onRefresh={handleRefresh}
+        />
 
         <SummaryCards
           customer={data.customer}

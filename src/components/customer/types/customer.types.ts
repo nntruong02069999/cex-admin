@@ -23,6 +23,31 @@ export interface Customer {
   userLoginDate?: number;
 }
 
+export interface CustomerVip {
+  customerId: number;
+  id: number;
+  createdAt: bigint | null;
+  updatedAt: bigint | null;
+  currentVipLevel: number;
+  vipActivatedAt: bigint | null;
+  lastUpgradeAt: bigint | null;
+  totalUpgradeFee: number;
+  totalMemberCount: number;
+  f1TotalCount: number;
+  f1AgencyCount: number;
+  totalVipCount: number;
+  f1VipCount: number;
+  weeklyF1TradingVolume: number;
+  monthlyF1TradingVolume: number;
+  totalVipCommission: number;
+  totalTradingCommission: number;
+  thisMonthCommission: number;
+  lastMonthCommission: number;
+  currentRank: number | null;
+  bestRank: number | null;
+  lastRankingUpdate: Date;
+}
+
 export interface CustomerMoney {
   balance: number;
   frozen: number;
@@ -93,6 +118,7 @@ export interface CustomerDetailData {
   hierarchy: NetworkHierarchy;
   networkSummary: NetworkSummary;
   inviter?: Inviter;
+  customerVip?: CustomerVip;
 }
 
 export interface VipLevel {
@@ -222,7 +248,7 @@ export interface Order {
   id: number;
   customerId: number;
   customer: Customer;
-  
+
   // Order details
   side: OrderSide;
   amount: number;
@@ -230,32 +256,32 @@ export interface Order {
   realAmount: number;
   symbol: string;
   configProfit: number;
-  
+
   // Order state
   status: OrderStatus;
   type: OrderType;
-  
+
   // Chart session integration
   issueNumber: string;
   idChart?: number;
   chartResult?: string;
-  
+
   // Price information
   entryPrice?: number;
   openingPrice: number;
   closingPrice: number;
-  
+
   // Results
   resultProfit: number;
   winAmount: number;
-  
+
   // Trading metadata
   duration?: number;
   expiresAt?: number;
   orderNumber: string;
   notes?: string;
   fromMktAccount?: boolean;
-  
+
   createdAt?: number;
   updatedAt?: number;
 }

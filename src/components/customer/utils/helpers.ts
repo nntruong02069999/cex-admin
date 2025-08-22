@@ -1,7 +1,7 @@
 // Helper utility functions
 
 import { STATUS_COLORS, STATUS_TEXT, VIP_LEVELS, TRADING_RESULTS } from './constants';
-import { Customer, NetworkHierarchy } from '../types/customer.types';
+import { Customer, CustomerVip, NetworkHierarchy } from '../types/customer.types';
 
 /**
  * Get status color for Ant Design components
@@ -34,8 +34,8 @@ export const getTradingResultStyle = (result: 'WIN' | 'LOSE' | 'DRAW') => {
 /**
  * Check if customer is VIP
  */
-export const isVipCustomer = (customer: Customer): boolean => {
-  return customer.isVip || customer.currentVipLevel > 0;
+export const isVipCustomer = (customerVip: CustomerVip): boolean => {
+  return customerVip?.currentVipLevel > 0;
 };
 
 /**
@@ -132,7 +132,7 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
-    
+
     try {
       const successful = document.execCommand('copy');
       document.body.removeChild(textArea);
@@ -149,11 +149,11 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
  */
 export const downloadCSV = (data: any[], filename: string, headers?: string[]): void => {
   if (!data.length) return;
-  
+
   const csvHeaders = headers || Object.keys(data[0]);
   const csvContent = [
     csvHeaders.join(','),
-    ...data.map(row => 
+    ...data.map(row =>
       csvHeaders.map(header => {
         const value = row[header];
         // Escape commas and quotes in values
@@ -164,15 +164,15 @@ export const downloadCSV = (data: any[], filename: string, headers?: string[]): 
       }).join(',')
     )
   ].join('\n');
-  
+
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   const url = URL.createObjectURL(blob);
-  
+
   link.setAttribute('href', url);
   link.setAttribute('download', `${filename}.csv`);
   link.style.visibility = 'hidden';
-  
+
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -184,13 +184,13 @@ export const downloadCSV = (data: any[], filename: string, headers?: string[]): 
  */
 export const formatSearchParams = (params: Record<string, any>): Record<string, string> => {
   const formatted: Record<string, string> = {};
-  
+
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {
       formatted[key] = String(value);
     }
   });
-  
+
   return formatted;
 };
 
@@ -202,7 +202,7 @@ export const debounce = <T extends (...args: any[]) => void>(
   delay: number
 ): (...args: Parameters<T>) => void => {
   let timeoutId: NodeJS.Timeout;
-  
+
   return (...args: Parameters<T>) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => func(...args), delay);
@@ -226,14 +226,14 @@ export const deepClone = <T>(obj: T): T => {
   if (obj === null || typeof obj !== 'object') return obj;
   if (obj instanceof Date) return new Date(obj.getTime()) as unknown as T;
   if (Array.isArray(obj)) return obj.map(item => deepClone(item)) as unknown as T;
-  
+
   const clonedObj = {} as T;
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       clonedObj[key] = deepClone(obj[key]);
     }
   }
-  
+
   return clonedObj;
 };
 
