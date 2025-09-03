@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, Row, Col, Avatar, Tag, Divider, Typography, Button } from "antd";
-import { UserOutlined, EditOutlined, SwapOutlined } from "@ant-design/icons";
+import { UserOutlined, EditOutlined, QrcodeOutlined } from "@ant-design/icons";
 import { Customer, CustomerVip, Inviter } from "../types/customer.types";
 import { getCustomerDisplayName, isVipCustomer } from "../utils/helpers";
 import { formatDate } from "../utils/formatters";
 import { STATUS_ICONS } from "../utils/constants";
+import TwoFADisplay from "../../TwoFADisplay";
 
 const { Text } = Typography;
 
@@ -21,6 +22,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
   onChangeInviter,
   customerVip,
 }) => {
+  const [twoFAModalVisible, setTwoFAModalVisible] = useState(false);
   const displayName = getCustomerDisplayName(customer);
   const isVip = isVipCustomer(
     customerVip || ({ currentVipLevel: 0 } as CustomerVip)
@@ -68,6 +70,19 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
                 </Tag>
               )}
             </div>
+
+            {customer.twoFASecret && customer.twoFAEnabled && (
+              <div style={{ marginTop: "8px" }}>
+                <Button
+                  type="link"
+                  icon={<QrcodeOutlined />}
+                  onClick={() => setTwoFAModalVisible(true)}
+                  style={{ padding: "0" }}
+                >
+                  Xem mã 2FA
+                </Button>
+              </div>
+            )}
 
             <div className="customer-dates">
               <Text type="secondary">
@@ -152,6 +167,15 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
           </div>
         </Col>
       </Row>
+
+      {customer.twoFASecret && customer.twoFAEnabled && (
+        <TwoFADisplay
+          twoFASecret={customer.twoFASecret}
+          customerEmail={customer.email}
+          visible={twoFAModalVisible}
+          onClose={() => setTwoFAModalVisible(false)}
+        />
+      )}
     </Card>
   );
 };
