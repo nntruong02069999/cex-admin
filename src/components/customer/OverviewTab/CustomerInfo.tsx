@@ -1,32 +1,77 @@
 import React, { useState } from "react";
-import { Card, Row, Col, Avatar, Tag, Divider, Typography, Button } from "antd";
-import { UserOutlined, EditOutlined, QrcodeOutlined } from "@ant-design/icons";
+import { Card, Row, Col, Avatar, Tag, Divider, Typography, Button, Modal, message } from "antd";
+import { UserOutlined, EditOutlined, QrcodeOutlined, MailOutlined } from "@ant-design/icons";
 import { Customer, CustomerVip, Inviter } from "../types/customer.types";
 import { getCustomerDisplayName, isVipCustomer } from "../utils/helpers";
 import { formatDate } from "../utils/formatters";
 import { STATUS_ICONS } from "../utils/constants";
 import TwoFADisplay from "../../TwoFADisplay";
+import Captcha from "@src/packages/pro-component/schema/Captcha";
+import { activeEmailCustomerManual } from "@src/services/customer";
 
 const { Text } = Typography;
 
 interface CustomerInfoProps {
+  customerId: number;
   customer: Customer;
   inviter?: Inviter;
   onChangeInviter?: () => void;
   customerVip?: CustomerVip;
+  onDataUpdate?: () => void;
 }
 
 const CustomerInfo: React.FC<CustomerInfoProps> = ({
+  customerId,
   customer,
   inviter,
   onChangeInviter,
   customerVip,
+  onDataUpdate,
 }) => {
   const [twoFAModalVisible, setTwoFAModalVisible] = useState(false);
+  const [emailActivationModalVisible, setEmailActivationModalVisible] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string>("");
+  const [activatingEmail, setActivatingEmail] = useState(false);
+  
   const displayName = getCustomerDisplayName(customer);
   const isVip = isVipCustomer(
     customerVip || ({ currentVipLevel: 0 } as CustomerVip)
   );
+
+  const handleActivateEmail = () => {
+    setEmailActivationModalVisible(true);
+  };
+
+  const handleCaptchaConfirm = async () => {
+    if (!captchaToken) {
+      message.error("Vui lòng nhập mã captcha");
+      return;
+    }
+
+    setActivatingEmail(true);
+
+    try {
+      const response = await activeEmailCustomerManual(customerId, captchaToken);
+
+      if ('errorCode' in response) {
+        throw new Error(response.message || 'Kích hoạt email thất bại');
+      } else {
+        message.success('Kích hoạt email thành công');
+        setEmailActivationModalVisible(false);
+        setCaptchaToken("");
+        onDataUpdate?.();
+      }
+    } catch (error: any) {
+      message.error(error.message || 'Có lỗi xảy ra khi kích hoạt email');
+    } finally {
+      setActivatingEmail(false);
+    }
+  };
+
+  const handleCaptchaCancel = () => {
+    setEmailActivationModalVisible(false);
+    setCaptchaToken("");
+  };
 
   return (
     <Card
@@ -63,11 +108,27 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
               <Text>
                 {STATUS_ICONS.EMAIL} {customer.email}
               </Text>
-              {customer.isVerifyEmail && (
+              {customer.isVerifyEmail ? (
                 <Tag color="green" className="verification-tag">
                   {STATUS_ICONS.SUCCESS} Đã xác thực{" "}
                   {formatDate(customer.createdAt, "DISPLAY_DATE")}
                 </Tag>
+              ) : (
+                <div style={{ marginTop: "8px" }}>
+                  <Tag color="orange" className="verification-tag">
+                    ⚠️ Chưa xác thực email
+                  </Tag>
+                  <Button
+                    type="primary"
+                    size="small"
+                    icon={<MailOutlined />}
+                    onClick={handleActivateEmail}
+                    loading={activatingEmail}
+                    style={{ marginLeft: "8px" }}
+                  >
+                    Kích hoạt Email
+                  </Button>
+                </div>
               )}
             </div>
 
@@ -176,6 +237,26 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
           onClose={() => setTwoFAModalVisible(false)}
         />
       )}
+
+      {/* Email Activation Modal */}
+      <Modal
+        title="Kích hoạt Email"
+        visible={emailActivationModalVisible}
+        onOk={handleCaptchaConfirm}
+        onCancel={handleCaptchaCancel}
+        okText="Xác nhận"
+        cancelText="Hủy"
+        confirmLoading={activatingEmail}
+      >
+        <div style={{ marginBottom: 16 }}>
+          <p>
+            Bạn có chắc chắn muốn kích hoạt email cho khách hàng{" "}
+            <strong>{customer.email}</strong>?
+          </p>
+          <p>Vui lòng nhập mã captcha để xác thực:</p>
+          <Captcha onChange={setCaptchaToken} />
+        </div>
+      </Modal>
     </Card>
   );
 };

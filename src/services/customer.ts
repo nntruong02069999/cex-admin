@@ -1048,3 +1048,29 @@ export const getCustomerWithdrawalsList = async (customerId: number, params: Wit
         }
     }
 }
+
+export const activeEmailCustomerManual = async (customerId: number, captcha: string) => {
+    const token = localStorage.getItem('token')
+    const res: any = await request({
+        url: `/admin/customer/active-email-manual`,
+        options: {
+            method: 'post',
+            data: {
+                customerId,
+                captcha
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}

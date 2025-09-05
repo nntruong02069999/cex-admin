@@ -26,9 +26,11 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
           <div className="overview-tab__sections">
             {/* Customer Information */}
             <CustomerInfo
+              customerId={customerId}
               customer={customerData.customer}
               customerVip={customerData.customerVip}
               inviter={customerData.inviter}
+              onDataUpdate={onDataUpdate}
             />
 
             {/* Financial Overview */}
