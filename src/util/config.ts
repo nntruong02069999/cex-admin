@@ -1,1 +1,1 @@
-export const footerText = '© Powered by Bicoin Trade';
+export const footerText = '© Powered by Mime Trade';
