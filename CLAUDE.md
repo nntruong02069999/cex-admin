@@ -1,558 +1,417 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI assistants when working with code in this repository.
 
-## Quick Start Commands
+## Project Overview
 
-### Development
+CEX Admin (cex-admin) is a cryptocurrency exchange administration dashboard for managing customers, deposits/withdrawals, games (Wingo, K3, 5D, TRX), VIP tiers, commission rates, wheel spins, and house wallets. The UI is built with React + Ant Design + DVA framework, serving Vietnamese-language admin users.
+
+**Tech Stack**: React 17.0.2 + TypeScript 4.3.5 + Ant Design 4.16.13 + DVA 2.6.0-beta.21 (Redux-Saga) + LESS + react-app-rewired + Axios 0.21.1
+
+**Runtime**: Node.js ≥14, Yarn preferred, Port 4334 (dev)
+
+## Development Commands
+
 ```bash
-# Development with .env.dev
-yarn dev
+# Development
+yarn dev                # Start dev server (loads .env.dev via dotenv-cli)
+yarn start              # Start with --openssl-legacy-provider flag
 
-# Type checking (run before commits)
-yarn type-check
+# Code Quality
+yarn type-check         # TypeScript check (tsc --pretty --noEmit)
+yarn lint               # ESLint for .ts, .tsx, .js files
+yarn format             # Prettier format all files
 
-# Format code
-yarn format
+# Code Generation
+yarn generate           # Run Plop generators (page, crud, models, select)
 
-# Lint code
-yarn lint
-
-# Generate components/pages
-yarn generate
+# Build
+yarn build              # Production build (loads .env.prod)
+yarn build:dev          # Dev-hosted build (loads .env.host.dev)
 ```
 
-### Building
-```bash
-# Production build with .env.prod
-yarn build
+## Architecture
 
-# Development build with .env.host.dev
-yarn build:dev
+### DVA + Redux-Saga Architecture
+
+The app uses **DVA** (a Redux-Saga framework) for state management. DVA models combine namespace, state, reducers, effects (saga generators), and subscriptions into single files.
+
+```
+src/
+├── index.tsx           # DVA app bootstrap, model registration
+├── NextApp.tsx          # ConnectedRouter entry point
+├── nav.ts              # Static sidebar menu definitions
+├── routes.ts            # Legacy route config (partially used)
+├── routes/              # Route components (the actual pages)
+│   ├── index.tsx        # Main route switch
+│   ├── home/            # Dashboard pages
+│   ├── customer/        # Customer detail pages
+│   ├── game/            # Game management (wingo, k3, 5d, trx)
+│   ├── games/           # Game sub-routes
+│   ├── houseWallet/     # House wallet management
+│   ├── main/            # System admin (roles, users, agencies)
+│   └── default/         # CMS pages (PageEditor, FormViewer, ListViewer)
+├── models/              # DVA models (state management)
+├── services/            # API service functions
+├── components/          # Reusable UI components
+├── containers/          # Layout containers (App, Sidebar, Topbar)
+├── constants/           # Enums, action types, theme settings
+├── interfaces/          # TypeScript interfaces per domain
+├── types/               # Additional TypeScript type definitions
+├── packages/            # Internal packages (pro-table, pro-component)
+├── util/                # Utilities (request, helpers, Socket, enums)
+├── lngProvider/         # i18n setup (vi_VN, en_US)
+├── styles/              # Global LESS styles
+├── assets/              # Static assets (images, vendor styles)
+└── controls/            # Control components
 ```
 
-### Testing
-```bash
-# Run tests
-yarn test
-```
+### State Management (DVA Models)
 
-## Technology Stack
-
-- **Framework**: React 17 + TypeScript 4.3.5
-- **State Management**: DVA (Redux + Redux-Saga)
-- **UI Library**: Ant Design 4.16.13
-- **Build Tool**: react-app-rewired with custom config
-- **Styling**: LESS with theme customization
-- **HTTP Client**: Axios with centralized request handler
-- **i18n**: React Intl
-
-## Core Architecture
-
-### DVA State Management Pattern
-
-DVA wraps Redux and Redux-Saga with a model-based architecture. All models follow this structure:
+Models are registered in `src/index.tsx` and follow the DVA model pattern:
 
 ```typescript
-{
-  namespace: 'modelName',
-  state: {},
+// ✅ Correct DVA model pattern
+const authModel: Model = {
+  namespace: 'auth',         // unique namespace for dispatch
+  state: { /* initial state */ },
   effects: {
-    *effectName({ payload }, { call, put, select }) {}
+    *userSignIn({ payload }, { put, call }) {
+      const res = yield call(serviceFunction, payload);
+      yield put({ type: 'reducerName', payload: res });
+    },
   },
   reducers: {
-    reducerName(state, { payload }) {}
-  },
-  subscriptions: {
-    setup({ dispatch, history }) {}
-  }
-}
-```
-
-**Key Points**:
-- Models are in `src/models/`
-- Effects are generators for async operations
-- Reducers are pure functions for state updates
-- Global store accessible via `window._store`
-- Dispatch actions: `dispatch({ type: 'namespace/action', payload })`
-
-### Configuration-Driven Architecture
-
-This project uses a sophisticated **pageInfo-based configuration system** that eliminates manual component creation for standard CRUD operations.
-
-#### Grid System (`src/controls/layouts/gridTemplate/`)
-- **Purpose**: Dynamic data tables with filtering, sorting, pagination
-- **Configuration**: `GridEditor.tsx` defines columns, filters, actions
-- **Component**: `ListCtrl.tsx` renders ProTable from configuration
-- **Entry Point**: `ListViewer.tsx` loads pageInfo and displays grid
-
-**Column Configuration Example**:
-```typescript
-{
-  key: 'customerId',
-  dataIndex: 'customerId',
-  title: 'Customer ID',
-  valueType: 'text',
-  hideInSearch: false,
-  sorter: true
-}
-```
-
-#### Form System (`src/controls/layouts/schemaTemplate/`)
-- **Purpose**: Dynamic form generation from JSON schema
-- **Configuration**: `SchemaEditor.tsx` defines fields, validation, layout
-- **Component**: `FormCtrl.tsx` handles form logic and submission
-- **Widgets**: 20+ types in `src/packages/pro-component/schema/`
-
-**Widget Types**: Text, TextArea, DateTime, Date, Time, Enum, EnumByUser, Checkbox, RadioGroup, SingleSelect, SingleModel, ArrayModel, ArraySelect, Image, RichText, Password, NumberMask, Location, Upload, ColorPicker, Icon
-
-**Schema Configuration Example**:
-```typescript
-{
-  key: 'email',
-  title: 'Email',
-  widget: 'Text',
-  required: true,
-  hideExpression: 'model.type === "guest"',
-  col: 2  // 1-4 column layout
-}
-```
-
-### Request Handler Pattern
-
-All API calls use the centralized `src/util/request.ts`:
-
-```typescript
-import request from '@src/util/request';
-
-const response = await request<ResponseType>({
-  url: '/admin/endpoint',
-  options: {
-    method: 'post',
-    data: { ... }
-  }
-});
-
-// Handle response
-if (response?.status === 200 && response.data?.code === 0) {
-  return response.data;
-} else {
-  return { errorCode: response.data?.code, message: response.data?.message };
-}
-```
-
-**Request Features**:
-- Automatic token injection from `localStorage`
-- 5-minute timeout
-- Auto-refresh token from response headers
-- 403 handling with auto logout
-- Centralized error handling
-- FormData support for file uploads
-
-## Project Structure
-
-### Critical Directories
-
-#### `src/models/` - DVA State Management
-- `global.ts` - App-wide state (collapsed sidebar, notices)
-- `auth.ts` - Authentication state and effects
-- `menu.ts` - Navigation and menu state
-- Domain models follow same pattern
-
-#### `src/services/` - API Layer
-Each service module exports functions for specific domain:
-
-```typescript
-// Pattern
-export const functionName = async (params) => {
-  const res = await request({ url, options });
-  return handleResponse(res);
-}
-```
-
-**Naming Convention**:
-- `get*` for GET requests
-- `create*`, `update*`, `delete*` for mutations
-- `*Request` suffix for explicit request functions
-
-#### `src/controls/` - Configuration-Driven Components
-- `layouts/gridTemplate/` - Grid/list rendering
-- `layouts/schemaTemplate/` - Form rendering
-- `layouts/detailTemplate/` - Detail view templates
-- `editors/` - Configuration editors (GridEditor, SchemaEditor, ButtonEditor, APIEditor)
-- `settings/` - Layout and behavior settings
-
-#### `src/packages/` - Reusable Packages
-- `pro-component/schema/` - Form widgets (20+ types)
-- `pro-table/` - Enhanced Ant Design table with ProTable features
-- `pro-utils/` - Utility functions
-
-#### `src/components/` - Reusable UI Components
-Organized by domain/feature (e.g., `customer/`, `dashboard/`)
-
-#### `src/routes/` - Route Components
-- `default/` - Main application routes
-- Nested structure mirrors URL paths
-
-#### `src/util/` - Utilities
-- `request.ts` - HTTP client (critical)
-- `helpers.tsx` - Common utilities
-- `config.ts` - App configuration
-- `Socket.ts` - WebSocket client
-- `local.ts` - localStorage wrapper
-
-#### `src/constants/` - Constants
-- `constants.ts` - App-wide constants
-- `enums.ts` - Enum definitions
-- `HttpStatusCode.ts` - HTTP status codes
-
-## Coding Conventions
-
-### TypeScript Guidelines
-
-1. **Use interfaces for object shapes**:
-```typescript
-interface CustomerInfo {
-  id: number;
-  email: string;
-  status: string;
-}
-```
-
-2. **Type service responses**:
-```typescript
-const response = await request<CustomerInfo>({ url, options });
-```
-
-3. **Avoid `any` - use `unknown` or proper types**
-
-4. **Enable strict mode features** (already configured in tsconfig.json)
-
-### Component Patterns
-
-1. **Functional components with hooks**:
-```typescript
-const MyComponent: React.FC<Props> = ({ prop1, prop2 }) => {
-  const [state, setState] = useState(initialValue);
-  // ...
-}
-```
-
-2. **Use DVA connect for state**:
-```typescript
-import { connect } from 'dva';
-
-const Component = ({ dispatch, user }) => { /* ... */ };
-
-export default connect(({ auth }) => ({ user: auth.user }))(Component);
-```
-
-3. **Memoize expensive computations**:
-```typescript
-const expensiveValue = useMemo(() => computeValue(data), [data]);
-```
-
-### File Naming
-
-- Components: PascalCase (`CustomerInfo.tsx`)
-- Services: kebab-case (`customer-service.ts`)
-- Utilities: camelCase (`helpers.ts`)
-- Constants: UPPER_SNAKE_CASE for values
-
-### Import Organization
-
-```typescript
-// 1. External dependencies
-import React from 'react';
-import { Button } from 'antd';
-
-// 2. Internal absolute imports (use @src alias)
-import request from '@src/util/request';
-import { CustomerType } from '@src/types/customer.types';
-
-// 3. Relative imports
-import { formatDate } from './utils';
-```
-
-## Form Widget Development
-
-### Creating a New Widget
-
-1. **Create widget file** in `src/packages/pro-component/schema/`:
-
-```typescript
-// NewWidget.tsx
-import React from 'react';
-import { IWidgetProps } from './types';
-
-const NewWidget: React.FC<IWidgetProps> = ({ value, onChange, schema }) => {
-  return (
-    <input
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    />
-  );
-};
-
-export default NewWidget;
-```
-
-2. **Export in `Widgets.tsx`**:
-```typescript
-export { default as NewWidget } from './NewWidget';
-```
-
-3. **Add to `SchemaEditor.tsx` widget list**:
-```typescript
-{ label: 'New Widget', value: 'NewWidget' }
-```
-
-4. **Update `Base.tsx`** if special rendering needed:
-```typescript
-case 'NewWidget':
-  return <Widgets.NewWidget {...widgetProps} />;
-```
-
-### Widget Interface
-
-All widgets receive:
-```typescript
-interface IWidgetProps {
-  value: any;
-  onChange: (value: any) => void;
-  schema: ISchemaEditorProperties;
-  disabled?: boolean;
-  formData?: any;  // Access to entire form values
-}
-```
-
-## Performance Optimization
-
-### 1. List Rendering
-- Always use pagination for grids
-- Implement virtual scrolling for 500+ rows
-- Use `rowKey` prop for unique keys
-- Memoize column definitions
-
-### 2. Form Performance
-- Use `hideExpression` to conditionally hide fields
-- Avoid inline functions in renders
-- Implement debounced inputs for search/filters
-- Cache pageInfo configurations
-
-### 3. State Management
-- Keep component state local when possible
-- Use DVA effects for async operations
-- Implement proper loading states
-- Avoid unnecessary re-renders with `React.memo`
-
-### 4. Bundle Optimization
-- Code splitting is configured via react-app-rewired
-- Lazy load routes with `React.lazy`
-- Use dynamic imports for large dependencies
-- Ant Design tree-shaking is enabled
-
-### 5. API Calls
-- Implement request cancellation for unmounted components
-- Use SWR for data fetching with caching
-- Batch related API calls
-- Cache stable data in localStorage
-
-## Common Development Patterns
-
-### Creating a New List Page
-
-1. **Define pageInfo** in backend with grid configuration
-2. **Add route** in router configuration
-3. **Create view component** using `ListViewer` pattern:
-
-```typescript
-import ListViewer from '@src/routes/default/list/ListViewer';
-
-const MyListPage = () => {
-  const pageId = 123; // Your pageInfo ID
-  return <ListViewer pageId={pageId} />;
+    reducerName(state, { payload }) {
+      return { ...state, ...payload };
+    },
+  } as ReducersMapObject<any, any>,
 };
 ```
 
-4. **Configure columns** via GridEditor in admin panel
+**Registered Models**: `auth`, `global`, `common`, `settings`, `modal`, `menu`, `role`, `user`, `houseWallet`, `chat`
 
-### Creating a New Form Page
-
-1. **Define pageInfo** with schema configuration
-2. **Add route** in router configuration
-3. **Create view component** using `FormViewer` pattern:
-
+**Dispatching Actions**:
 ```typescript
-import FormViewer from '@src/routes/default/form/FormViewer';
+// From connected components
+dispatch({ type: 'namespace/effectName', payload: { ... } });
 
-const MyFormPage = () => {
-  const pageId = 124; // Your pageInfo ID
-  return <FormViewer pageId={pageId} />;
-};
+// Cross-model dispatch within effects
+yield put({ type: 'otherNamespace/reducerName', payload: data });
 ```
 
-4. **Configure fields** via SchemaEditor in admin panel
+### API Layer
 
-### Adding New Service
+All API calls go through `src/util/request.ts` — a centralized Axios wrapper.
 
+**Key behaviors**:
+- Base URL: `REACT_APP_URL/api` (configured via env vars)
+- Auto-attaches Bearer token from `localStorage.getItem('token')`
+- 5-minute timeout per request
+- Auto-refreshes token from `accesstoken` response header
+- **403 response → auto sign-out** (dispatches `auth/userSignOut`)
+- Returns `{ status, data }` — never throws
+
+**Service pattern**:
 ```typescript
-// src/services/my-feature.ts
-import request from '@src/util/request';
-import HttpStatusCode from '@src/constants/HttpStatusCode';
-import { DEFAULT_ERROR_MESSAGE } from '@src/constants/constants';
-
-export interface MyFeatureParams {
-  id: number;
-  name: string;
-}
-
-export const getMyFeature = async (id: number) => {
+// ✅ Service function pattern
+export const getCustomerInfo = async (customerId: number) => {
+  const token = localStorage.getItem('token')
   const res: any = await request({
-    url: `/admin/my-feature/${id}`,
-    options: { method: 'get' }
-  });
-
-  if (res?.status === HttpStatusCode.OK && res.data?.code === 0) {
-    return res.data;
+    url: '/admin/customer/get-all-customer-info',
+    options: {
+      method: 'post',
+      data: { customerId },
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  })
+  if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+    return res.data
   } else {
     return {
       errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
       message: res.data?.message || DEFAULT_ERROR_MESSAGE,
-    };
+    }
   }
-};
+}
 ```
 
-### Adding New DVA Model
+**API response convention**: Backend returns `{ code: 0, data: ..., message: ... }`. Code `0` = success.
+
+### Routing
+
+Uses **react-router-dom v5** with DVA's router integration:
+
+- `src/NextApp.tsx` → `ConnectedRouter` → root `<Route>`
+- `src/containers/App/index.tsx` → Auth guard (`RestrictedRoute`), locale provider
+- `src/routes/index.tsx` → Main `<Switch>` with all authenticated routes
+- Routes use both direct imports and `asyncComponent` for code splitting
+
+**Auth flow**: Unauthenticated → `/signin` → 2FA → store token in localStorage → redirect to `/dashboard`
+
+### Internationalization (i18n)
+
+Uses **react-intl** with per-module JSON locale files:
+
+```
+src/lngProvider/
+├── locales/
+│   ├── vi_VN/          # Vietnamese (primary)
+│   │   ├── index.js    # Aggregates all locale JSON files
+│   │   ├── vi_VN.json  # Core translations
+│   │   └── [module]/   # Per-module translation files
+│   └── en_US/          # English
+└── index.ts            # Locale registry
+```
+
+Plop generators auto-create locale files for new pages.
+
+### Code Generation (Plop)
+
+Run `yarn generate` to scaffold new pages. Available generators:
+
+| Generator | Creates |
+|-----------|---------|
+| `page` | List page + route + model + service + i18n |
+| `crud` | CRUD form page (OneCol/TwoCol/ThreeCol layouts) |
+| `models` | DVA model + service file |
+| `select` | Select component |
+| `selectlist` | Select with list component |
+
+**Injection markers** in code (do not remove):
+- `/* PLOP_INJECT_IMPORT */` — import statements
+- `/* PLOP_INJECT_EXPORT */` — model registrations / route declarations
+
+## Coding Conventions
+
+### File Naming
+- **Models**: `camelCase.ts` — e.g. `houseWallet.ts`, `auth.ts`
+- **Services**: `camelCase.ts` — e.g. `customer.ts`, `depositService.ts`
+- **Components**: `PascalCase/` directories — e.g. `HouseWallet/`, `Deposit/`
+- **Routes**: `camelCase/` directories — e.g. `houseWallet/`, `customer/`
+- **Interfaces**: `PascalCase.ts` — e.g. `Customer.ts`, `K3Game.ts`
+
+### Component Patterns
+
+The codebase mixes class components (legacy) and functional components:
 
 ```typescript
-// src/models/my-feature.ts
-import { Model } from 'dva';
-import { getMyFeature } from '@src/services/my-feature';
-
-const myFeatureModel: Model = {
-  namespace: 'myFeature',
-
-  state: {
-    data: null,
-    loading: false,
-  },
-
-  effects: {
-    *fetchData({ payload }, { call, put }) {
-      yield put({ type: 'updateState', payload: { loading: true } });
-      const response = yield call(getMyFeature, payload.id);
-      yield put({ type: 'updateState', payload: { data: response, loading: false } });
-    },
-  },
-
-  reducers: {
-    updateState(state, { payload }) {
-      return { ...state, ...payload };
-    },
-  },
+// ✅ Newer functional component pattern
+const App: React.FC<AppProps> = ({ match }) => {
+  return (
+    <div className="gx-main-content-wrapper">
+      <Switch>
+        <Route path={`/dashboard`} component={HomeIndex} />
+      </Switch>
+    </div>
+  );
 };
 
-export default myFeatureModel;
+// Legacy class component (containers/App)
+class App extends Component<Props> {
+  componentWillMount() { /* ... */ }
+  render() { /* ... */ }
+}
+export default connect(mapStateToProps)(App);
 ```
 
-## Build Configuration
+### TypeScript Conventions
+- `strict: true` in tsconfig
+- Experimental decorators enabled
+- Heavy use of `any` types (legacy code)
+- Interfaces defined in `src/interfaces/` per domain and `src/interfaces.ts` for global store
+- Enums use SCREAMING_SNAKE_CASE values
 
-### Webpack Aliases
-- `@src` points to `src/` directory
-- Use absolute imports: `import { X } from '@src/util/helpers'`
+### Import Conventions
 
-### Environment Variables
-- `.env.dev` - Development environment
-- `.env.prod` - Production environment
-- `.env.host.dev` - Host development environment
-- Access via `process.env.REACT_APP_*`
-
-### LESS Theming
-- Theme variables in `src/theme.less`
-- Ant Design variables can be overridden
-- LESS modules for component-specific styles
-
-## Common Pitfalls
-
-### 1. DVA Namespace Collisions
-Always use unique namespaces in models. Check `src/models/` for existing names.
-
-### 2. Token Management
-- Token is stored in `localStorage` with key `'token'`
-- Auto-refreshed from response headers
-- Use `local.get('token')` and `local.set('token', value)`
-
-### 3. Form Schema Configuration
-- `hideExpression` uses string expressions evaluated at runtime
-- Reference form values via `model.fieldName`
-- Complex expressions: `model.type === 'A' && model.status === 'active'`
-
-### 4. Grid Column Configuration
-- `dataIndex` must match API response field
-- `valueType` determines cell rendering
-- `hideInSearch` controls filter visibility
-- `sorter: true` enables backend sorting
-
-### 5. Type Safety with Request Handler
-Always provide type parameter to `request<T>()` for type-safe responses.
-
-## Gaming Domain Features
-
-This project includes gaming-specific components:
-
-- **5D Game**: Number prediction game with digit analysis
-- **K3 Game**: Dice game with statistics
-- **Wingo Game**: Color/number prediction with time configs (30s, 1m, 3m, 5m, 10m)
-- **TRX Wingo**: TRX blockchain-based Wingo variant
-
-Game components typically include:
-- Result history tables
-- Statistics and analytics
-- Betting management
-- Winner calculations
-- Real-time updates via WebSocket
-
-## Debugging Tips
-
-### DVA State Inspection
-Access global store in browser console:
-```javascript
-window._store.getState()
+**Path Aliases** (defined in `tsconfig.paths.json` + `config-overrides.js`):
+```typescript
+import request from '@src/util/request'    // @src → src/
+import { COLORS } from '@constants/constants' // @constants → src/constants/ (tsconfig only)
 ```
 
-### API Debugging
-Enable debug mode in browser console:
-```javascript
-window.debug = true
+> **Note**: `@src` is resolved by both Webpack (via `config-overrides.js`) and TypeScript. `@constants` is TypeScript-only.
+
+### CSS/Styling
+- Global styles use **LESS** with Ant Design theme variable overrides in `src/theme.less`
+- Primary color: `#f03945` (red)
+- CSS class prefix: `gx-` (e.g. `gx-main-content-wrapper`, `gx-header-horizontal`)
+- Ant Design variables are injected at build time via `less-loader` + `customize-cra`
+
+## Key Non-Obvious Patterns
+
+### Token Management
+```typescript
+// ✅ Token is stored in localStorage as a raw string
+localStorage.getItem('token')    // returns the JWT string directly
+localStorage.getItem('user_id')  // returns stringified user object
+
+// The `local` utility auto-JSON-parses:
+import local from '@src/util/local'
+local.get('token')    // returns parsed token
+local.get('user_id')  // returns parsed user object
 ```
 
-### Form Schema Debugging
-- Check `FormCtrl.tsx` for data flow
-- Verify schema configuration in `SchemaEditor`
-- Test widgets independently in isolation
+### DVA Store on Window
+```typescript
+// The DVA store is exposed globally for emergency dispatches
+window._store = app?._store;
 
-### Grid Debugging
-- Inspect pageInfo configuration
-- Verify API response structure matches column dataIndex
-- Check ProTable console warnings
-- Use React DevTools to inspect ProTable props
+// Used in request.ts for auto-logout on 403
+window._store.dispatch({ type: 'auth/userSignOut' });
+```
 
-## Key Dependencies
+### Socket.io Integration
+`src/util/Socket.ts` provides real-time WebSocket connectivity via `socket.io-client` v4. Used for live game updates.
 
-- **antd**: 4.16.13 - UI component library
-- **dva**: 2.6.0-beta.21 - State management
-- **axios**: 0.21.1 - HTTP client
-- **react-intl**: 5.20.13 - Internationalization
-- **socket.io-client**: 4.4.0 - WebSocket client
-- **dayjs**: 1.11.13 - Date manipulation
-- **lodash**: 4.17.11 - Utility functions
+### Pro-Table (Internal Package)
+`src/packages/pro-table/` is an internal adaptation of Ant Design Pro's ProTable, providing configurable data tables with built-in search, pagination, and column management. Column configs are JSON-driven via Plop data templates.
 
-## Additional Resources
+## Environment Variables
 
-For detailed architecture guides, see `.cursor/rules/`:
-- `form-system.mdc` - Comprehensive form system guide
-- `list-system.mdc` - Grid/list system guide
-- `services.mdc` - Service layer patterns
-- `project-structure.mdc` - Full project structure
+| Variable | Purpose |
+|----------|---------|
+| `REACT_APP_URL` | Backend API base URL |
+| `REACT_APP_IMAGE_URI` | Image upload/serve URL |
+| `REACT_APP_FILE_MANAGER` | File manager URL |
+| `REACT_APP_PAGESIZE` / `REACT_APP_PAGE_SIZE` | Default pagination size |
+| `REACT_APP_APP_NAME` | Application name identifier |
+| `REACT_APP_PAGE_EDITOR_ID` | CMS page editor config ID |
+| `REACT_APP_PAGE_SETTING_ID` | CMS page settings config ID |
+| `REACT_APP_RECAPTCHA_SITE_KEY` | Google reCAPTCHA site key |
+| `REACT_APP_IS_DEV` | Dev mode flag |
+| `IS_DEBUG` | Debug logging toggle |
+
+Environment files: `.env`, `.env.dev`, `.env.host.dev`, `.env.prod`
+
+## Important Rules
+
+### State Management
+- Always register new DVA models in `src/index.tsx` — both import and `app.model()`
+- Use `yield call(serviceFunction)` in effects — never call services directly
+- Reducer return types are cast with `as Reducer<any, Action<any>>` (DVA TypeScript workaround)
+
+### API Calls
+- All service functions should use the centralized `request()` from `src/util/request.ts`
+- Check `res.data?.code === 0` for success, not just HTTP status
+- Default error message: `'Hệ thống đang bận vui lòng thực hiện sau'`
+
+### Code Generation
+- Never remove `/* PLOP_INJECT_IMPORT */` or `/* PLOP_INJECT_EXPORT */` comments — Plop uses them
+- Column data for Plop generators lives in `plop-templates/data/[pageName].json`
+
+### Styling
+- Use `gx-` prefixed CSS classes from the global LESS framework
+- Theme colors are in `src/theme.less` — don't hardcode color values
+- Ant Design component theming is via LESS variable overrides, not CSS-in-JS
+
+### Authentication
+- 2FA flow: login → receive temp token → verify 2FA → receive real token
+- Token refresh happens silently via response header `accesstoken`
+- 403 errors trigger automatic sign-out via `window._store.dispatch`
+
+### Pagination
+- Default: `{ skip: 0, limit: 10, total: 0, totalPage: 0, page: 1 }`
+- Backend uses `skip`/`limit` (not `page`/`pageSize`)
+
+<!-- gitnexus:start -->
+# GitNexus — Code Intelligence
+
+This project is indexed by GitNexus as **cex-admin** (4399 symbols, 8841 relationships, 114 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+
+> If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
+
+## Always Do
+
+- **MUST run impact analysis before editing any symbol.** Before modifying a function, class, or method, run `gitnexus_impact({target: "symbolName", direction: "upstream"})` and report the blast radius (direct callers, affected processes, risk level) to the user.
+- **MUST run `gitnexus_detect_changes()` before committing** to verify your changes only affect expected symbols and execution flows.
+- **MUST warn the user** if impact analysis returns HIGH or CRITICAL risk before proceeding with edits.
+- When exploring unfamiliar code, use `gitnexus_query({query: "concept"})` to find execution flows instead of grepping. It returns process-grouped results ranked by relevance.
+- When you need full context on a specific symbol — callers, callees, which execution flows it participates in — use `gitnexus_context({name: "symbolName"})`.
+
+## When Debugging
+
+1. `gitnexus_query({query: "<error or symptom>"})` — find execution flows related to the issue
+2. `gitnexus_context({name: "<suspect function>"})` — see all callers, callees, and process participation
+3. `READ gitnexus://repo/cex-admin/process/{processName}` — trace the full execution flow step by step
+4. For regressions: `gitnexus_detect_changes({scope: "compare", base_ref: "main"})` — see what your branch changed
+
+## When Refactoring
+
+- **Renaming**: MUST use `gitnexus_rename({symbol_name: "old", new_name: "new", dry_run: true})` first. Review the preview — graph edits are safe, text_search edits need manual review. Then run with `dry_run: false`.
+- **Extracting/Splitting**: MUST run `gitnexus_context({name: "target"})` to see all incoming/outgoing refs, then `gitnexus_impact({target: "target", direction: "upstream"})` to find all external callers before moving code.
+- After any refactor: run `gitnexus_detect_changes({scope: "all"})` to verify only expected files changed.
+
+## Never Do
+
+- NEVER edit a function, class, or method without first running `gitnexus_impact` on it.
+- NEVER ignore HIGH or CRITICAL risk warnings from impact analysis.
+- NEVER rename symbols with find-and-replace — use `gitnexus_rename` which understands the call graph.
+- NEVER commit changes without running `gitnexus_detect_changes()` to check affected scope.
+
+## Tools Quick Reference
+
+| Tool | When to use | Command |
+|------|-------------|---------|
+| `query` | Find code by concept | `gitnexus_query({query: "auth validation"})` |
+| `context` | 360-degree view of one symbol | `gitnexus_context({name: "validateUser"})` |
+| `impact` | Blast radius before editing | `gitnexus_impact({target: "X", direction: "upstream"})` |
+| `detect_changes` | Pre-commit scope check | `gitnexus_detect_changes({scope: "staged"})` |
+| `rename` | Safe multi-file rename | `gitnexus_rename({symbol_name: "old", new_name: "new", dry_run: true})` |
+| `cypher` | Custom graph queries | `gitnexus_cypher({query: "MATCH ..."})` |
+
+## Impact Risk Levels
+
+| Depth | Meaning | Action |
+|-------|---------|--------|
+| d=1 | WILL BREAK — direct callers/importers | MUST update these |
+| d=2 | LIKELY AFFECTED — indirect deps | Should test |
+| d=3 | MAY NEED TESTING — transitive | Test if critical path |
+
+## Resources
+
+| Resource | Use for |
+|----------|---------|
+| `gitnexus://repo/cex-admin/context` | Codebase overview, check index freshness |
+| `gitnexus://repo/cex-admin/clusters` | All functional areas |
+| `gitnexus://repo/cex-admin/processes` | All execution flows |
+| `gitnexus://repo/cex-admin/process/{name}` | Step-by-step execution trace |
+
+## Self-Check Before Finishing
+
+Before completing any code modification task, verify:
+1. `gitnexus_impact` was run for all modified symbols
+2. No HIGH/CRITICAL risk warnings were ignored
+3. `gitnexus_detect_changes()` confirms changes match expected scope
+4. All d=1 (WILL BREAK) dependents were updated
+
+## Keeping the Index Fresh
+
+After committing code changes, the GitNexus index becomes stale. Re-run analyze to update it:
+
+```bash
+npx gitnexus analyze
+```
+
+If the index previously included embeddings, preserve them by adding `--embeddings`:
+
+```bash
+npx gitnexus analyze --embeddings
+```
+
+To check whether embeddings exist, inspect `.gitnexus/meta.json` — the `stats.embeddings` field shows the count (0 means no embeddings). **Running analyze without `--embeddings` will delete any previously generated embeddings.**
+
+> Claude Code users: A PostToolUse hook handles this automatically after `git commit` and `git merge`.
+
+## CLI
+
+| Task | Read this skill file |
+|------|---------------------|
+| Understand architecture / "How does X work?" | `.claude/skills/gitnexus/gitnexus-exploring/SKILL.md` |
+| Blast radius / "What breaks if I change X?" | `.claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md` |
+| Trace bugs / "Why is X failing?" | `.claude/skills/gitnexus/gitnexus-debugging/SKILL.md` |
+| Rename / extract / split / refactor | `.claude/skills/gitnexus/gitnexus-refactoring/SKILL.md` |
+| Tools, resources, schema reference | `.claude/skills/gitnexus/gitnexus-guide/SKILL.md` |
+| Index, status, clean, wiki CLI commands | `.claude/skills/gitnexus/gitnexus-cli/SKILL.md` |
+
+<!-- gitnexus:end -->
