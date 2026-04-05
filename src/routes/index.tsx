@@ -20,6 +20,7 @@ import Deposit from "@src/components/Deposit";
 import Withdraw from "@src/components/Withdraw";
 import VipOverview from "@src/components/Vip";
 import HouseWalletPage from "./houseWallet";
+import ConfigPage from "./main/config";
 // import DashboardListing from './main/dashboard/Listing';
 /* PLOP_INJECT_IMPORT */
 
@@ -51,6 +52,7 @@ const App: React.FC<AppProps> = ({ match }) => {
         <Route path="/deposit/manage" component={Deposit} />
         <Route path="/withdraw/manage" component={Withdraw} />
         <Route path="/vip/dashboard" component={VipOverview} />
+        <Route path={`/main/config`} component={ConfigPage} />
         <Route path={`${match.url}main`} component={Main} />
         <Route path={`${match.url}game`} component={Games} />
         <Route path={`/house-wallet`} component={HouseWalletPage} />
