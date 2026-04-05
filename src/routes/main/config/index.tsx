@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "dva";
 import { Tabs, Card, Spin } from "antd";
+import { useLocation, useHistory } from "react-router-dom";
 import {
   ShoppingCartOutlined,
   WalletOutlined,
@@ -24,11 +25,19 @@ const ConfigPage: React.FC<ConfigPageProps> = ({
   dispatch,
   loading,
 }) => {
+  const location = useLocation();
+  const history = useHistory();
+  const params = new URLSearchParams(location.search);
+  const activeTab = params.get("tab") || "order";
   const { order, deposit, withdraw, kyc } = config;
 
   useEffect(() => {
     dispatch({ type: "config/fetchAllConfig" });
   }, [dispatch]);
+
+  const handleTabChange = (key: string) => {
+    history.push({ search: `?tab=${key}` });
+  };
 
   if (loading) {
     return (
@@ -43,7 +52,12 @@ const ConfigPage: React.FC<ConfigPageProps> = ({
   return (
     <div className="config-page">
       <Card bordered={false}>
-        <Tabs defaultActiveKey="order" size="large" type="card">
+        <Tabs
+          activeKey={activeTab}
+          onChange={handleTabChange}
+          size="large"
+          type="card"
+        >
           <TabPane
             tab={
               <span>
