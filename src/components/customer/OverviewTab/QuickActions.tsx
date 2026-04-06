@@ -10,6 +10,7 @@ import {
   Row,
   Col,
   Modal,
+  Alert,
 } from "antd";
 import {
   PlusOutlined,
@@ -19,11 +20,13 @@ import {
   DollarOutlined,
   LinkOutlined,
   NotificationOutlined,
+  MailOutlined,
 } from "@ant-design/icons";
 import { CustomerDetailData } from "../types/customer.types";
 import { useCustomerActions } from "../hooks/useCustomerActions";
 import { VIP_LEVELS } from "../utils/constants";
 import Captcha from "@src/packages/pro-component/schema/Captcha";
+import { activeEmailCustomerManual } from "@src/services/customer";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -42,10 +45,10 @@ const QuickActions: React.FC<QuickActionsProps> = ({
   const [balanceAmount, setBalanceAmount] = useState<string>("");
   const [balanceNote, setBalanceNote] = useState<string>("");
   const [newVipLevel, setNewVipLevel] = useState<number>(
-    customerData.customer.currentVipLevel
+    customerData.customer.currentVipLevel,
   );
   const [isMarketing, setIsMarketing] = useState<boolean>(
-    customerData.customer.isAccountMarketing
+    customerData.customer.isAccountMarketing,
   );
   const [newInviterNickname, setNewInviterNickname] = useState<string>("");
 
@@ -57,6 +60,12 @@ const QuickActions: React.FC<QuickActionsProps> = ({
     data: any;
   } | null>(null);
 
+  // Email activation states
+  const [emailActivationModalVisible, setEmailActivationModalVisible] =
+    useState(false);
+  const [emailCaptchaToken, setEmailCaptchaToken] = useState<string>("");
+  const [activatingEmail, setActivatingEmail] = useState(false);
+
   const {
     addBalance,
     subtractBalance,
@@ -65,6 +74,43 @@ const QuickActions: React.FC<QuickActionsProps> = ({
     changeInviter,
     loading,
   } = useCustomerActions();
+
+  // Email activation handlers
+  const handleActivateEmail = () => {
+    setEmailActivationModalVisible(true);
+  };
+
+  const handleEmailCaptchaConfirm = async () => {
+    if (!emailCaptchaToken) {
+      message.error("Vui lòng nhập mã captcha");
+      return;
+    }
+
+    setActivatingEmail(true);
+    try {
+      const response = await activeEmailCustomerManual(
+        customerId,
+        emailCaptchaToken,
+      );
+      if ("errorCode" in response) {
+        throw new Error(response.message || "Kích hoạt email thất bại");
+      } else {
+        message.success("Kích hoạt email thành công");
+        setEmailActivationModalVisible(false);
+        setEmailCaptchaToken("");
+        onDataUpdate();
+      }
+    } catch (error: any) {
+      message.error(error.message || "Có lỗi xảy ra khi kích hoạt email");
+    } finally {
+      setActivatingEmail(false);
+    }
+  };
+
+  const handleEmailCaptchaCancel = () => {
+    setEmailActivationModalVisible(false);
+    setEmailCaptchaToken("");
+  };
 
   const handleAddBalance = () => {
     if (!balanceAmount || parseFloat(balanceAmount) <= 0) {
@@ -140,7 +186,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
             customerId,
             pendingAction.data.amount,
             captchaToken,
-            pendingAction.data.note
+            pendingAction.data.note,
           );
           setBalanceAmount("");
           setBalanceNote("");
@@ -150,7 +196,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
             customerId,
             pendingAction.data.amount,
             captchaToken,
-            pendingAction.data.note
+            pendingAction.data.note,
           );
           setBalanceAmount("");
           setBalanceNote("");
@@ -159,7 +205,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
           await updateVipLevel(
             customerId,
             pendingAction.data.newLevel,
-            captchaToken
+            captchaToken,
           );
           break;
       }
@@ -178,13 +224,42 @@ const QuickActions: React.FC<QuickActionsProps> = ({
     setPendingAction(null);
   };
 
+  const emailNotVerified = !customerData.customer.isVerifyEmail;
+
   return (
     <div className="quick-actions">
-      <Card
-        title="Thao tác nhanh"
-        size="small"
-        className="quick-actions__card"
-      >
+      <Card title="Thao tác nhanh" size="small" className="quick-actions__card">
+        {/* Email Activation — top, prominent */}
+        {emailNotVerified && (
+          <>
+            <div className="quick-actions__section">
+              <Alert
+                message="Email chưa xác thực"
+                description={
+                  <div style={{ marginTop: 8 }}>
+                    <div style={{ marginBottom: 8, fontSize: 12 }}>
+                      {customerData.customer.email}
+                    </div>
+                    <Button
+                      type="primary"
+                      icon={<MailOutlined />}
+                      block
+                      size="small"
+                      onClick={handleActivateEmail}
+                      loading={activatingEmail}
+                    >
+                      Kích hoạt Email
+                    </Button>
+                  </div>
+                }
+                type="warning"
+                showIcon
+              />
+            </div>
+            <Divider className="quick-actions__divider" />
+          </>
+        )}
+
         {/* Balance Management */}
         <div className="quick-actions__section">
           <h4 className="quick-actions__section-title">
@@ -275,9 +350,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
             size="small"
             onClick={handleUpdateVipLevel}
             loading={loading.updateVip}
-            disabled={
-              newVipLevel === customerData.customerVip?.currentVipLevel
-            }
+            disabled={newVipLevel === customerData.customerVip?.currentVipLevel}
           >
             Cập nhật VIP
           </Button>
@@ -349,6 +422,24 @@ const QuickActions: React.FC<QuickActionsProps> = ({
       >
         <p>Vui lòng nhập mã captcha để xác thực thao tác:</p>
         <Captcha onChange={setCaptchaToken} />
+      </Modal>
+
+      {/* Email Activation Modal */}
+      <Modal
+        title="Kích hoạt Email"
+        visible={emailActivationModalVisible}
+        onOk={handleEmailCaptchaConfirm}
+        onCancel={handleEmailCaptchaCancel}
+        okText="Xác nhận"
+        cancelText="Hủy"
+        confirmLoading={activatingEmail}
+      >
+        <p>
+          Bạn có chắc chắn muốn kích hoạt email cho khách hàng{" "}
+          <strong>{customerData.customer.email}</strong>?
+        </p>
+        <p>Vui lòng nhập mã captcha để xác thực:</p>
+        <Captcha onChange={setEmailCaptchaToken} />
       </Modal>
     </div>
   );
