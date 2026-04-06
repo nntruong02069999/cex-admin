@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Spin, message, Result, Button } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 import CustomerHeader from "../CustomerHeader";
-import SummaryCards from "../SummaryCards";
+import StatusBar from "../StatusBar";
+import FinancialSummary from "../FinancialSummary";
 import TabContainer from "../TabContainer";
+import QuickActions from "../OverviewTab/QuickActions";
 import { useCustomerData } from "../hooks/useCustomerData";
 import "./CustomerDetail.less";
 
-interface CustomerDetailProps {}
-
-const CustomerDetail: React.FC<CustomerDetailProps> = () => {
+const CustomerDetail: React.FC = () => {
   const { customerId } = useParams<{ customerId: string }>();
   const { data, loading, error, refetch } = useCustomerData(
     parseInt(customerId || "0")
@@ -87,17 +87,27 @@ const CustomerDetail: React.FC<CustomerDetailProps> = () => {
           onRefresh={handleRefresh}
         />
 
-        <SummaryCards
-          customer={data.customer}
-          customerMoney={data.customerMoney}
-          networkSummary={data.networkSummary}
-        />
+        <StatusBar customer={data.customer} />
 
-        <TabContainer
-          customerId={parseInt(customerId || "0")}
-          customerData={data}
-          onDataUpdate={refetch}
-        />
+        <div className="customer-detail__body">
+          <div className="customer-detail__main">
+            <FinancialSummary customerMoney={data.customerMoney} />
+
+            <TabContainer
+              customerId={parseInt(customerId || "0")}
+              customerData={data}
+              onDataUpdate={refetch}
+            />
+          </div>
+
+          <aside className="customer-detail__sidebar">
+            <QuickActions
+              customerId={parseInt(customerId || "0")}
+              customerData={data}
+              onDataUpdate={refetch}
+            />
+          </aside>
+        </div>
       </div>
     </div>
   );

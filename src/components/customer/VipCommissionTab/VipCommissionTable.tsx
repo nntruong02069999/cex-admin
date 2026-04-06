@@ -127,9 +127,9 @@ const VipCommissionTable: React.FC<VipCommissionTableProps> = ({
       key: "status",
       render: (status: VipCommissionStatus, record: VipCommission) => {
         const statusMap = {
-          [VipCommissionStatus.PAID]: "✅ Đã trả",
-          [VipCommissionStatus.PENDING]: "⏳ Chờ xử lý",
-          [VipCommissionStatus.CANCELLED]: "❌ Đã hủy",
+          [VipCommissionStatus.PAID]: "Đã trả",
+          [VipCommissionStatus.PENDING]: "Chờ xử lý",
+          [VipCommissionStatus.CANCELLED]: "Đã hủy",
         };
 
         return (
@@ -225,7 +225,7 @@ const VipCommissionTable: React.FC<VipCommissionTableProps> = ({
   };
 
   return (
-    <Card title="📋 Lịch sử Hoa hồng VIP">
+    <Card title="Lịch sử Hoa hồng VIP">
       {/* Filters */}
       <Card size="small" style={{ marginBottom: 16 }}>
         <Row gutter={16} align="middle">

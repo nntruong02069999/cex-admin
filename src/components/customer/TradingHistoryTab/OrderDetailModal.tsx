@@ -39,15 +39,15 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
   const getStatusText = (status: OrderStatus) => {
     switch (status) {
       case OrderStatus.PENDING:
-        return '⏳ Chờ';
+        return 'Chờ';
       case OrderStatus.SUCCESS:
-        return '🏆 WIN';
+        return 'WIN';
       case OrderStatus.FAILED:
-        return '❌ LOST';
+        return 'LOST';
       case OrderStatus.CANCELLED:
-        return '❌ LOST';
+        return 'LOST';
       case OrderStatus.EXPIRED:
-        return '❌ LOST';
+        return 'LOST';
       default:
         return status;
     }
@@ -56,9 +56,9 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
   const getSideText = (side: OrderSide) => {
     switch (side) {
       case OrderSide.BUY:
-        return '📈 MUA';
+        return 'MUA';
       case OrderSide.SELL:
-        return '📉 BÁN';
+        return 'BÁN';
       default:
         return side;
     }
@@ -67,9 +67,9 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
   const getTypeText = (type: OrderType) => {
     switch (type) {
       case OrderType.LIVE:
-        return '🔴 LIVE';
+        return 'LIVE';
       case OrderType.DEMO:
-        return '🟡 DEMO';
+        return 'DEMO';
       default:
         return type;
     }

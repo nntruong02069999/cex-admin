@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, message } from "antd";
+import { WalletOutlined, DollarOutlined } from "@ant-design/icons";
 import { USDTTransaction, WalletTransaction } from "../types/customer.types";
 import {
   getCustomerUSDTTransactions,
@@ -92,7 +93,7 @@ const TransactionsTab: React.FC<TransactionsTabProps> = ({ customerId }) => {
         type="card"
         className="transactions-sub-tabs"
       >
-        <TabPane key="usdt" tab={<span>🪙 Giao dịch USDT</span>}>
+        <TabPane key="usdt" tab={<span><WalletOutlined /> Giao dịch USDT</span>}>
           <USDTTransactions
             transactions={usdtTransactions}
             loading={usdtLoading}
@@ -100,7 +101,7 @@ const TransactionsTab: React.FC<TransactionsTabProps> = ({ customerId }) => {
           />
         </TabPane>
 
-        <TabPane key="wallet" tab={<span>💰 Giao dịch Ví</span>}>
+        <TabPane key="wallet" tab={<span><DollarOutlined /> Giao dịch Ví</span>}>
           <WalletTransactions
             transactions={walletTransactions}
             loading={walletLoading}

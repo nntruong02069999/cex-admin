@@ -26,7 +26,7 @@ const DepositsSummary: React.FC<DepositsSummaryProps> = ({
       <Col xs={24} sm={8}>
         <Card>
           <Statistic
-            title="✅ Nạp thành công"
+            title="Nạp thành công"
             value={successful.amount.toFixed(2)}
             precision={2}
             suffix="$"
@@ -41,7 +41,7 @@ const DepositsSummary: React.FC<DepositsSummaryProps> = ({
       <Col xs={24} sm={8}>
         <Card>
           <Statistic
-            title="⏳ Nạp chờ"
+            title="Nạp chờ"
             value={pending.amount.toFixed(2)}
             precision={2}
             suffix="$"
@@ -56,7 +56,7 @@ const DepositsSummary: React.FC<DepositsSummaryProps> = ({
       <Col xs={24} sm={8}>
         <Card>
           <Statistic
-            title="❌ Nạp lỗi"
+            title="Nạp lỗi"
             value={failed.amount.toFixed(2)}
             precision={2}
             suffix="$"

@@ -45,7 +45,7 @@ const VipCommissionTab: React.FC<VipCommissionTabProps> = ({ customerId }) => {
   return (
     <div className="vip-commission-tab">
       {/* VIP Information */}
-      <Card title="👑 Thông tin VIP" style={{ marginBottom: 24 }}>
+      <Card title="Thông tin VIP" style={{ marginBottom: 24 }}>
         <Row gutter={16}>
           <Col span={12}>
             <div style={{ textAlign: "center", padding: "12px 0" }}>
@@ -102,7 +102,7 @@ const VipCommissionTab: React.FC<VipCommissionTabProps> = ({ customerId }) => {
                   >
                     {formatCurrency(summaryData?.totalCommission || 0)}
                   </div>
-                  <div style={{ color: "#666" }}>💰 Tổng</div>
+                  <div style={{ color: "#666" }}>Tổng</div>
                 </>
               )}
             </div>
@@ -125,7 +125,7 @@ const VipCommissionTab: React.FC<VipCommissionTabProps> = ({ customerId }) => {
                   >
                     {formatCurrency(summaryData?.monthlyCommission || 0)}
                   </div>
-                  <div style={{ color: "#666" }}>📅 Tháng này</div>
+                  <div style={{ color: "#666" }}>Tháng này</div>
                 </>
               )}
             </div>
@@ -148,7 +148,7 @@ const VipCommissionTab: React.FC<VipCommissionTabProps> = ({ customerId }) => {
                   >
                     {summaryData?.totalF1Vip || 0}
                   </div>
-                  <div style={{ color: "#666" }}>👑 Tổng F1 VIP</div>
+                  <div style={{ color: "#666" }}>Tổng F1 VIP</div>
                 </>
               )}
             </div>

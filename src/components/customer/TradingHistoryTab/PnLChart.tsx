@@ -66,14 +66,14 @@ const PnLChart: React.FC<PnLChartProps> = ({ data }) => {
           }}
         >
           <p style={{ margin: 0, fontWeight: "bold", marginBottom: 8 }}>
-            📅 {moment(data.date).format("DD/MM/YYYY")}
+            {moment(data.date).format("DD/MM/YYYY")}
           </p>
           <p style={{ margin: 0, color: "#1890ff" }}>
-            💰 Tổng giao dịch:{" "}
+            Tổng giao dịch:{" "}
             <strong>{formatCurrency(data.totalTrading)}</strong>
           </p>
           <p style={{ margin: 0, color: "#52c41a" }}>
-            🏆 Tổng thắng:{" "}
+            Tổng thắng:{" "}
             <strong>{formatCurrency(data.totalWinAmount)}</strong>
           </p>
           <p
@@ -82,14 +82,14 @@ const PnLChart: React.FC<PnLChartProps> = ({ data }) => {
               color: data.pnl >= 0 ? "#3f8600" : "#cf1322",
             }}
           >
-            📊 P&L:{" "}
+            P&L:{" "}
             <strong>
               {data.pnl >= 0 ? "+" : ""}
               {formatCurrency(data.pnl)}
             </strong>
           </p>
           <p style={{ margin: 0, color: "#666" }}>
-            📈 Tỷ lệ thắng: <strong>{data.winRate.toFixed(1)}%</strong>
+            Tỷ lệ thắng: <strong>{data.winRate.toFixed(1)}%</strong>
           </p>
         </div>
       );
@@ -258,7 +258,7 @@ const PnLChart: React.FC<PnLChartProps> = ({ data }) => {
           }}
         >
           <Title level={4} style={{ margin: 0, color: "#262626" }}>
-            📈 Biểu đồ P&L theo ngày
+            Biểu đồ P&L theo ngày
           </Title>
           <Radio.Group
             value={chartType}

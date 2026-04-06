@@ -116,7 +116,7 @@ const VipDailyChart: React.FC<VipDailyChartProps> = ({ customerId }) => {
   const rankChange = dailyData[dailyData.length - 1]?.rankChange || 0;
 
   return (
-    <Card title="📈 Biểu đồ Hoa hồng VIP" style={{ marginBottom: 24 }}>
+    <Card title="Biểu đồ Hoa hồng VIP" style={{ marginBottom: 24 }}>
       {/* Controls */}
       <Row gutter={16} style={{ marginBottom: 16 }}>
         <Col span={12}>
@@ -148,7 +148,7 @@ const VipDailyChart: React.FC<VipDailyChartProps> = ({ customerId }) => {
         <Col xs={12} sm={6}>
           <Card size="small">
             <Statistic
-              title="💰 Tổng HH"
+              title="Tổng HH"
               value={totals.totalCommission}
               formatter={(value) => formatCurrency(Number(value))}
               valueStyle={{ fontSize: 16, color: "#52c41a" }}
@@ -158,7 +158,7 @@ const VipDailyChart: React.FC<VipDailyChartProps> = ({ customerId }) => {
         <Col xs={12} sm={6}>
           <Card size="small">
             <Statistic
-              title="📈 Tổng F1 Trading Volume"
+              title="Tổng F1 Trading Volume"
               value={totals.totalF1TradingVolume}
               formatter={(value) => formatCurrency(Number(value), "USDT")}
               valueStyle={{ fontSize: 16, color: "#1890ff" }}
@@ -168,7 +168,7 @@ const VipDailyChart: React.FC<VipDailyChartProps> = ({ customerId }) => {
         <Col xs={12} sm={6}>
           <Card size="small">
             <Statistic
-              title="📊 Xếp hạng"
+              title="Xếp hạng"
               value={currentRank}
               suffix={
                 rankChange !== 0
@@ -192,7 +192,7 @@ const VipDailyChart: React.FC<VipDailyChartProps> = ({ customerId }) => {
         <Col xs={12} sm={6}>
           <Card size="small">
             <Statistic
-              title="💱 Tổng Volume"
+              title="Tổng Volume"
               value={totals.totalVolume}
               formatter={(value) => formatCurrency(Number(value))}
               valueStyle={{ fontSize: 16, color: "#722ed1" }}

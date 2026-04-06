@@ -16,10 +16,12 @@ import {
   MinusOutlined,
   CrownOutlined,
   UserSwitchOutlined,
+  DollarOutlined,
+  LinkOutlined,
+  NotificationOutlined,
 } from "@ant-design/icons";
 import { CustomerDetailData } from "../types/customer.types";
 import { useCustomerActions } from "../hooks/useCustomerActions";
-import { formatCurrency } from "../utils/formatters";
 import { VIP_LEVELS } from "../utils/constants";
 import Captcha from "@src/packages/pro-component/schema/Captcha";
 
@@ -46,12 +48,12 @@ const QuickActions: React.FC<QuickActionsProps> = ({
     customerData.customer.isAccountMarketing
   );
   const [newInviterNickname, setNewInviterNickname] = useState<string>("");
-  
+
   // Captcha states
   const [captchaModalVisible, setCaptchaModalVisible] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string>("");
   const [pendingAction, setPendingAction] = useState<{
-    type: 'ADD_BALANCE' | 'SUBTRACT_BALANCE' | 'UPDATE_VIP';
+    type: "ADD_BALANCE" | "SUBTRACT_BALANCE" | "UPDATE_VIP";
     data: any;
   } | null>(null);
 
@@ -64,41 +66,38 @@ const QuickActions: React.FC<QuickActionsProps> = ({
     loading,
   } = useCustomerActions();
 
-  const handleAddBalance = async () => {
+  const handleAddBalance = () => {
     if (!balanceAmount || parseFloat(balanceAmount) <= 0) {
       message.error("Vui lòng nhập số tiền hợp lệ");
       return;
     }
-
     setPendingAction({
-      type: 'ADD_BALANCE',
-      data: { amount: parseFloat(balanceAmount), note: balanceNote }
+      type: "ADD_BALANCE",
+      data: { amount: parseFloat(balanceAmount), note: balanceNote },
     });
     setCaptchaModalVisible(true);
   };
 
-  const handleSubtractBalance = async () => {
+  const handleSubtractBalance = () => {
     if (!balanceAmount || parseFloat(balanceAmount) <= 0) {
       message.error("Vui lòng nhập số tiền hợp lệ");
       return;
     }
-
     setPendingAction({
-      type: 'SUBTRACT_BALANCE',
-      data: { amount: parseFloat(balanceAmount), note: balanceNote }
+      type: "SUBTRACT_BALANCE",
+      data: { amount: parseFloat(balanceAmount), note: balanceNote },
     });
     setCaptchaModalVisible(true);
   };
 
-  const handleUpdateVipLevel = async () => {
+  const handleUpdateVipLevel = () => {
     if (newVipLevel === customerData.customer.currentVipLevel) {
       message.warning("Cấp VIP mới giống cấp hiện tại");
       return;
     }
-
     setPendingAction({
-      type: 'UPDATE_VIP',
-      data: { newLevel: newVipLevel }
+      type: "UPDATE_VIP",
+      data: { newLevel: newVipLevel },
     });
     setCaptchaModalVisible(true);
   };
@@ -109,7 +108,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
       setIsMarketing(checked);
       onDataUpdate();
     } catch (error) {
-      setIsMarketing(!checked); // Revert on error
+      setIsMarketing(!checked);
     }
   };
 
@@ -118,7 +117,6 @@ const QuickActions: React.FC<QuickActionsProps> = ({
       message.error("Vui lòng nhập nickname người giới thiệu");
       return;
     }
-
     try {
       await changeInviter(customerId, newInviterNickname.trim());
       setNewInviterNickname("");
@@ -133,28 +131,38 @@ const QuickActions: React.FC<QuickActionsProps> = ({
       message.error("Vui lòng nhập mã captcha");
       return;
     }
-
-    if (!pendingAction) {
-      return;
-    }
+    if (!pendingAction) return;
 
     try {
       switch (pendingAction.type) {
-        case 'ADD_BALANCE':
-          await addBalance(customerId, pendingAction.data.amount, captchaToken, pendingAction.data.note);
+        case "ADD_BALANCE":
+          await addBalance(
+            customerId,
+            pendingAction.data.amount,
+            captchaToken,
+            pendingAction.data.note
+          );
           setBalanceAmount("");
           setBalanceNote("");
           break;
-        case 'SUBTRACT_BALANCE':
-          await subtractBalance(customerId, pendingAction.data.amount, captchaToken, pendingAction.data.note);
+        case "SUBTRACT_BALANCE":
+          await subtractBalance(
+            customerId,
+            pendingAction.data.amount,
+            captchaToken,
+            pendingAction.data.note
+          );
           setBalanceAmount("");
           setBalanceNote("");
           break;
-        case 'UPDATE_VIP':
-          await updateVipLevel(customerId, pendingAction.data.newLevel, captchaToken);
+        case "UPDATE_VIP":
+          await updateVipLevel(
+            customerId,
+            pendingAction.data.newLevel,
+            captchaToken
+          );
           break;
       }
-      
       setCaptchaModalVisible(false);
       setCaptchaToken("");
       setPendingAction(null);
@@ -172,21 +180,26 @@ const QuickActions: React.FC<QuickActionsProps> = ({
 
   return (
     <div className="quick-actions">
-      {/* Actions Panel */}
-      <Card title="Thao tác Nhanh" className="actions-card">
+      <Card
+        title="Thao tác nhanh"
+        size="small"
+        className="quick-actions__card"
+      >
         {/* Balance Management */}
-        <div className="action-section">
-          <h4 className="action-title">💰 Quản lý Số dư</h4>
+        <div className="quick-actions__section">
+          <h4 className="quick-actions__section-title">
+            <DollarOutlined /> Quản lý số dư
+          </h4>
 
           <Input
             placeholder="Nhập số tiền"
             value={balanceAmount}
             onChange={(e) => setBalanceAmount(e.target.value)}
-            style={{ marginBottom: 8 }}
             addonAfter="USD"
             type="number"
             min="0"
             step="0.01"
+            className="quick-actions__input"
           />
 
           <TextArea
@@ -194,8 +207,8 @@ const QuickActions: React.FC<QuickActionsProps> = ({
             value={balanceNote}
             onChange={(e) => setBalanceNote(e.target.value)}
             rows={2}
-            style={{ marginBottom: 8 }}
             maxLength={200}
+            className="quick-actions__input"
           />
 
           <Row gutter={8}>
@@ -207,8 +220,9 @@ const QuickActions: React.FC<QuickActionsProps> = ({
                 onClick={handleAddBalance}
                 loading={loading.addBalance}
                 disabled={!balanceAmount || parseFloat(balanceAmount) <= 0}
+                size="small"
               >
-                Cộng tiền
+                Cộng
               </Button>
             </Col>
             <Col span={12}>
@@ -219,31 +233,33 @@ const QuickActions: React.FC<QuickActionsProps> = ({
                 onClick={handleSubtractBalance}
                 loading={loading.subtractBalance}
                 disabled={!balanceAmount || parseFloat(balanceAmount) <= 0}
+                size="small"
               >
-                Trừ tiền
+                Trừ
               </Button>
             </Col>
           </Row>
         </div>
 
-        <Divider />
+        <Divider className="quick-actions__divider" />
 
         {/* VIP Management */}
-        <div className="action-section">
-          <h4 className="action-title">👑 Quản lý VIP</h4>
+        <div className="quick-actions__section">
+          <h4 className="quick-actions__section-title">
+            <CrownOutlined /> Quản lý VIP
+          </h4>
 
-          <div className="current-vip">
-            <span>Cấp hiện tại: </span>
-            <strong className="vip-level">
-              Level {customerData.customerVip?.currentVipLevel}
-            </strong>
+          <div className="quick-actions__current">
+            <span>Cấp hiện tại:</span>
+            <strong>Level {customerData.customerVip?.currentVipLevel}</strong>
           </div>
 
           <Select
             placeholder="Chọn cấp VIP mới"
             value={newVipLevel}
             onChange={setNewVipLevel}
-            style={{ width: "100%", margin: "8px 0" }}
+            className="quick-actions__select"
+            size="small"
           >
             {VIP_LEVELS.map((level) => (
               <Option key={level.value} value={level.value}>
@@ -256,149 +272,65 @@ const QuickActions: React.FC<QuickActionsProps> = ({
             type="primary"
             icon={<CrownOutlined />}
             block
+            size="small"
             onClick={handleUpdateVipLevel}
             loading={loading.updateVip}
-            disabled={newVipLevel === customerData.customerVip?.currentVipLevel}
+            disabled={
+              newVipLevel === customerData.customerVip?.currentVipLevel
+            }
           >
-            Cập nhật Cấp VIP
+            Cập nhật VIP
           </Button>
         </div>
 
-        <Divider />
+        <Divider className="quick-actions__divider" />
 
         {/* Inviter Management */}
-        <div className="action-section">
-          <h4 className="action-title">🔗 Quản lý Người giới thiệu</h4>
+        <div className="quick-actions__section">
+          <h4 className="quick-actions__section-title">
+            <LinkOutlined /> Người giới thiệu
+          </h4>
 
           <Input
-            placeholder="Nhập nickname người giới thiệu mới"
+            placeholder="Nhập nickname mới"
             value={newInviterNickname}
             onChange={(e) => setNewInviterNickname(e.target.value)}
-            style={{ marginBottom: 8 }}
             maxLength={50}
+            size="small"
+            className="quick-actions__input"
           />
 
           <Button
             type="primary"
             icon={<UserSwitchOutlined />}
             block
+            size="small"
             onClick={handleChangeInviter}
             loading={loading.changeInviter}
             disabled={!newInviterNickname.trim()}
           >
-            Thay đổi Người giới thiệu
+            Thay đổi
           </Button>
         </div>
 
-        <Divider />
+        <Divider className="quick-actions__divider" />
 
         {/* Marketing Account */}
-        <div className="action-section">
-          <h4 className="action-title">📢 Tài khoản Marketing</h4>
+        <div className="quick-actions__section">
+          <h4 className="quick-actions__section-title">
+            <NotificationOutlined /> Marketing
+          </h4>
 
-          <div className="marketing-switch">
-            <div className="switch-container">
-              <span>Kích hoạt tài khoản marketing:</span>
-              <Switch
-                checked={isMarketing}
-                onChange={handleUpdateMarketing}
-                loading={loading.updateMarketing}
-                checkedChildren="BẬT"
-                unCheckedChildren="TẮT"
-              />
-            </div>
-          </div>
-
-          <div className="marketing-note">
-            <small>Bật để gán tài khoản marketing cho khách hàng</small>
-          </div>
-        </div>
-      </Card>
-
-      {/* Quick Stats */}
-      <Card title="Thống kê Nhanh" className="stats-card">
-        <div className="quick-stats">
-          <div className="stat-section">
-            <h5 className="stat-section-title">💰 Tài chính</h5>
-            <div className="stat-item">
-              <span>Balance:</span>
-              <strong>
-                {formatCurrency(customerData.customerMoney.balance)}
-              </strong>
-            </div>
-            <div className="stat-item">
-              <span>USDT:</span>
-              <strong>
-                {formatCurrency(customerData.customerMoney.balanceUSDT, "USDT")}
-              </strong>
-            </div>
-            <div className="stat-item">
-              <span>Frozen:</span>
-              <strong className="text-warning">
-                {formatCurrency(customerData.customerMoney.frozen)}
-              </strong>
-            </div>
-            <div className="stat-item">
-              <span>Demo:</span>
-              <strong className="text-info">
-                {formatCurrency(customerData.customerMoney.balanceDemo)}
-              </strong>
-            </div>
-          </div>
-
-          <Divider />
-
-          <div className="stat-section">
-            <h5 className="stat-section-title">📈 Trading</h5>
-            <div className="stat-item">
-              <span>Tỷ lệ thắng:</span>
-              <strong className="text-success">
-                {(
-                  (customerData.customerMoney.totalTradeWinCount /
-                    Math.max(customerData.customerMoney.totalTradeCount, 1)) *
-                  100
-                ).toFixed(1)}
-                %
-              </strong>
-            </div>
-            <div className="stat-item">
-              <span>Tổng lệnh:</span>
-              <strong>{customerData.customerMoney.totalTradeCount}</strong>
-            </div>
-            <div className="stat-item">
-              <span>Volume:</span>
-              <strong>
-                {formatCurrency(customerData.customerMoney.totalTradeAmount)}
-              </strong>
-            </div>
-          </div>
-
-          <Divider />
-
-          <div className="stat-section">
-            <h5 className="stat-section-title">🌐 Network</h5>
-            <div className="stat-item">
-              <span>Tổng thành viên:</span>
-              <strong>{customerData.networkSummary.totalMembers}</strong>
-            </div>
-            <div className="stat-item">
-              <span>VIP:</span>
-              <strong className="text-vip">
-                {customerData.networkSummary.totalVip}
-              </strong>
-            </div>
-            <div className="stat-item">
-              <span>Tháng này:</span>
-              <strong className="text-success">
-                +{customerData.networkSummary.monthlyGrowth}
-              </strong>
-            </div>
-            <div className="stat-item">
-              <span>Hoa hồng:</span>
-              <strong className="text-success">
-                {formatCurrency(customerData.customerMoney.totalCommission)}
-              </strong>
-            </div>
+          <div className="quick-actions__switch-row">
+            <span>Tài khoản marketing</span>
+            <Switch
+              checked={isMarketing}
+              onChange={handleUpdateMarketing}
+              loading={loading.updateMarketing}
+              checkedChildren="ON"
+              unCheckedChildren="OFF"
+              size="small"
+            />
           </div>
         </div>
       </Card>
@@ -411,12 +343,12 @@ const QuickActions: React.FC<QuickActionsProps> = ({
         onCancel={handleCaptchaCancel}
         okText="Xác nhận"
         cancelText="Hủy"
-        confirmLoading={loading.addBalance || loading.subtractBalance || loading.updateVip}
+        confirmLoading={
+          loading.addBalance || loading.subtractBalance || loading.updateVip
+        }
       >
-        <div style={{ marginBottom: 16 }}>
-          <p>Vui lòng nhập mã captcha để xác thực thao tác:</p>
-          <Captcha onChange={setCaptchaToken} />
-        </div>
+        <p>Vui lòng nhập mã captcha để xác thực thao tác:</p>
+        <Captcha onChange={setCaptchaToken} />
       </Modal>
     </div>
   );

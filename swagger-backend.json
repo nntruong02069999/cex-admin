@@ -591,6 +591,535 @@
                 }
             }
         },
+        "/api/admin/customer/get-list-v2": {
+            "get": {
+                "tags": [
+                    "Admin/Customer"
+                ],
+                "parameters": [
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "name": "search",
+                        "required": false,
+                        "description": "Tìm kiếm gộp theo nickname, email, uuid (contains). Nếu là số sẽ tìm thêm theo id (exact match)"
+                    },
+                    {
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "in": "query",
+                        "name": "isVerifyEmail",
+                        "required": false,
+                        "description": "Lọc theo trạng thái xác thực email"
+                    },
+                    {
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "not_submit",
+                                "pending",
+                                "approved",
+                                "rejected"
+                            ]
+                        },
+                        "in": "query",
+                        "name": "statusDocument",
+                        "required": false,
+                        "description": "Lọc theo trạng thái KYC: not_submit | pending | approved | rejected"
+                    },
+                    {
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "in": "query",
+                        "name": "isVip",
+                        "required": false,
+                        "description": "Lọc theo trạng thái VIP"
+                    },
+                    {
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "in": "query",
+                        "name": "isAccountMarketing",
+                        "required": false,
+                        "description": "Lọc tài khoản marketing"
+                    },
+                    {
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 7
+                        },
+                        "in": "query",
+                        "name": "vipLevel",
+                        "required": false,
+                        "description": "Lọc theo cấp VIP (0-7)"
+                    },
+                    {
+                        "schema": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "in": "query",
+                        "name": "minBalance",
+                        "required": false,
+                        "description": "Số dư tối thiểu (USDT)"
+                    },
+                    {
+                        "schema": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "in": "query",
+                        "name": "maxBalance",
+                        "required": false,
+                        "description": "Số dư tối đa (USDT)"
+                    },
+                    {
+                        "schema": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "in": "query",
+                        "name": "minTotalDeposit",
+                        "required": false,
+                        "description": "Tổng nạp tối thiểu (USDT)"
+                    },
+                    {
+                        "schema": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "in": "query",
+                        "name": "maxTotalDeposit",
+                        "required": false,
+                        "description": "Tổng nạp tối đa (USDT)"
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "name": "inviterEmail",
+                        "required": false,
+                        "description": "Lọc theo email người giới thiệu"
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "name": "inviterUuid",
+                        "required": false,
+                        "description": "Lọc theo UUID người giới thiệu"
+                    },
+                    {
+                        "schema": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                        },
+                        "in": "query",
+                        "name": "createdFrom",
+                        "required": false,
+                        "description": "Ngày đăng ký từ (Unix timestamp ms)"
+                    },
+                    {
+                        "schema": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                        },
+                        "in": "query",
+                        "name": "createdTo",
+                        "required": false,
+                        "description": "Ngày đăng ký đến (Unix timestamp ms)"
+                    },
+                    {
+                        "schema": {
+                            "default": "id",
+                            "type": "string",
+                            "enum": [
+                                "id",
+                                "createdAt",
+                                "balance",
+                                "totalDeposit"
+                            ]
+                        },
+                        "in": "query",
+                        "name": "sortBy",
+                        "required": false,
+                        "description": "Sắp xếp theo trường: id | createdAt | balance | totalDeposit"
+                    },
+                    {
+                        "schema": {
+                            "default": "desc",
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "in": "query",
+                        "name": "sortOrder",
+                        "required": false,
+                        "description": "Thứ tự sắp xếp: asc | desc (mặc định: desc)"
+                    },
+                    {
+                        "schema": {
+                            "default": 0,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                        },
+                        "in": "query",
+                        "name": "skip",
+                        "required": false,
+                        "description": "Số bản ghi bỏ qua (offset)"
+                    },
+                    {
+                        "schema": {
+                            "default": 20,
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "in": "query",
+                        "name": "limit",
+                        "required": false,
+                        "description": "Số bản ghi trả về mỗi lần (tối đa 100)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Default Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "description": "Mã trạng thái (0 = thành công)",
+                                            "type": "number"
+                                        },
+                                        "message": {
+                                            "description": "Thông báo kết quả",
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "description": "Danh sách khách hàng",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "ID khách hàng",
+                                                        "type": "number"
+                                                    },
+                                                    "nickname": {
+                                                        "description": "Nickname",
+                                                        "type": "string"
+                                                    },
+                                                    "firstName": {
+                                                        "description": "Tên",
+                                                        "anyOf": [
+                                                            {
+                                                                "type": "string"
+                                                            },
+                                                            {
+                                                                "type": "null"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "lastName": {
+                                                        "description": "Họ",
+                                                        "anyOf": [
+                                                            {
+                                                                "type": "string"
+                                                            },
+                                                            {
+                                                                "type": "null"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "email": {
+                                                        "description": "Email",
+                                                        "type": "string"
+                                                    },
+                                                    "uuid": {
+                                                        "description": "UUID định danh duy nhất",
+                                                        "type": "string"
+                                                    },
+                                                    "password": {
+                                                        "description": "Mật khẩu (đã giải mã)",
+                                                        "type": "string"
+                                                    },
+                                                    "avatar": {
+                                                        "description": "URL ảnh đại diện",
+                                                        "anyOf": [
+                                                            {
+                                                                "type": "string"
+                                                            },
+                                                            {
+                                                                "type": "null"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "isVerifyEmail": {
+                                                        "description": "Đã xác thực email",
+                                                        "type": "boolean"
+                                                    },
+                                                    "statusDocument": {
+                                                        "description": "Trạng thái KYC",
+                                                        "type": "string"
+                                                    },
+                                                    "isVip": {
+                                                        "description": "Là VIP",
+                                                        "anyOf": [
+                                                            {
+                                                                "type": "boolean"
+                                                            },
+                                                            {
+                                                                "type": "null"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "isAccountMarketing": {
+                                                        "description": "Là tài khoản marketing",
+                                                        "anyOf": [
+                                                            {
+                                                                "type": "boolean"
+                                                            },
+                                                            {
+                                                                "type": "null"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "createdAt": {
+                                                        "description": "Ngày tạo (Unix timestamp ms)",
+                                                        "anyOf": [
+                                                            {
+                                                                "type": "number"
+                                                            },
+                                                            {
+                                                                "type": "null"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "userLoginDate": {
+                                                        "description": "Lần đăng nhập cuối (Unix timestamp ms)",
+                                                        "anyOf": [
+                                                            {
+                                                                "type": "number"
+                                                            },
+                                                            {
+                                                                "type": "null"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "inviteCode": {
+                                                        "description": "Mã mời",
+                                                        "type": "string"
+                                                    },
+                                                    "inviterCustomerId": {
+                                                        "description": "ID người giới thiệu",
+                                                        "anyOf": [
+                                                            {
+                                                                "type": "number"
+                                                            },
+                                                            {
+                                                                "type": "null"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "inviterInfo": {
+                                                        "description": "Thông tin người giới thiệu (null nếu không có)",
+                                                        "anyOf": [
+                                                            {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "description": "ID người giới thiệu",
+                                                                        "type": "number"
+                                                                    },
+                                                                    "nickname": {
+                                                                        "description": "Nickname người giới thiệu",
+                                                                        "type": "string"
+                                                                    },
+                                                                    "email": {
+                                                                        "description": "Email người giới thiệu",
+                                                                        "type": "string"
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "id",
+                                                                    "nickname",
+                                                                    "email"
+                                                                ],
+                                                                "additionalProperties": false
+                                                            },
+                                                            {
+                                                                "type": "null"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "money": {
+                                                        "description": "Thông tin tài chính (null nếu chưa có)",
+                                                        "anyOf": [
+                                                            {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "balance": {
+                                                                        "description": "Số dư hiện tại (USDT)",
+                                                                        "type": "number"
+                                                                    },
+                                                                    "balanceUSDT": {
+                                                                        "description": "Số dư USDT on-chain",
+                                                                        "type": "number"
+                                                                    },
+                                                                    "total": {
+                                                                        "description": "Tổng tài sản (USDT)",
+                                                                        "type": "number"
+                                                                    },
+                                                                    "totalDeposit": {
+                                                                        "description": "Tổng nạp (USDT)",
+                                                                        "type": "number"
+                                                                    },
+                                                                    "totalWithdraw": {
+                                                                        "description": "Tổng rút (USDT)",
+                                                                        "type": "number"
+                                                                    },
+                                                                    "totalTradeAmount": {
+                                                                        "description": "Tổng khối lượng giao dịch (USDT)",
+                                                                        "type": "number"
+                                                                    },
+                                                                    "totalTradeAmountWin": {
+                                                                        "description": "Tổng khối lượng giao dịch thắng (USDT)",
+                                                                        "type": "number"
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "balance",
+                                                                    "balanceUSDT",
+                                                                    "total",
+                                                                    "totalDeposit",
+                                                                    "totalWithdraw",
+                                                                    "totalTradeAmount",
+                                                                    "totalTradeAmountWin"
+                                                                ],
+                                                                "additionalProperties": false
+                                                            },
+                                                            {
+                                                                "type": "null"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "vipLevel": {
+                                                        "description": "Cấp VIP hiện tại (0-7)",
+                                                        "type": "number"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "id",
+                                                    "nickname",
+                                                    "firstName",
+                                                    "lastName",
+                                                    "email",
+                                                    "uuid",
+                                                    "password",
+                                                    "avatar",
+                                                    "isVerifyEmail",
+                                                    "statusDocument",
+                                                    "isVip",
+                                                    "isAccountMarketing",
+                                                    "createdAt",
+                                                    "userLoginDate",
+                                                    "inviteCode",
+                                                    "inviterCustomerId",
+                                                    "inviterInfo",
+                                                    "money",
+                                                    "vipLevel"
+                                                ],
+                                                "additionalProperties": false
+                                            }
+                                        },
+                                        "total": {
+                                            "description": "Tổng số bản ghi phù hợp",
+                                            "type": "number"
+                                        },
+                                        "skip": {
+                                            "description": "Số bản ghi đã bỏ qua",
+                                            "type": "number"
+                                        },
+                                        "limit": {
+                                            "description": "Số bản ghi trả về mỗi lần",
+                                            "type": "number"
+                                        }
+                                    },
+                                    "required": [
+                                        "code",
+                                        "message",
+                                        "data",
+                                        "total",
+                                        "skip",
+                                        "limit"
+                                    ],
+                                    "additionalProperties": false
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Default Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "description": "Thông báo lỗi",
+                                            "type": "string"
+                                        },
+                                        "error": {
+                                            "description": "Chi tiết lỗi"
+                                        }
+                                    },
+                                    "required": [
+                                        "message"
+                                    ],
+                                    "additionalProperties": false
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/admin/game/get-completed-round": {
             "post": {
                 "summary": "Get completed round",
@@ -4546,7 +5075,15 @@
     },
     "servers": [
         {
-            "url": "https://api-v1.mimetrader.com",
+            "url": "http://localhost:7879",
+            "description": "Local host"
+        },
+        {
+            "url": "https://api-demo.bicoin.trade",
+            "description": "Development server"
+        },
+        {
+            "url": "https://api-v1.bicoin.trade",
             "description": "Production server"
         }
     ]

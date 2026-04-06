@@ -157,15 +157,15 @@ const USDTTransactions: React.FC<USDTTransactionsProps> = ({
   const getTypeText = (type: USDTTransactionType) => {
     switch (type) {
       case USDTTransactionType.DEPOSIT:
-        return "📥 Nạp USDT";
+        return "Nạp USDT";
       case USDTTransactionType.WITHDRAW:
-        return "📤 Rút USDT";
+        return "Rút USDT";
       case USDTTransactionType.PAYMENT:
-        return "💳 Thanh toán";
+        return "Thanh toán";
       case USDTTransactionType.DEPOSIT_INTERNAL:
-        return "📥 Nạp nội bộ";
+        return "Nạp nội bộ";
       case USDTTransactionType.WITHDRAW_INTERNAL:
-        return "📤 Rút nội bộ";
+        return "Rút nội bộ";
       default:
         return type;
     }

@@ -7,9 +7,10 @@ A comprehensive customer management interface built with React, TypeScript, Ant 
 ### Component Structure
 ```
 src/components/customer/
-├── CustomerDetail/           # Main container component
-├── CustomerHeader/           # Header with breadcrumb and actions
-├── SummaryCards/            # Financial summary cards
+├── CustomerDetail/           # Main container (2-column layout)
+├── CustomerHeader/           # Slim header with breadcrumb
+├── StatusBar/               # Inline status indicators
+├── FinancialSummary/        # Compact financial metric cards
 ├── TabContainer/            # Tab navigation component
 ├── OverviewTab/             # Customer overview and info
 │   ├── CustomerInfo/        # Basic customer information

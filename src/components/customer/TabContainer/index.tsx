@@ -30,20 +30,15 @@ const TabContainer: React.FC<TabContainerProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState("overview");
 
-  const handleTabChange = (key: string) => {
-    setActiveTab(key);
-  };
-
   return (
     <div className="tab-container">
       <Tabs
         activeKey={activeTab}
-        onChange={handleTabChange}
-        type="card"
-        size="large"
+        onChange={setActiveTab}
+        type="line"
         className="customer-tabs"
         tabPosition="top"
-        destroyInactiveTabPane={false} // Keep tab content for better UX
+        destroyInactiveTabPane={false}
       >
         <TabPane
           key="overview"
@@ -66,13 +61,11 @@ const TabContainer: React.FC<TabContainerProps> = ({
           tab={
             <span className="tab-label">
               <TransactionOutlined />
-              <span className="tab-text">Nạp/Rút tiền</span>
+              <span className="tab-text">Nạp/Rút</span>
             </span>
           }
         >
-          <DepositsWithdrawalsTab
-            customerId={customerId}
-          />
+          <DepositsWithdrawalsTab customerId={customerId} />
         </TabPane>
 
         <TabPane
@@ -84,9 +77,7 @@ const TabContainer: React.FC<TabContainerProps> = ({
             </span>
           }
         >
-          <TransactionsTab
-            customerId={customerId}
-          />
+          <TransactionsTab customerId={customerId} />
         </TabPane>
 
         <TabPane
@@ -94,13 +85,11 @@ const TabContainer: React.FC<TabContainerProps> = ({
           tab={
             <span className="tab-label">
               <TrophyOutlined />
-              <span className="tab-text">Lịch sử Cược</span>
+              <span className="tab-text">Lịch sử cược</span>
             </span>
           }
         >
-          <TradingHistoryTab
-            customerId={customerId}
-          />
+          <TradingHistoryTab customerId={customerId} />
         </TabPane>
 
         <TabPane

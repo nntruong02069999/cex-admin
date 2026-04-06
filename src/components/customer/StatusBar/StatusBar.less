@@ -1,0 +1,22 @@
+@import '~antd/lib/style/themes/default.less';
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 12px 24px;
+  background: @component-background;
+  border-radius: @border-radius-base;
+  border: 1px solid @border-color-split;
+  margin-bottom: 16px;
+
+  .@{ant-prefix}-tag {
+    margin: 0;
+    font-size: 12px;
+    line-height: 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+}

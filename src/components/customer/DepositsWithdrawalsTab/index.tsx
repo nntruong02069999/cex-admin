@@ -356,7 +356,7 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
     <div className="deposits-withdrawals-tab">
       {/* Deposits Summary */}
       <div style={{ marginBottom: 24 }}>
-        <h4>📥 Tóm tắt Nạp tiền</h4>
+        <h4>Tóm tắt Nạp tiền</h4>
         <Spin spinning={summaryLoading}>
           <DepositsSummary {...depositsSummaryData} />
         </Spin>
@@ -364,7 +364,7 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
 
       {/* Withdrawals Summary */}
       <div style={{ marginBottom: 24 }}>
-        <h4>📤 Tóm tắt Rút tiền</h4>
+        <h4>Tóm tắt Rút tiền</h4>
         <Spin spinning={summaryLoading}>
           <Row gutter={16}>
             <Col xs={12} sm={8} lg={4}>
@@ -382,7 +382,7 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
                     )}
                     $
                   </div>
-                  <div style={{ color: "#666" }}>✅ Rút thành công</div>
+                  <div style={{ color: "#666" }}>Rút thành công</div>
                   <div
                     style={{
                       fontSize: "12px",
@@ -412,7 +412,7 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
                     )}
                     $
                   </div>
-                  <div style={{ color: "#666" }}>⏳ Rút chờ</div>
+                  <div style={{ color: "#666" }}>Rút chờ</div>
                   <div
                     style={{
                       fontSize: "12px",
@@ -441,7 +441,7 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
                     )}
                     $
                   </div>
-                  <div style={{ color: "#666" }}>❌ Rút từ chối</div>
+                  <div style={{ color: "#666" }}>Rút từ chối</div>
                   <div
                     style={{
                       fontSize: "12px",
@@ -461,7 +461,7 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
       {/* Split Tables */}
       <Row gutter={24}>
         <Col xs={24} lg={12}>
-          <Card title="📥 LỊCH SỬ NẠP TIỀN">
+          <Card title="LỊCH SỬ NẠP TIỀN">
             <DepositsTable
               deposits={deposits}
               loading={depositsLoading}
@@ -476,7 +476,7 @@ const DepositsWithdrawalsTab: React.FC<DepositsWithdrawalsTabProps> = ({
         </Col>
 
         <Col xs={24} lg={12}>
-          <Card title="📤 LỊCH SỬ RÚT TIỀN">
+          <Card title="LỊCH SỬ RÚT TIỀN">
             <WithdrawalsTable
               withdrawals={withdrawals}
               loading={withdrawalsLoading}

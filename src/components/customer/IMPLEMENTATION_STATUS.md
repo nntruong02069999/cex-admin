@@ -4,8 +4,9 @@
 
 ### Core Infrastructure ✅
 - [x] **CustomerDetail/**: Main container component with routing and data management
-- [x] **CustomerHeader/**: Header with breadcrumb, user info, and action buttons
-- [x] **SummaryCards/**: 4 financial summary metric cards
+- [x] **CustomerHeader/**: Slim header with breadcrumb and user info
+- [x] **StatusBar/**: Inline status indicators (Active/KYC/2FA/Email/Marketing)
+- [x] **FinancialSummary/**: 4 compact financial metric cards
 - [x] **TabContainer/**: Tab navigation wrapper with all 5 tabs
 
 ### OverviewTab ✅ (All Sub-components)

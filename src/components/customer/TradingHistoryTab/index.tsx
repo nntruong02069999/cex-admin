@@ -18,6 +18,18 @@ import {
   FilterOutlined,
   ReloadOutlined,
   EyeOutlined,
+  BarChartOutlined,
+  TrophyOutlined,
+  DollarOutlined,
+  RiseOutlined,
+  ArrowUpOutlined,
+  ArrowDownOutlined,
+  FallOutlined,
+  ClockCircleOutlined,
+  CloseCircleOutlined,
+  MinusCircleOutlined,
+  FileTextOutlined,
+  LineChartOutlined,
 } from "@ant-design/icons";
 import { Moment } from "moment";
 import {
@@ -189,15 +201,15 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
   const getStatusText = (status: OrderStatus) => {
     switch (status) {
       case OrderStatus.PENDING:
-        return "⏳ Chờ";
+        return "Chờ";
       case OrderStatus.SUCCESS:
-        return "🏆 WIN";
+        return "WIN";
       case OrderStatus.FAILED:
-        return "❌ LOST";
+        return "LOST";
       case OrderStatus.CANCELLED:
-        return "❌ LOST";
+        return "LOST";
       case OrderStatus.EXPIRED:
-        return "❌ LOST";
+        return "LOST";
       default:
         return status;
     }
@@ -206,9 +218,9 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
   const getSideText = (side: OrderSide) => {
     switch (side) {
       case OrderSide.BUY:
-        return "📈 MUA";
+        return "MUA";
       case OrderSide.SELL:
-        return "📉 BÁN";
+        return "BÁN";
       default:
         return side;
     }
@@ -217,9 +229,9 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
   const getTypeText = (type: OrderType) => {
     switch (type) {
       case OrderType.LIVE:
-        return "🔴 LIVE";
+        return "LIVE";
       case OrderType.DEMO:
-        return "🟡 DEMO";
+        return "DEMO";
       default:
         return type;
     }
@@ -392,10 +404,10 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
             style={{ margin: 0 }}
           >
             {result === "WIN"
-              ? "🏆 THẮNG"
+              ? "THẮNG"
               : result === "LOSS"
-              ? "❌ THUA"
-              : "🤝 HÒA"}
+              ? "THUA"
+              : "HÒA"}
           </Tag>
         );
       },
@@ -460,7 +472,7 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
               </div>
             ) : (
               <Statistic
-                title="📊 Tổng lệnh"
+                title="Tổng lệnh"
                 value={tradingSummary?.totalTradeCount || 0}
                 valueStyle={{ color: "#1890ff" }}
               />
@@ -476,7 +488,7 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
               </div>
             ) : (
               <Statistic
-                title="🏆 Tỷ lệ thắng"
+                title="Tỷ lệ thắng"
                 value={tradingSummary?.winRate || 0}
                 precision={1}
                 suffix="%"
@@ -501,7 +513,7 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
               </div>
             ) : (
               <Statistic
-                title="💰 Volume"
+                title="Volume"
                 value={tradingSummary?.totalTradeAmount || 0}
                 precision={2}
                 suffix="$"
@@ -519,7 +531,7 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
               </div>
             ) : (
               <Statistic
-                title="💎 Lời/Lỗ"
+                title="Lời/Lỗ"
                 value={tradingSummary?.netPnL || 0}
                 precision={2}
                 suffix="$"
@@ -535,7 +547,7 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
 
       {/* P&L Chart Section */}
       {pnlLoading ? (
-        <Card title="📈 Biểu đồ P&L" style={{ marginBottom: 24 }}>
+        <Card title="Biểu đồ P&L" style={{ marginBottom: 24 }}>
           <div style={{ textAlign: "center", padding: "40px" }}>
             <Spin size="large" />
             <div style={{ marginTop: 16 }}>Đang tải dữ liệu biểu đồ...</div>
@@ -584,8 +596,8 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
               style={{ width: 120 }}
               allowClear
             >
-              <Option value={OrderSide.BUY}>📈 MUA</Option>
-              <Option value={OrderSide.SELL}>📉 BÁN</Option>
+              <Option value={OrderSide.BUY}>MUA</Option>
+              <Option value={OrderSide.SELL}>BÁN</Option>
             </Select>
 
             <Select
@@ -607,9 +619,9 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
               style={{ width: 100 }}
               allowClear
             >
-              <Option value="WIN">🏆 THẮNG</Option>
-              <Option value="LOSS">❌ THUA</Option>
-              <Option value="DRAW">🤝 HÒA</Option>
+              <Option value="WIN">THẮNG</Option>
+              <Option value="LOSS">THUA</Option>
+              <Option value="DRAW">HÒA</Option>
             </Select>
 
             <Button
@@ -639,7 +651,7 @@ const TradingHistoryTab: React.FC<TradingHistoryTabProps> = ({
 
       {/* Orders History Table */}
       <Card
-        title={`📋 Lịch sử Lệnh (${pagination.total})`}
+        title={`Lịch sử Lệnh (${pagination.total})`}
         style={{
           background: "linear-gradient(135deg, #fdfdfd 0%, #ffffff 100%)",
           border: "1px solid #f0f0f0",
