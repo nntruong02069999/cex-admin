@@ -1074,3 +1074,39 @@ export const activeEmailCustomerManual = async (customerId: number, captcha: str
         }
     }
 }
+
+/**
+ * Get customer list with v2 API (strongly-typed query params)
+ */
+export const getCustomerListV2 = async (params: Record<string, any> = {}) => {
+    const token = localStorage.getItem('token')
+    const queryParams = new URLSearchParams()
+
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+            queryParams.append(key, value.toString())
+        }
+    })
+
+    const queryString = queryParams.toString()
+    const url = `/admin/customer/get-list-v2${queryString ? `?${queryString}` : ''}`
+
+    const res: any = await request({
+        url,
+        options: {
+            method: 'get',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    })
+
+    if (res && res.status === HttpStatusCode.OK && res.data?.code === 0) {
+        return res.data
+    } else {
+        return {
+            errorCode: res.data?.code || HttpStatusCode.UNKNOW_ERROR,
+            message: res.data?.message || DEFAULT_ERROR_MESSAGE,
+        }
+    }
+}

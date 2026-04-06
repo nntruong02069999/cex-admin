@@ -42,6 +42,7 @@ const App: React.FC<AppProps> = ({ match }) => {
           component={asyncComponent(() => import('./home'))}
         /> */}
         <Route path={`/dashboard`} component={HomeIndex} />
+        <Route path={`/customer`} exact component={CustomerPage} />
         <Route path={`/customer/:customerId`} component={CustomerPage} />
         <Route path="/game/chart" component={ChartGame} />
         <Route path="/game/5d" component={FiveDGame} />
