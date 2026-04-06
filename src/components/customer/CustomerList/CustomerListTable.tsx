@@ -249,7 +249,7 @@ const CustomerListTable: React.FC<CustomerListTableProps> = ({
     {
       title: "Thao tác",
       key: "actions",
-      width: 160,
+      width: 100,
       fixed: "right" as const,
       render: (_: any, record: CustomerListItem) => (
         <CustomerActions customer={record} onSuccess={onRefresh} />

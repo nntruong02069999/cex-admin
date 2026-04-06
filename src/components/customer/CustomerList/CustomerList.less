@@ -206,11 +206,11 @@
     }
   }
 
-  // Action buttons — inline icon group
+  // Action buttons — Detail + More dropdown
   &__actions-group {
     display: flex;
     align-items: center;
-    gap: 0;
+    gap: 2px;
   }
 
   &__action-btn {
@@ -233,34 +233,13 @@
       }
     }
 
-    &--add {
-      color: @success-color;
-
-      &:hover {
-        color: @green-5;
-        background: fade(@success-color, 8%);
-      }
-    }
-
-    &--subtract {
-      color: @error-color;
-
-      &:hover {
-        color: @red-5;
-        background: fade(@error-color, 8%);
-      }
-    }
-
-    &--mkt {
+    &--more {
       color: @text-color-secondary;
+      font-size: 18px;
 
       &:hover {
-        color: @orange-6;
-        background: fade(@orange-6, 8%);
-      }
-
-      &--active {
-        color: @orange-6;
+        color: @text-color;
+        background: fade(@text-color, 6%);
       }
     }
   }
