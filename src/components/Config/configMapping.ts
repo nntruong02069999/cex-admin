@@ -3,7 +3,7 @@ export const CONFIG_LABELS: Record<string, string> = {
   MIN_DEPOSIT_AMOUNT: "Số Tiền Nạp Tối Thiểu",
   TELEGRAM_NOTIFICATION_DEPOSIT_BOT_API_KEY: "API Key Bot Telegram (Nạp Tiền)",
   TELEGRAM_NOTIFICATION_DEPOSIT_CHAT_ID: "Chat ID Telegram (Nạp Tiền)",
-  WITHDRAW_FEE: "Phí Rút Tiền (%)",
+  WITHDRAW_FEE: "Phí Rút Tiền (USD)",
   MAX_DAILY_WITHDRAW: "Hạn Mức Rút Tối Đa / Ngày",
   MAX_DAILY_INTERNAL_TRANSFER: "Hạn Mức Chuyển Khoản Nội Bộ Tối Đa / Ngày",
   TELEGRAM_NOTIFICATION_WITHDRAW_BOT_API_KEY: "API Key Bot Telegram (Rút Tiền)",
