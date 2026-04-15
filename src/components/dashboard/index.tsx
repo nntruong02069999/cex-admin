@@ -12,6 +12,7 @@ import RevenueChart from "./RevenueChart";
 import RequestInfoCard from "./RequestInfoCard";
 import TransactionTable from "./TransactionTable";
 import TopUsers from "./TopUsers";
+import { DASHBOARD_CONFIG } from "./config";
 import { DashboardState, ApiDashboardResponse } from "./types";
 import { getDashboardData } from "@src/services/dashboard";
 
@@ -30,8 +31,8 @@ const Dashboard: React.FC = () => {
 
   const [state, setState] = useState<DashboardState>({
     dateRange: [
-      defaultDates[0].toLocaleDateString("en-IN"),
-      defaultDates[1].toLocaleDateString("en-IN"),
+      defaultDates[0].toLocaleDateString(DASHBOARD_CONFIG.dateFormat),
+      defaultDates[1].toLocaleDateString(DASHBOARD_CONFIG.dateFormat),
     ],
     summaryData: {
       userAccounts: 0,
@@ -67,7 +68,7 @@ const Dashboard: React.FC = () => {
 
   // Transform API response to component state
   const transformApiData = (
-    apiResponse: ApiDashboardResponse
+    apiResponse: ApiDashboardResponse,
   ): Partial<DashboardState> => {
     const { data } = apiResponse;
 
@@ -195,28 +196,45 @@ const Dashboard: React.FC = () => {
 
   // Navigation handlers for deposit requests
   const handleDepositPendingClick = () => {
-    history.push("/list?page=311");
+    history.push(
+      `${DASHBOARD_CONFIG.routes.depositList}${DASHBOARD_CONFIG.queryParams.deposit}`,
+    );
   };
 
   const handleDepositCompletedClick = () => {
-    history.push("/list?page=311");
+    history.push(
+      `${DASHBOARD_CONFIG.routes.depositList}${DASHBOARD_CONFIG.queryParams.deposit}`,
+    );
   };
 
   const handleDepositFailedClick = () => {
-    history.push("/list?page=311");
+    history.push(
+      `${DASHBOARD_CONFIG.routes.depositList}${DASHBOARD_CONFIG.queryParams.deposit}`,
+    );
   };
 
   // Navigation handlers for withdrawal requests
   const handleWithdrawalPendingClick = () => {
-    history.push("/list?page=313");
+    history.push(
+      `${DASHBOARD_CONFIG.routes.withdrawalList}${DASHBOARD_CONFIG.queryParams.withdrawal}`,
+    );
   };
 
   const handleWithdrawalCompletedClick = () => {
-    history.push("/list?page=313");
+    history.push(
+      `${DASHBOARD_CONFIG.routes.withdrawalList}${DASHBOARD_CONFIG.queryParams.withdrawal}`,
+    );
   };
 
   const handleWithdrawalFailedClick = () => {
-    history.push("/list?page=313");
+    history.push(
+      `${DASHBOARD_CONFIG.routes.withdrawalList}${DASHBOARD_CONFIG.queryParams.withdrawal}`,
+    );
+  };
+
+  const parseAmount = (value: string | number): number => {
+    if (typeof value === "number") return value;
+    return parseFloat(String(value).replace(/,/g, "")) || 0;
   };
 
   return (
@@ -250,7 +268,7 @@ const Dashboard: React.FC = () => {
               }
               backgroundColor="#5cb85c"
               value={`${new Intl.NumberFormat("en-US").format(
-                state.summaryData.revenue
+                parseAmount(state.summaryData.revenue),
               )} USDT`}
               title="Doanh thu"
             />
@@ -264,7 +282,7 @@ const Dashboard: React.FC = () => {
               }
               backgroundColor="#d9534f"
               value={`${new Intl.NumberFormat("en-US").format(
-                state.summaryData.expenses
+                parseAmount(state.summaryData.expenses),
               )} USDT`}
               title="Chi phí"
             />
@@ -276,7 +294,7 @@ const Dashboard: React.FC = () => {
               }
               backgroundColor="#5cb85c"
               value={`${new Intl.NumberFormat("en-US").format(
-                state.summaryData.profit
+                parseAmount(state.summaryData.profit),
               )} USDT`}
               title="Lợi nhuận"
             />

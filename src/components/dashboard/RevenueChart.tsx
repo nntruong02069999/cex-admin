@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import moment from "moment";
+import { DASHBOARD_CONFIG } from "./config";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -40,12 +41,28 @@ const RevenueChart: React.FC<RevenueChartProps> = ({
     useState<string>("30_days");
 
   // Calculate total revenue and expense from data
-  const totalRevenue = data.reduce((sum, item) => sum + item.revenue, 0);
-  const totalExpense = data.reduce((sum, item) => sum + item.expense, 0);
+  const parseAmount = (value: string | number): number => {
+    if (typeof value === "number") return value;
+    return parseFloat(String(value).replace(/,/g, "")) || 0;
+  };
 
-  // Format numbers with Indian locale
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-IN").format(amount) + " ₹";
+  const totalRevenue = data.reduce(
+    (sum, item) => sum + parseAmount(item.revenue),
+    0,
+  );
+  const totalExpense = data.reduce(
+    (sum, item) => sum + parseAmount(item.expense),
+    0,
+  );
+
+  // Format numbers with dashboard config
+  const formatCurrency = (amount: number | string) => {
+    const num = parseAmount(amount);
+    return (
+      new Intl.NumberFormat(DASHBOARD_CONFIG.currency.locale).format(num) +
+      " " +
+      DASHBOARD_CONFIG.currency.symbol
+    );
   };
 
   // Handle time period dropdown change

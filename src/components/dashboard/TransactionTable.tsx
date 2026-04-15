@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Card, Table, Button } from "antd";
 import { useHistory } from "react-router-dom";
+import { DASHBOARD_CONFIG } from "./config";
 
 export interface TransactionItem {
   id: number;
@@ -12,7 +13,7 @@ export interface TransactionItem {
 
 interface TransactionTableProps {
   title: string;
-  totalAmount: number;
+  totalAmount: number | string;
   data: TransactionItem[];
   totalItems: number;
   isRevenue: boolean;
@@ -30,6 +31,11 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   const history = useHistory();
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
+
+  const parseAmount = (value: string | number): number => {
+    if (typeof value === "number") return value;
+    return parseFloat(String(value).replace(/,/g, "")) || 0;
+  };
 
   // Calculate current page data
   const startIndex = (currentPage - 1) * pageSize;
@@ -110,7 +116,11 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         <div>
           {title}{" "}
           <span style={{ fontWeight: "normal", float: "right" }}>
-            Tổng: {new Intl.NumberFormat("en-US").format(totalAmount)} ₹
+            Tổng:{" "}
+            {new Intl.NumberFormat(DASHBOARD_CONFIG.currency.locale).format(
+              parseAmount(totalAmount),
+            )}{" "}
+            {DASHBOARD_CONFIG.currency.symbol}
           </span>
         </div>
       }
