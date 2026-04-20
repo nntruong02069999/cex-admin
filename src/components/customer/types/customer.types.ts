@@ -116,8 +116,8 @@ export interface CustomerSummary {
 export interface CustomerDetailData {
   customer: Customer;
   customerMoney: CustomerMoney;
-  hierarchy: NetworkHierarchy;
-  networkSummary: NetworkSummary;
+  hierarchy?: NetworkHierarchy;
+  networkSummary?: NetworkSummary;
   inviter?: Inviter;
   customerVip?: CustomerVip;
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import CustomerInfo from "./CustomerInfo";
 import FinancialOverview from "./FinancialOverview";
-import NetworkHierarchy from "./NetworkHierarchy";
+import HierarchyTreeSection from "./HierarchyTreeSection";
 import { CustomerDetailData } from "../types/customer.types";
 import "./OverviewTab.less";
 
@@ -28,10 +28,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
 
       <FinancialOverview customerMoney={customerData.customerMoney} />
 
-      <NetworkHierarchy
-        hierarchy={customerData.hierarchy}
-        networkSummary={customerData.networkSummary}
-      />
+      <HierarchyTreeSection customerId={customerId} />
     </div>
   );
 };

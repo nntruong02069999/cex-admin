@@ -1,0 +1,60 @@
+.hierarchy-tree-section {
+  &__toolbar {
+    margin: 16px 0;
+  }
+
+  &__summary {
+    padding: 16px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .ant-tree {
+    background: transparent;
+
+    .ant-tree-node-content-wrapper:hover {
+      background-color: rgba(240, 57, 69, 0.06);
+    }
+  }
+
+  &__node-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+
+    &__id {
+      color: #8c8c8c;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    &__nickname {
+      font-weight: 600;
+      cursor: pointer;
+
+      &:hover {
+        color: #f03945;
+      }
+    }
+
+    &__balance {
+      color: #52c41a;
+      font-weight: 500;
+    }
+
+    &__count {
+      color: #8c8c8c;
+      font-size: 12px;
+    }
+  }
+
+  &__load-more {
+    color: #f03945;
+    cursor: pointer;
+    font-style: italic;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

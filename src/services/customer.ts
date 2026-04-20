@@ -6,6 +6,11 @@ import {
     DepositsResponse,
     WithdrawalsResponse
 } from '@src/types/deposits-withdrawals.types';
+import type {
+  GetHierarchyChildrenParams,
+  HierarchyChildrenResponse,
+  HierarchySummary,
+} from '@src/components/customer/OverviewTab/HierarchyTreeSection/hierarchy.types'
 import { DEFAULT_ERROR_MESSAGE } from '@src/constants/constants'
 import HttpStatusCode from '@src/constants/HttpStatusCode'
 import request from '@src/util/request'
@@ -1109,4 +1114,42 @@ export const getCustomerListV2 = async (params: Record<string, any> = {}) => {
             message: res.data?.message || DEFAULT_ERROR_MESSAGE,
         }
     }
+}
+
+export const getHierarchyChildren = async (params: GetHierarchyChildrenParams) => {
+  const token = localStorage.getItem('token')
+  const res: any = await request({
+    url: '/admin/customer/hierarchy-children',
+    options: {
+      method: 'post',
+      data: params,
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  })
+  if (res?.status === HttpStatusCode.OK && res.data?.code === 0) {
+    return res.data as { code: 0; message: string; data: HierarchyChildrenResponse }
+  }
+  return {
+    errorCode: res?.data?.code || HttpStatusCode.UNKNOW_ERROR,
+    message: res?.data?.message || DEFAULT_ERROR_MESSAGE,
+  }
+}
+
+export const getHierarchySummary = async (customerId: number) => {
+  const token = localStorage.getItem('token')
+  const res: any = await request({
+    url: '/admin/customer/hierarchy-summary',
+    options: {
+      method: 'post',
+      data: { customerId },
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  })
+  if (res?.status === HttpStatusCode.OK && res.data?.code === 0) {
+    return res.data as { code: 0; message: string; data: HierarchySummary }
+  }
+  return {
+    errorCode: res?.data?.code || HttpStatusCode.UNKNOW_ERROR,
+    message: res?.data?.message || DEFAULT_ERROR_MESSAGE,
+  }
 }

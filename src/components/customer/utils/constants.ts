@@ -74,14 +74,3 @@ export const CURRENCY_SETTINGS = {
   USDT: { symbol: 'USDT', precision: 2 },
   VND: { symbol: '₫', precision: 0 }
 } as const;
-
-// Network hierarchy levels
-export const NETWORK_LEVELS = [
-  { level: 1, label: 'Cấp 1 (F1)', color: '#1890ff', marginLeft: 0 },
-  { level: 2, label: 'Cấp 2 (F2)', color: '#52c41a', marginLeft: 20 },
-  { level: 3, label: 'Cấp 3 (F3)', color: '#fa8c16', marginLeft: 40 },
-  { level: 4, label: 'Cấp 4 (F4)', color: '#eb2f96', marginLeft: 60 },
-  { level: 5, label: 'Cấp 5 (F5)', color: '#722ed1', marginLeft: 80 },
-  { level: 6, label: 'Cấp 6 (F6)', color: '#13c2c2', marginLeft: 100 },
-  { level: 7, label: 'Cấp 7 (F7)', color: '#a0d911', marginLeft: 120 }
-] as const;
