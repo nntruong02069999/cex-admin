@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Row, Col, Skeleton, Alert, Empty, Statistic, Tag } from 'antd';
-import { TeamOutlined, WalletOutlined } from '@ant-design/icons';
+import { TeamOutlined, WalletOutlined, CrownOutlined, UserOutlined, RiseOutlined } from '@ant-design/icons';
 import type { HierarchySummary as HierarchySummaryType } from './hierarchy.types';
+import type { Customer, CustomerVip } from '../../types/customer.types';
 import { formatCurrency, formatNumber } from '@src/components/customer/utils/formatters';
 
 interface HierarchySummaryProps {
   summary: HierarchySummaryType | null;
   loading: boolean;
   error: string | null;
+  customer?: Customer;
+  customerVip?: CustomerVip;
 }
 
-export const HierarchySummary: React.FC<HierarchySummaryProps> = ({ summary, loading, error }) => {
+const HierarchySummaryComponent: React.FC<HierarchySummaryProps> = ({ summary, loading, error, customer, customerVip }) => {
   if (loading) {
     return <Skeleton active paragraph={{ rows: 2 }} />;
   }
@@ -25,12 +28,36 @@ export const HierarchySummary: React.FC<HierarchySummaryProps> = ({ summary, loa
 
   const { totalMembers, totalBalance, levelCounts } = summary;
 
+  // 4 KPIs from customer data
+  const customerStats = [
+    { key: 'members', label: 'Members', value: customer?.totalMember ?? 0, icon: <UserOutlined />, accent: 'primary' },
+    { key: 'vip', label: 'VIP', value: customer?.totalMemberVip ?? 0, icon: <CrownOutlined />, accent: 'purple' },
+    { key: 'f1', label: 'F1', value: customer?.totalMemberVip1 ?? 0, icon: <TeamOutlined />, accent: 'blue' },
+    { key: 'level', label: 'Cấp hiện tại', value: customerVip?.currentVipLevel ?? 0, icon: <RiseOutlined />, accent: 'gold' },
+  ];
+
   return (
     <div className="hierarchy-tree-section__summary">
-      <Row gutter={[16, 16]}>
+      {/* Customer KPIs with accent borders */}
+      <Row gutter={[12, 12]} className="hierarchy-kpi-row">
+        {customerStats.map((stat) => (
+          <Col key={stat.key} xs={12} sm={6}>
+            <div className={`hierarchy-kpi hierarchy-kpi--${stat.accent}`}>
+              <div className="hierarchy-kpi__icon">{stat.icon}</div>
+              <div className="hierarchy-kpi__content">
+                <div className="hierarchy-kpi__value">{formatNumber(stat.value)}</div>
+                <div className="hierarchy-kpi__label">{stat.label}</div>
+              </div>
+            </div>
+          </Col>
+        ))}
+      </Row>
+
+      {/* Backend summary stats */}
+      <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={12} sm={8}>
           <Statistic
-            title="Tổng thành viên"
+            title="Tổng thành viên (hệ thống)"
             value={totalMembers}
             prefix={<TeamOutlined />}
             formatter={(value) => formatNumber(value as number)}
@@ -38,13 +65,15 @@ export const HierarchySummary: React.FC<HierarchySummaryProps> = ({ summary, loa
         </Col>
         <Col xs={12} sm={8}>
           <Statistic
-            title="Tổng balance"
+            title="Tổng balance (hệ thống)"
             value={totalBalance}
             prefix={<WalletOutlined />}
             formatter={(value) => formatCurrency(value as number)}
           />
         </Col>
       </Row>
+
+      {/* F1-F7 Level tags */}
       <Row gutter={[8, 8]} style={{ marginTop: 16 }}>
         {[
           { key: 'F1', count: levelCounts.level1 },
@@ -65,3 +94,5 @@ export const HierarchySummary: React.FC<HierarchySummaryProps> = ({ summary, loa
     </div>
   );
 };
+
+export const HierarchySummary = memo(HierarchySummaryComponent);

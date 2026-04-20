@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Tabs } from "antd";
+import React, { useState, Suspense, lazy } from "react";
+import { Tabs, Spin } from "antd";
 import {
   FolderViewOutlined,
   TransactionOutlined,
@@ -8,12 +8,20 @@ import {
   CrownOutlined,
 } from "@ant-design/icons";
 import OverviewTab from "../OverviewTab";
-import DepositsWithdrawalsTab from "../DepositsWithdrawalsTab";
-import TransactionsTab from "../TransactionsTab";
-import TradingHistoryTab from "../TradingHistoryTab";
-import VipCommissionTab from "../VipCommissionTab";
 import { CustomerDetailData } from "../types/customer.types";
 import "./TabContainer.less";
+
+// Lazy-load non-Overview tabs for better performance
+const DepositsWithdrawalsTab = lazy(() => import("../DepositsWithdrawalsTab"));
+const TransactionsTab = lazy(() => import("../TransactionsTab"));
+const TradingHistoryTab = lazy(() => import("../TradingHistoryTab"));
+const VipCommissionTab = lazy(() => import("../VipCommissionTab"));
+
+const TabFallback: React.FC = () => (
+  <div className="tab-container__fallback">
+    <Spin />
+  </div>
+);
 
 const { TabPane } = Tabs;
 
@@ -65,7 +73,9 @@ const TabContainer: React.FC<TabContainerProps> = ({
             </span>
           }
         >
-          <DepositsWithdrawalsTab customerId={customerId} />
+          <Suspense fallback={<TabFallback />}>
+            <DepositsWithdrawalsTab customerId={customerId} />
+          </Suspense>
         </TabPane>
 
         <TabPane
@@ -77,7 +87,9 @@ const TabContainer: React.FC<TabContainerProps> = ({
             </span>
           }
         >
-          <TransactionsTab customerId={customerId} />
+          <Suspense fallback={<TabFallback />}>
+            <TransactionsTab customerId={customerId} />
+          </Suspense>
         </TabPane>
 
         <TabPane
@@ -89,7 +101,9 @@ const TabContainer: React.FC<TabContainerProps> = ({
             </span>
           }
         >
-          <TradingHistoryTab customerId={customerId} />
+          <Suspense fallback={<TabFallback />}>
+            <TradingHistoryTab customerId={customerId} />
+          </Suspense>
         </TabPane>
 
         <TabPane
@@ -101,7 +115,9 @@ const TabContainer: React.FC<TabContainerProps> = ({
             </span>
           }
         >
-          <VipCommissionTab customerId={customerId} />
+          <Suspense fallback={<TabFallback />}>
+            <VipCommissionTab customerId={customerId} />
+          </Suspense>
         </TabPane>
       </Tabs>
     </div>

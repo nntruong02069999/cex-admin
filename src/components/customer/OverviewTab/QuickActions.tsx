@@ -21,12 +21,15 @@ import {
   LinkOutlined,
   NotificationOutlined,
   MailOutlined,
+  QrcodeOutlined,
+  SafetyOutlined,
 } from "@ant-design/icons";
 import { CustomerDetailData } from "../types/customer.types";
 import { useCustomerActions } from "../hooks/useCustomerActions";
 import { VIP_LEVELS } from "../utils/constants";
 import Captcha from "@src/packages/pro-component/schema/Captcha";
 import { activeEmailCustomerManual } from "@src/services/customer";
+import TwoFADisplay from "../../TwoFADisplay";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -65,6 +68,13 @@ const QuickActions: React.FC<QuickActionsProps> = ({
     useState(false);
   const [emailCaptchaToken, setEmailCaptchaToken] = useState<string>("");
   const [activatingEmail, setActivatingEmail] = useState(false);
+
+  // 2FA modal state
+  const [twoFAModalVisible, setTwoFAModalVisible] = useState(false);
+
+  const canViewTwoFA =
+    !!customerData.customer.twoFAEnabled &&
+    !!customerData.customer.twoFASecret;
 
   const {
     addBalance,
@@ -260,6 +270,26 @@ const QuickActions: React.FC<QuickActionsProps> = ({
           </>
         )}
 
+        {/* Security - 2FA */}
+        {canViewTwoFA && (
+          <>
+            <div className="quick-actions__section">
+              <h4 className="quick-actions__section-title">
+                <SafetyOutlined /> Bảo mật
+              </h4>
+              <Button
+                icon={<QrcodeOutlined />}
+                block
+                size="small"
+                onClick={() => setTwoFAModalVisible(true)}
+              >
+                Xem mã 2FA
+              </Button>
+            </div>
+            <Divider className="quick-actions__divider" />
+          </>
+        )}
+
         {/* Balance Management */}
         <div className="quick-actions__section">
           <h4 className="quick-actions__section-title">
@@ -441,6 +471,16 @@ const QuickActions: React.FC<QuickActionsProps> = ({
         <p>Vui lòng nhập mã captcha để xác thực:</p>
         <Captcha onChange={setEmailCaptchaToken} />
       </Modal>
+
+      {/* 2FA Display Modal */}
+      {canViewTwoFA && (
+        <TwoFADisplay
+          twoFASecret={customerData.customer.twoFASecret}
+          customerEmail={customerData.customer.email}
+          visible={twoFAModalVisible}
+          onClose={() => setTwoFAModalVisible(false)}
+        />
+      )}
     </div>
   );
 };

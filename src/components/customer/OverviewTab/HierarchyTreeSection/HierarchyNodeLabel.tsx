@@ -13,7 +13,7 @@ export const HierarchyNodeLabel: React.FC<HierarchyNodeLabelProps> = ({ node }) 
   const history = useHistory();
 
   const handleClick = () => {
-    history.push(`/admin/customer/${node.id}`);
+    history.push(`/customer/${node.id}`);
   };
 
   return (

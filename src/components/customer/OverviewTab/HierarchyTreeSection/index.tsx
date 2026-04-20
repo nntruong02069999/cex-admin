@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useCallback } from 'react';
+import React, { useState, ChangeEvent, useCallback, memo } from 'react';
 import { Card, Space, Button, Row, Col, Input, message } from 'antd';
 import { ReloadOutlined, DownOutlined, UpOutlined, SearchOutlined } from '@ant-design/icons';
 import type { EventDataNode } from 'antd/lib/tree';
@@ -8,13 +8,16 @@ import { HierarchySummary } from './HierarchySummary';
 import { HierarchyTree } from './HierarchyTree';
 import { HierarchyNodeLabel } from './HierarchyNodeLabel';
 import type { HierarchyNode } from './hierarchy.types';
+import type { Customer, CustomerVip } from '../../types/customer.types';
 import './HierarchyTreeSection.less';
 
 interface HierarchyTreeSectionProps {
   customerId: number;
+  customer?: Customer;
+  customerVip?: CustomerVip;
 }
 
-const HierarchyTreeSection: React.FC<HierarchyTreeSectionProps> = ({ customerId }) => {
+const HierarchyTreeSection: React.FC<HierarchyTreeSectionProps> = ({ customerId, customer, customerVip }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [searchInput, setSearchInput] = useState('');
 
@@ -76,6 +79,8 @@ const HierarchyTreeSection: React.FC<HierarchyTreeSectionProps> = ({ customerId 
             summary={summary.summary}
             loading={summary.loading}
             error={summary.error}
+            customer={customer}
+            customerVip={customerVip}
           />
           <Row gutter={8} className="hierarchy-tree-section__toolbar">
             <Col flex="auto">
@@ -109,4 +114,4 @@ const HierarchyTreeSection: React.FC<HierarchyTreeSectionProps> = ({ customerId 
   );
 };
 
-export default HierarchyTreeSection;
+export default memo(HierarchyTreeSection);

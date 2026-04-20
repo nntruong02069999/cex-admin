@@ -1,0 +1,48 @@
+@import '~antd/lib/style/themes/default.less';
+
+.account-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 32px;
+}
+
+.account-info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+
+  &__label {
+    font-size: 11px;
+    font-weight: 500;
+    color: @text-color-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  &__value {
+    font-size: 14px;
+    font-weight: 600;
+    color: @text-color;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &--mono {
+      font-family: 'SFMono-Regular', 'Consolas', monospace;
+      font-size: 13px;
+      background: @background-color-light;
+      padding: 3px 8px;
+      border-radius: 4px;
+      align-self: flex-start;
+      font-weight: 500;
+    }
+  }
+}
+
+@media (max-width: @screen-sm) {
+  .account-info-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}

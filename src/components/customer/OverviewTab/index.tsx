@@ -1,9 +1,11 @@
-import React from "react";
-import CustomerInfo from "./CustomerInfo";
-import FinancialOverview from "./FinancialOverview";
-import HierarchyTreeSection from "./HierarchyTreeSection";
+import React, { memo, Suspense, lazy } from "react";
+import AccountInfoSection from "./AccountInfoSection";
+import WalletSection from "./WalletSection";
+import { SectionSkeleton } from "./SectionBlock";
 import { CustomerDetailData } from "../types/customer.types";
 import "./OverviewTab.less";
+
+const HierarchyTreeSection = lazy(() => import("./HierarchyTreeSection"));
 
 interface OverviewTabProps {
   customerId: number;
@@ -14,23 +16,23 @@ interface OverviewTabProps {
 const OverviewTab: React.FC<OverviewTabProps> = ({
   customerId,
   customerData,
-  onDataUpdate,
 }) => {
   return (
     <div className="overview-tab">
-      <CustomerInfo
-        customerId={customerId}
+      <AccountInfoSection
         customer={customerData.customer}
-        customerVip={customerData.customerVip}
         inviter={customerData.inviter}
-        onDataUpdate={onDataUpdate}
       />
-
-      <FinancialOverview customerMoney={customerData.customerMoney} />
-
-      <HierarchyTreeSection customerId={customerId} />
+      <WalletSection customerMoney={customerData.customerMoney} />
+      <Suspense fallback={<SectionSkeleton title="Cây phả hệ" rows={5} />}>
+        <HierarchyTreeSection
+          customerId={customerId}
+          customer={customerData.customer}
+          customerVip={customerData.customerVip}
+        />
+      </Suspense>
     </div>
   );
 };
 
-export default OverviewTab;
+export default memo(OverviewTab);

@@ -1,0 +1,83 @@
+@import '~antd/lib/style/themes/default.less';
+
+.section-block {
+  background: @component-background;
+  border: 1px solid @border-color-split;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  padding: 20px;
+
+  + .section-block {
+    margin-top: 20px;
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  &__icon-wrap {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  &__heading {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: 15px;
+    font-weight: 600;
+    color: @heading-color;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  &__subtitle {
+    font-size: 12px;
+    color: @text-color-secondary;
+    margin: 2px 0 0;
+  }
+
+  &__extra {
+    flex-shrink: 0;
+  }
+
+  &__body {
+    font-variant-numeric: tabular-nums;
+  }
+
+  // Accents
+  &--primary &__icon-wrap {
+    background: fade(@primary-color, 10%);
+    color: @primary-color;
+  }
+  &--success &__icon-wrap {
+    background: fade(@success-color, 10%);
+    color: @success-color;
+  }
+  &--gold &__icon-wrap {
+    background: fade(@gold-6, 12%);
+    color: @gold-6;
+  }
+  &--purple &__icon-wrap {
+    background: fade(@purple-6, 10%);
+    color: @purple-6;
+  }
+}
+
+@media (max-width: @screen-md) {
+  .section-block {
+    padding: 16px;
+    + .section-block { margin-top: 16px; }
+  }
+}
